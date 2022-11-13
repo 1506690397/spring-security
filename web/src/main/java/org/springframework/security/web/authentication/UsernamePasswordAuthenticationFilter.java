@@ -79,10 +79,10 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
 		String password = obtainPassword(request);
 		password = (password != null) ? password : "";
 		UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(username,
-				password);
+				password);//生成一个UsernamePasswordAuthenticationToken
 		// Allow subclasses to set the "details" property
 		setDetails(request, authRequest);
-		return this.getAuthenticationManager().authenticate(authRequest);
+		return this.getAuthenticationManager().authenticate(authRequest);//调用认证逻辑
 	}
 
 	/**

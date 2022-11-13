@@ -81,7 +81,7 @@ public class SimpleUrlAuthenticationFailureHandler implements AuthenticationFail
 			}
 			else {
 				this.logger.debug("Sending 401 Unauthorized error");
-			}
+			} //发送异常
 			response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
 			return;
 		}
@@ -90,7 +90,7 @@ public class SimpleUrlAuthenticationFailureHandler implements AuthenticationFail
 			this.logger.debug("Forwarding to " + this.defaultFailureUrl);
 			request.getRequestDispatcher(this.defaultFailureUrl).forward(request, response);
 		}
-		else {
+		else { //重定向到默认的url
 			this.redirectStrategy.sendRedirect(request, response, this.defaultFailureUrl);
 		}
 	}

@@ -34,8 +34,13 @@ ext.releaseBuild = version.contains("SNAPSHOT")
 ext.milestoneBuild = !(snapshotBuild || releaseBuild)
 
 repositories {
+	maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+	maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
 	mavenCentral()
+	//注意保留原镜像地址，否则可能会出问题
+	maven { url "https://repo.spring.io/libs-spring-framework-build" }
 }
+
 
 tasks.named("saganCreateRelease") {
 	referenceDocUrl = "https://docs.spring.io/spring-security/reference/{version}/index.html"

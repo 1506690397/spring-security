@@ -170,7 +170,7 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 		Authentication parentResult = null;
 		int currentPosition = 0;
 		int size = this.providers.size();
-		for (AuthenticationProvider provider : getProviders()) {
+		for (AuthenticationProvider provider : getProviders()) { //遍历provider进行认证
 			if (!provider.supports(toTest)) {
 				continue;
 			}
@@ -179,7 +179,7 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 						provider.getClass().getSimpleName(), ++currentPosition, size));
 			}
 			try {
-				result = provider.authenticate(authentication);
+				result = provider.authenticate(authentication); //调用具体认证方法
 				if (result != null) {
 					copyDetails(authentication, result);
 					break;
@@ -195,7 +195,7 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 				lastException = ex;
 			}
 		}
-		if (result == null && this.parent != null) {
+		if (result == null && this.parent != null) { //如果没有provider认证成功parent进行兜底处理
 			// Allow the parent to try.
 			try {
 				parentResult = this.parent.authenticate(authentication);

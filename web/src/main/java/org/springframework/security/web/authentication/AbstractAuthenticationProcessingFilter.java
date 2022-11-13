@@ -227,26 +227,26 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 			chain.doFilter(request, response);
 			return;
 		}
-		try {
+		try { //尝试进行认证
 			Authentication authenticationResult = attemptAuthentication(request, response);
 			if (authenticationResult == null) {
 				// return immediately as subclass has indicated that it hasn't completed
 				return;
-			}
+			} //session进行处理（不同策略处理不同）
 			this.sessionStrategy.onAuthentication(authenticationResult, request, response);
 			// Authentication success
 			if (this.continueChainBeforeSuccessfulAuthentication) {
 				chain.doFilter(request, response);
-			}
+			} //认证成功
 			successfulAuthentication(request, response, chain, authenticationResult);
 		}
 		catch (InternalAuthenticationServiceException failed) {
 			this.logger.error("An internal error occurred while trying to authenticate the user.", failed);
-			unsuccessfulAuthentication(request, response, failed);
+			unsuccessfulAuthentication(request, response, failed); //认证失败
 		}
 		catch (AuthenticationException ex) {
 			// Authentication failed
-			unsuccessfulAuthentication(request, response, ex);
+			unsuccessfulAuthentication(request, response, ex); //认证失败
 		}
 	}
 
@@ -320,16 +320,16 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 		SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
-		context.setAuthentication(authResult);
+		context.setAuthentication(authResult);//将认证信息保存到context中
 		this.securityContextHolderStrategy.setContext(context);
 		this.securityContextRepository.saveContext(context, request, response);
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug(LogMessage.format("Set SecurityContextHolder to %s", authResult));
 		}
-		this.rememberMeServices.loginSuccess(request, response, authResult);
+		this.rememberMeServices.loginSuccess(request, response, authResult); //对rememberMeServices进行登录成功的处理（如果未设置则是空操作）
 		if (this.eventPublisher != null) {
-			this.eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));
-		}
+			this.eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));//发布时间
+		}//调用successHandler执行认证成功后的处理流程
 		this.successHandler.onAuthenticationSuccess(request, response, authResult);
 	}
 
@@ -346,12 +346,12 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 	 */
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) throws IOException, ServletException {
-		this.securityContextHolderStrategy.clearContext();
+		this.securityContextHolderStrategy.clearContext(); //清除context
 		this.logger.trace("Failed to process authentication request", failed);
 		this.logger.trace("Cleared SecurityContextHolder");
 		this.logger.trace("Handling authentication failure");
-		this.rememberMeServices.loginFail(request, response);
-		this.failureHandler.onAuthenticationFailure(request, response, failed);
+		this.rememberMeServices.loginFail(request, response); //对rememberMeService进行登录失败的处理（未设置则为空操作）
+		this.failureHandler.onAuthenticationFailure(request, response, failed); //调用认证失败处理器执行认证失败处理
 	}
 
 	protected AuthenticationManager getAuthenticationManager() {

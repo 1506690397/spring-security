@@ -87,7 +87,7 @@ public class SavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAuth
 		clearAuthenticationAttributes(request);
 		// Use the DefaultSavedRequest URL
 		String targetUrl = savedRequest.getRedirectUrl();
-		getRedirectStrategy().sendRedirect(request, response, targetUrl);
+		getRedirectStrategy().sendRedirect(request, response, targetUrl);//发送重定向  这里的targetUrl是在访问拒绝后保存的url
 	}
 
 	public void setRequestCache(RequestCache requestCache) {
