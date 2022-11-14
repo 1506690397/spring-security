@@ -119,7 +119,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 		doAfterPropertiesSet();
 	}
 
-	@Override
+	@Override //对用户信息进行认证
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		Assert.isInstanceOf(UsernamePasswordAuthenticationToken.class, authentication,
 				() -> this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.onlySupports",
@@ -129,7 +129,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 		UserDetails user = this.userCache.getUserFromCache(username);
 		if (user == null) {
 			cacheWasUsed = false;
-			try {
+			try { //查找用户  模板模式 留给子类进行实现
 				user = retrieveUser(username, (UsernamePasswordAuthenticationToken) authentication);
 			}
 			catch (UsernameNotFoundException ex) {
@@ -144,7 +144,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 		}
 		try {
 			this.preAuthenticationChecks.check(user);
-			additionalAuthenticationChecks(user, (UsernamePasswordAuthenticationToken) authentication);
+			additionalAuthenticationChecks(user, (UsernamePasswordAuthenticationToken) authentication); //检查密码是否正确
 		}
 		catch (AuthenticationException ex) {
 			if (!cacheWasUsed) {
@@ -192,7 +192,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 		// Ensure we return the original credentials the user supplied,
 		// so subsequent attempts are successful even with encoded passwords.
 		// Also ensure we return the original getDetails(), so that future
-		// authentication events after cache expiry contain the details
+		// authentication events after cache expiry contain the details 创建一个包含principal的token进行返回
 		UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(principal,
 				authentication.getCredentials(), this.authoritiesMapper.mapAuthorities(user.getAuthorities()));
 		result.setDetails(authentication.getDetails());

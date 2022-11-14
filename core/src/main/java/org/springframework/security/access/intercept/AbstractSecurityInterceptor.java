@@ -332,7 +332,7 @@ public abstract class AbstractSecurityInterceptor
 			this.logger.debug(LogMessage.format("Re-authenticated %s before authorizing", authentication));
 		}
 		SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
-		context.setAuthentication(authentication);
+		context.setAuthentication(authentication); //将认证的信息放入context当中
 		this.securityContextHolderStrategy.setContext(context);
 		return authentication;
 	}

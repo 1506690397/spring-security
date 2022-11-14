@@ -135,7 +135,7 @@ public class DigestAuthenticationFilter extends GenericFilterBean implements Mes
 		logger.debug(LogMessage.format("Digest Authorization header received from user agent: %s", header));
 		DigestData digestAuth = new DigestData(header);
 		try {
-			digestAuth.validateAndDecode(this.authenticationEntryPoint.getKey(),
+			digestAuth.validateAndDecode(this.authenticationEntryPoint.getKey(), //key:防止修改nonce令牌的私钥
 					this.authenticationEntryPoint.getRealmName());
 		}
 		catch (BadCredentialsException ex) {

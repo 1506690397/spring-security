@@ -100,7 +100,7 @@ public class WithUserDetailsTests {
 
 	}
 
-	static class CustomUserDetailsService implements UserDetailsService {
+	static class CustomUserDetailsService implements UserDetailsService { //自定义自己的检索用户方法实现
 
 		@Override
 		public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {

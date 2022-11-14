@@ -49,7 +49,7 @@ import org.springframework.util.Assert;
  *
  * @author Luke Taylor
  * @since 3.1
- */
+ */ //内存中的用户管理器
 public class InMemoryUserDetailsManager implements UserDetailsManager, UserDetailsPasswordService {
 
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -150,7 +150,7 @@ public class InMemoryUserDetailsManager implements UserDetailsManager, UserDetai
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserDetails user = this.users.get(username.toLowerCase());
+		UserDetails user = this.users.get(username.toLowerCase()); //从内存中获取用户
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}

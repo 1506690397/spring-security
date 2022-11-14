@@ -72,8 +72,8 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 			throw new BadCredentialsException(this.messages
 					.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
 		}
-		String presentedPassword = authentication.getCredentials().toString();
-		if (!this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
+		String presentedPassword = authentication.getCredentials().toString(); //获取密码
+		if (!this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) { //对密码进行校验
 			this.logger.debug("Failed to authenticate since password does not match stored value");
 			throw new BadCredentialsException(this.messages
 					.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
@@ -89,7 +89,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 	protected final UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
 		prepareTimingAttackProtection();
-		try {
+		try { //加载用户
 			UserDetails loadedUser = this.getUserDetailsService().loadUserByUsername(username);
 			if (loadedUser == null) {
 				throw new InternalAuthenticationServiceException(
