@@ -82,7 +82,7 @@ import org.springframework.web.util.WebUtils;
  *
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //将用户信息和session进行联系
 public class HttpSessionSecurityContextRepository implements SecurityContextRepository {
 
 	/**
@@ -390,7 +390,7 @@ public class HttpSessionSecurityContextRepository implements SecurityContextRepo
 			// actually changed in this thread (see SEC-37, SEC-1307, SEC-1528)
 			if (httpSession != null) {
 				// We may have a new session, so check also whether the context attribute
-				// is set SEC-1561
+				// is set SEC-1561 如果当前的context已经改变那么将当前的context设置到session中
 				if (contextChanged(context) || httpSession.getAttribute(springSecurityContextKey) == null) {
 					httpSession.setAttribute(springSecurityContextKey, context);
 					this.isSaveContextInvoked = true;

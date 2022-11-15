@@ -41,7 +41,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  *
  * @author Rob Winch
  * @since 5.7
- */
+ */ //负责在使用securityContextRepository的请求之间加载SecurityContext。
 public class SecurityContextHolderFilter extends OncePerRequestFilter {
 
 	private final SecurityContextRepository securityContextRepository;
@@ -62,7 +62,7 @@ public class SecurityContextHolderFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+			throws ServletException, IOException { //在其他应用运行之前会先从securityContextRepository取出context并放入contextHolder当中
 		Supplier<SecurityContext> deferredContext = this.securityContextRepository.loadDeferredContext(request);
 		try {
 			this.securityContextHolderStrategy.setDeferredContext(deferredContext);

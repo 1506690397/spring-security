@@ -102,9 +102,9 @@ public class SecurityContextPersistenceFilter extends GenericFilterBean {
 			}
 		}
 		HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
-		SecurityContext contextBeforeChainExecution = this.repo.loadContext(holder);
+		SecurityContext contextBeforeChainExecution = this.repo.loadContext(holder);//从repository中获取context
 		try {
-			this.securityContextHolderStrategy.setContext(contextBeforeChainExecution);
+			this.securityContextHolderStrategy.setContext(contextBeforeChainExecution);//将context舍之道contextHolder中
 			if (contextBeforeChainExecution.getAuthentication() == null) {
 				logger.debug("Set SecurityContextHolder to empty SecurityContext");
 			}
@@ -116,11 +116,11 @@ public class SecurityContextPersistenceFilter extends GenericFilterBean {
 			}
 			chain.doFilter(holder.getRequest(), holder.getResponse());
 		}
-		finally {
-			SecurityContext contextAfterChainExecution = this.securityContextHolderStrategy.getContext();
+		finally { //如果执行结束之后context发生了改变则保存当前的context
+			SecurityContext contextAfterChainExecution = this.securityContextHolderStrategy.getContext(); //获取context
 			// Crucial removal of SecurityContextHolder contents before anything else.
-			this.securityContextHolderStrategy.clearContext();
-			this.repo.saveContext(contextAfterChainExecution, holder.getRequest(), holder.getResponse());
+			this.securityContextHolderStrategy.clearContext(); //将holder中的context清除
+			this.repo.saveContext(contextAfterChainExecution, holder.getRequest(), holder.getResponse()); //保存当前的context
 			request.removeAttribute(FILTER_APPLIED);
 			this.logger.debug("Cleared SecurityContextHolder to complete request");
 		}

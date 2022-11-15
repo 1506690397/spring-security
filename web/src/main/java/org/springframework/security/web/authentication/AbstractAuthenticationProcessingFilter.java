@@ -319,10 +319,10 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 	 */
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
+		SecurityContext context = this.securityContextHolderStrategy.createEmptyContext(); //创建context容器
 		context.setAuthentication(authResult);//将认证信息保存到context中
-		this.securityContextHolderStrategy.setContext(context);
-		this.securityContextRepository.saveContext(context, request, response);
+		this.securityContextHolderStrategy.setContext(context); //将context设置到contextHolder中
+		this.securityContextRepository.saveContext(context, request, response); //保存context到repository（session中）
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug(LogMessage.format("Set SecurityContextHolder to %s", authResult));
 		}
