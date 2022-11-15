@@ -32,7 +32,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  *
  * @author Rob Winch
  * @since 5.7
- */
+ */ //急切的创建session
 public class ForceEagerSessionCreationFilter extends OncePerRequestFilter {
 
 	@Override

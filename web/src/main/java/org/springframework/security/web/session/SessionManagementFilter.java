@@ -90,14 +90,14 @@ public class SessionManagementFilter extends GenericFilterBean {
 		if (request.getAttribute(FILTER_APPLIED) != null) {
 			chain.doFilter(request, response);
 			return;
-		}
+		}//根据securityContextHolder的当前内容检查securityContextRepository的内容，以确定用户是否已通过身份验证  如果包含context则不会做任何处理
 		request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
 		if (!this.securityContextRepository.containsContext(request)) {
-			Authentication authentication = this.securityContextHolderStrategy.getContext().getAuthentication();
+			Authentication authentication = this.securityContextHolderStrategy.getContext().getAuthentication();//如果包含一个非匿名的Authentication对象则调用配置的SessionAuthenticationStrategy
 			if (authentication != null && !this.trustResolver.isAnonymous(authentication)) {
 				// The user has been authenticated during the current request, so call the
 				// session strategy
-				try {
+				try { //调用session策略进行认证
 					this.sessionAuthenticationStrategy.onAuthentication(authentication, request, response);
 				}
 				catch (SessionAuthenticationException ex) {
@@ -115,12 +115,12 @@ public class SessionManagementFilter extends GenericFilterBean {
 			}
 			else {
 				// No security context or authentication present. Check for a session
-				// timeout
+				// timeout 当前未被认证检查session是否过期
 				if (request.getRequestedSessionId() != null && !request.isRequestedSessionIdValid()) {
 					if (this.logger.isDebugEnabled()) {
 						this.logger.debug(LogMessage.format("Request requested invalid session id %s",
 								request.getRequestedSessionId()));
-					}
+					}//如果设置了invalidSessionStrategy则进行调用
 					if (this.invalidSessionStrategy != null) {
 						this.invalidSessionStrategy.onInvalidSessionDetected(request, response);
 						return;

@@ -86,7 +86,7 @@ public abstract class AbstractSessionFixationProtectionStrategy
 			synchronized (mutex) {
 				// We need to migrate to a new session
 				originalSessionId = session.getId();
-				session = applySessionFixation(request);
+				session = applySessionFixation(request); //使用Session Fixation Attack Protection防止固定session攻击
 				newSessionId = session.getId();
 			}
 			if (originalSessionId.equals(newSessionId)) {
@@ -97,7 +97,7 @@ public abstract class AbstractSessionFixationProtectionStrategy
 				if (this.logger.isDebugEnabled()) {
 					this.logger.debug(LogMessage.format("Changed session id from %s", originalSessionId));
 				}
-			}
+			} //发布一个SessionFixationProtectionEvent事件
 			onSessionChange(originalSessionId, session, authentication);
 		}
 	}

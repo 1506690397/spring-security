@@ -29,7 +29,7 @@ import jakarta.servlet.http.HttpSession;
 public final class ChangeSessionIdAuthenticationStrategy extends AbstractSessionFixationProtectionStrategy {
 
 	@Override
-	HttpSession applySessionFixation(HttpServletRequest request) {
+	HttpSession applySessionFixation(HttpServletRequest request) { //更换一个sessionId
 		request.changeSessionId();
 		return request.getSession();
 	}

@@ -95,17 +95,17 @@ public class ConcurrentSessionControlAuthenticationStrategy
 	public void onAuthentication(Authentication authentication, HttpServletRequest request,
 			HttpServletResponse response) {
 		int allowedSessions = getMaximumSessionsForThisUser(authentication);
-		if (allowedSessions == -1) {
+		if (allowedSessions == -1) { //不限制登录并发数
 			// We permit unlimited logins
 			return;
 		}
 		List<SessionInformation> sessions = this.sessionRegistry.getAllSessions(authentication.getPrincipal(), false);
-		int sessionCount = sessions.size();
-		if (sessionCount < allowedSessions) {
+		int sessionCount = sessions.size(); //查看是否超过最大的session数量
+		if (sessionCount < allowedSessions) { //是否超过session最大数量
 			// They haven't got too many login sessions running at present
 			return;
 		}
-		if (sessionCount == allowedSessions) {
+		if (sessionCount == allowedSessions) { //查看当前登录的sessionId是否存在于获取到的sessionInformation当中如果存在则登录没问题
 			HttpSession session = request.getSession(false);
 			if (session != null) {
 				// Only permit it though if this request is associated with one of the
@@ -144,17 +144,17 @@ public class ConcurrentSessionControlAuthenticationStrategy
 	 */
 	protected void allowableSessionsExceeded(List<SessionInformation> sessions, int allowableSessions,
 			SessionRegistry registry) throws SessionAuthenticationException {
-		if (this.exceptionIfMaximumExceeded || (sessions == null)) {
+		if (this.exceptionIfMaximumExceeded || (sessions == null)) { //如果超过了最大session限制则抛出认证异常
 			throw new SessionAuthenticationException(
 					this.messages.getMessage("ConcurrentSessionControlAuthenticationStrategy.exceededAllowed",
 							new Object[] { allowableSessions }, "Maximum sessions of {0} for this principal exceeded"));
 		}
-		// Determine least recently used sessions, and mark them for invalidation
+		// Determine least recently used sessions, and mark them for invalidation 按最后一次请求时间进行排序
 		sessions.sort(Comparator.comparing(SessionInformation::getLastRequest));
 		int maximumSessionsExceededBy = sessions.size() - allowableSessions + 1;
-		List<SessionInformation> sessionsToBeExpired = sessions.subList(0, maximumSessionsExceededBy);
+		List<SessionInformation> sessionsToBeExpired = sessions.subList(0, maximumSessionsExceededBy); //计算出需要过期的session数量
 		for (SessionInformation session : sessionsToBeExpired) {
-			session.expireNow();
+			session.expireNow();//调用方法使其过期
 		}
 	}
 
