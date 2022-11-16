@@ -41,13 +41,13 @@ public class SessionInformation implements Serializable {
 
 	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
-	private Date lastRequest;
+	private Date lastRequest; //最近一次请求的时间
 
-	private final Object principal;
+	private final Object principal; //请求对应的主体（用户）
 
-	private final String sessionId;
+	private final String sessionId; //会话Id
 
-	private boolean expired = false;
+	private boolean expired = false; //会话是否过期
 
 	public SessionInformation(Object principal, String sessionId, Date lastRequest) {
 		Assert.notNull(principal, "Principal required");
@@ -80,7 +80,7 @@ public class SessionInformation implements Serializable {
 
 	/**
 	 * Refreshes the internal lastRequest to the current date and time.
-	 */
+	 */ //用于更新最近一次请求时间
 	public void refreshLastRequest() {
 		this.lastRequest = new Date();
 	}

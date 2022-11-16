@@ -35,7 +35,7 @@ import org.springframework.web.util.WebUtils;
  *
  * @author Rob Winch
  * @since 3.2
- */
+ */ //防止会话固定攻击的基类
 public abstract class AbstractSessionFixationProtectionStrategy
 		implements SessionAuthenticationStrategy, ApplicationEventPublisherAware {
 

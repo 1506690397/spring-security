@@ -65,7 +65,7 @@ import org.springframework.web.filter.GenericFilterBean;
  * @author Eddú Meléndez
  * @author Marten Deinum
  * @author Onur Kagan Ozcan
- */
+ */ //是一个处理会话并发管理的过滤器
 public class ConcurrentSessionFilter extends GenericFilterBean {
 
 	private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
@@ -131,21 +131,21 @@ public class ConcurrentSessionFilter extends GenericFilterBean {
 
 	private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		HttpSession session = request.getSession(false);
-		if (session != null) {
+		HttpSession session = request.getSession(false); //获取当前会话
+		if (session != null) { //如果当前会话不为空则获取会话中所对应的SessionInformation实例
 			SessionInformation info = this.sessionRegistry.getSessionInformation(session.getId());
 			if (info != null) {
-				if (info.isExpired()) {
+				if (info.isExpired()) {//判断当前会话是否过期
 					// Expired - abort processing
 					this.logger.debug(LogMessage
 							.of(() -> "Requested session ID " + request.getRequestedSessionId() + " has expired."));
-					doLogout(request, response);
+					doLogout(request, response); //如果当前会话已经过期则进行注销操作
 					this.sessionInformationExpiredStrategy
-							.onExpiredSessionDetected(new SessionInformationExpiredEvent(info, request, response));
+							.onExpiredSessionDetected(new SessionInformationExpiredEvent(info, request, response)); //调用会话过期回调
 					return;
 				}
 				// Non-expired - update last request date/time
-				this.sessionRegistry.refreshLastRequest(info.getSessionId());
+				this.sessionRegistry.refreshLastRequest(info.getSessionId()); //如果没有过期则刷新当前会话最后一次请求时间
 			}
 		}
 		chain.doFilter(request, response);

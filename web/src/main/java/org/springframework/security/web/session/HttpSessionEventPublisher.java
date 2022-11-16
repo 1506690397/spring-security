@@ -45,7 +45,7 @@ import org.springframework.security.web.context.support.SecurityWebApplicationCo
  * {@link HttpSessionDestroyedEvent}.
  *
  * @author Ray Krueger
- */
+ */ //用于监听会话创建和销毁等
 public class HttpSessionEventPublisher implements HttpSessionListener, HttpSessionIdListener {
 
 	private static final String LOGGER_NAME = HttpSessionEventPublisher.class.getName();

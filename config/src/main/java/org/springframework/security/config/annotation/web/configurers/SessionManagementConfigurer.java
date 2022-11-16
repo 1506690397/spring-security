@@ -359,15 +359,15 @@ public final class SessionManagementConfigurer<H extends HttpSecurityBuilder<H>>
 
 	@Override
 	public void init(H http) {
-		SecurityContextRepository securityContextRepository = http.getSharedObject(SecurityContextRepository.class);
+		SecurityContextRepository securityContextRepository = http.getSharedObject(SecurityContextRepository.class); //先从Security中获取SecurityRepository实例
 		boolean stateless = isStateless();
-		if (securityContextRepository == null) {
-			if (stateless) {
+		if (securityContextRepository == null) { //如果没有获取到securityContextRepository则进行创建
+			if (stateless) { //如果SpringSecurity中的HttpSession创建策略是STATELESS 则使用NullSecurityContextRepository进行保存SecurityContext（相当于不保存）
 				http.setSharedObject(SecurityContextRepository.class, new RequestAttributeSecurityContextRepository());
 				this.sessionManagementSecurityContextRepository = new NullSecurityContextRepository();
 			}
-			else {
-				HttpSessionSecurityContextRepository httpSecurityRepository = new HttpSessionSecurityContextRepository();
+			else { //如果HttpSession创建策略不是STATELESS
+				HttpSessionSecurityContextRepository httpSecurityRepository = new HttpSessionSecurityContextRepository();//构建HttpSessionSecurityContextRepository对象
 				httpSecurityRepository.setDisableUrlRewriting(!this.enableSessionUrlRewriting);
 				httpSecurityRepository.setAllowSessionCreation(isAllowSessionCreation());
 				AuthenticationTrustResolver trustResolver = http.getSharedObject(AuthenticationTrustResolver.class);
@@ -377,30 +377,30 @@ public final class SessionManagementConfigurer<H extends HttpSecurityBuilder<H>>
 				this.sessionManagementSecurityContextRepository = httpSecurityRepository;
 				DelegatingSecurityContextRepository defaultRepository = new DelegatingSecurityContextRepository(
 						httpSecurityRepository, new RequestAttributeSecurityContextRepository());
-				http.setSharedObject(SecurityContextRepository.class, defaultRepository);
+				http.setSharedObject(SecurityContextRepository.class, defaultRepository); //存入HttpSession共享对象以备用
 			}
 		}
 		RequestCache requestCache = http.getSharedObject(RequestCache.class);
 		if (requestCache == null) {
 			if (stateless) {
-				http.setSharedObject(RequestCache.class, new NullRequestCache());
+				http.setSharedObject(RequestCache.class, new NullRequestCache());// 如果HttpSession创建策略是STATELESS 则请求缓存中的对象用NullRequestCache进行替换
 			}
 		}
-		http.setSharedObject(SessionAuthenticationStrategy.class, getSessionAuthenticationStrategy(http));
+		http.setSharedObject(SessionAuthenticationStrategy.class, getSessionAuthenticationStrategy(http));  //
 		http.setSharedObject(InvalidSessionStrategy.class, getInvalidSessionStrategy());
 	}
 
 	@Override
 	public void configure(H http) {
-		SessionManagementFilter sessionManagementFilter = createSessionManagementFilter(http);
+		SessionManagementFilter sessionManagementFilter = createSessionManagementFilter(http); //创建一个SessionManagementFilter
 		if (sessionManagementFilter != null) {
-			http.addFilter(sessionManagementFilter);
+			http.addFilter(sessionManagementFilter); //添加到过滤器链中
 		}
-		if (isConcurrentSessionControlEnabled()) {
-			ConcurrentSessionFilter concurrentSessionFilter = createConcurrencyFilter(http);
+		if (isConcurrentSessionControlEnabled()) { //只要调用了.maximumSessions()方法就算开启了会话并发控制
+			ConcurrentSessionFilter concurrentSessionFilter = createConcurrencyFilter(http);//创建一个concurrentSessionFilter
 
 			concurrentSessionFilter = postProcess(concurrentSessionFilter);
-			http.addFilter(concurrentSessionFilter);
+			http.addFilter(concurrentSessionFilter);//将concurrentSessionFilter添加到过滤器链中
 		}
 		if (!this.enableSessionUrlRewriting) {
 			http.addFilter(new DisableEncodeUrlFilter());
@@ -434,7 +434,7 @@ public final class SessionManagementConfigurer<H extends HttpSecurityBuilder<H>>
 		}
 		SecurityContextRepository securityContextRepository = this.sessionManagementSecurityContextRepository;
 		SessionManagementFilter sessionManagementFilter = new SessionManagementFilter(securityContextRepository,
-				getSessionAuthenticationStrategy(http));
+				getSessionAuthenticationStrategy(http)); //通过getSessionAuthenticationStrategy方法获取SessionAuthenticationStrategy传入到sessionManagementFilter当中
 		if (this.sessionAuthenticationErrorUrl != null) {
 			sessionManagementFilter.setAuthenticationFailureHandler(
 					new SimpleUrlAuthenticationFailureHandler(this.sessionAuthenticationErrorUrl));
@@ -558,7 +558,7 @@ public final class SessionManagementConfigurer<H extends HttpSecurityBuilder<H>>
 		if (this.providedSessionAuthenticationStrategy == null) {
 			// If the user did not provide a SessionAuthenticationStrategy
 			// then default to sessionFixationAuthenticationStrategy
-			defaultSessionAuthenticationStrategy = postProcess(this.sessionFixationAuthenticationStrategy);
+			defaultSessionAuthenticationStrategy = postProcess(this.sessionFixationAuthenticationStrategy); //创建ChangeSessionIdAuthenticationStrategy对象
 		}
 		else {
 			defaultSessionAuthenticationStrategy = this.providedSessionAuthenticationStrategy;
@@ -566,12 +566,12 @@ public final class SessionManagementConfigurer<H extends HttpSecurityBuilder<H>>
 		if (isConcurrentSessionControlEnabled()) {
 			SessionRegistry sessionRegistry = getSessionRegistry(http);
 			ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlStrategy = new ConcurrentSessionControlAuthenticationStrategy(
-					sessionRegistry);
+					sessionRegistry); //创建ConcurrentSessionControlAuthenticationStrategy对象
 			concurrentSessionControlStrategy.setMaximumSessions(this.maximumSessions);
 			concurrentSessionControlStrategy.setExceptionIfMaximumExceeded(this.maxSessionsPreventsLogin);
 			concurrentSessionControlStrategy = postProcess(concurrentSessionControlStrategy);
 			RegisterSessionAuthenticationStrategy registerSessionStrategy = new RegisterSessionAuthenticationStrategy(
-					sessionRegistry);
+					sessionRegistry);//创建RegisterSessionAuthenticationStrategy对象
 			registerSessionStrategy = postProcess(registerSessionStrategy);
 
 			delegateStrategies.addAll(Arrays.asList(concurrentSessionControlStrategy,
@@ -582,7 +582,7 @@ public final class SessionManagementConfigurer<H extends HttpSecurityBuilder<H>>
 		}
 		this.sessionAuthenticationStrategy = postProcess(
 				new CompositeSessionAuthenticationStrategy(delegateStrategies));
-		return this.sessionAuthenticationStrategy;
+		return this.sessionAuthenticationStrategy; //返回的是CompositeSessionAuthenticationStrategy类（由这个类进行代理）
 	}
 
 	private SessionRegistry getSessionRegistry(H http) {

@@ -50,11 +50,11 @@ import org.springframework.util.Assert;
 public class SessionRegistryImpl implements SessionRegistry, ApplicationListener<AbstractSessionEvent> {
 
 	protected final Log logger = LogFactory.getLog(SessionRegistryImpl.class);
-
-	// <principal:Object,SessionIdSet>
+	//注：需要重写user类的equals和hashcode方法否则会话并发管理会失效
+	// <principal:Object,SessionIdSet> //保存用户和sessionId之间的关系 key：用户  value：sessionId的集合
 	private final ConcurrentMap<Object, Set<String>> principals;
 
-	// <sessionId:Object,SessionInformation>
+	// <sessionId:Object,SessionInformation> //保存sessionId和sessionInformation之间的映射关系
 	private final Map<String, SessionInformation> sessionIds;
 
 	public SessionRegistryImpl() {
@@ -68,12 +68,12 @@ public class SessionRegistryImpl implements SessionRegistry, ApplicationListener
 		this.sessionIds = sessionIds;
 	}
 
-	@Override
+	@Override //返回所有的登录用户对象
 	public List<Object> getAllPrincipals() {
 		return new ArrayList<>(this.principals.keySet());
 	}
 
-	@Override
+	@Override //返回某个用户对应的所有SessionInformation  principal：用户对象  includeExpiredSessions：是否包含已经过期的session
 	public List<SessionInformation> getAllSessions(Object principal, boolean includeExpiredSessions) {
 		Set<String> sessionsUsedByPrincipal = this.principals.get(principal);
 		if (sessionsUsedByPrincipal == null) {
@@ -92,13 +92,13 @@ public class SessionRegistryImpl implements SessionRegistry, ApplicationListener
 		return list;
 	}
 
-	@Override
+	@Override //根据sessionId从sessionIds集合中获取对应的Sessioninformation
 	public SessionInformation getSessionInformation(String sessionId) {
 		Assert.hasText(sessionId, "SessionId required as per interface contract");
 		return this.sessionIds.get(sessionId);
 	}
 
-	@Override
+	@Override //接收session销毁和改变的事件从而管理HttpSession记录
 	public void onApplicationEvent(AbstractSessionEvent event) {
 		if (event instanceof SessionDestroyedEvent) {
 			SessionDestroyedEvent sessionDestroyedEvent = (SessionDestroyedEvent) event;
@@ -116,7 +116,7 @@ public class SessionRegistryImpl implements SessionRegistry, ApplicationListener
 		}
 	}
 
-	@Override
+	@Override //根据sessionId刷新session最后一次请求的时间
 	public void refreshLastRequest(String sessionId) {
 		Assert.hasText(sessionId, "SessionId required as per interface contract");
 		SessionInformation info = getSessionInformation(sessionId);
@@ -125,42 +125,42 @@ public class SessionRegistryImpl implements SessionRegistry, ApplicationListener
 		}
 	}
 
-	@Override
+	@Override //保存会话操作
 	public void registerNewSession(String sessionId, Object principal) {
 		Assert.hasText(sessionId, "SessionId required as per interface contract");
 		Assert.notNull(principal, "Principal required as per interface contract");
-		if (getSessionInformation(sessionId) != null) {
+		if (getSessionInformation(sessionId) != null) { //如果sessionId已经存在则先将其移除
 			removeSessionInformation(sessionId);
 		}
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug(LogMessage.format("Registering session %s, for principal %s", sessionId, principal));
-		}
+		} //往sessionIds中添加一个新的sessionInformation
 		this.sessionIds.put(sessionId, new SessionInformation(principal, sessionId, new Date()));
 		this.principals.compute(principal, (key, sessionsUsedByPrincipal) -> {
-			if (sessionsUsedByPrincipal == null) {
+			if (sessionsUsedByPrincipal == null) { //如果principals中不包含sessionsUsedByPrincipal则新建一个集合
 				sessionsUsedByPrincipal = new CopyOnWriteArraySet<>();
 			}
-			sessionsUsedByPrincipal.add(sessionId);
+			sessionsUsedByPrincipal.add(sessionId);//将sessionId加入sessionsUsedByPrincipal中
 			this.logger.trace(LogMessage.format("Sessions used by '%s' : %s", principal, sessionsUsedByPrincipal));
 			return sessionsUsedByPrincipal;
 		});
 	}
 
-	@Override
+	@Override //移除sessionInformation
 	public void removeSessionInformation(String sessionId) {
 		Assert.hasText(sessionId, "SessionId required as per interface contract");
-		SessionInformation info = getSessionInformation(sessionId);
+		SessionInformation info = getSessionInformation(sessionId); //获取sessionInformation信息
 		if (info == null) {
 			return;
 		}
 		if (this.logger.isTraceEnabled()) {
 			this.logger.debug("Removing session " + sessionId + " from set of registered sessions");
 		}
-		this.sessionIds.remove(sessionId);
+		this.sessionIds.remove(sessionId); //先移除session信息
 		this.principals.computeIfPresent(info.getPrincipal(), (key, sessionsUsedByPrincipal) -> {
 			this.logger.debug(
 					LogMessage.format("Removing session %s from principal's set of registered sessions", sessionId));
-			sessionsUsedByPrincipal.remove(sessionId);
+			sessionsUsedByPrincipal.remove(sessionId); //移除一个用户中目前会话所对应的sessionId
 			if (sessionsUsedByPrincipal.isEmpty()) {
 				// No need to keep object in principals Map anymore
 				this.logger.debug(LogMessage.format("Removing principal %s from registry", info.getPrincipal()));

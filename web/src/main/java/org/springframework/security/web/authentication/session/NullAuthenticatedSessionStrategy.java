@@ -24,7 +24,7 @@ import org.springframework.security.core.Authentication;
 /**
  * @author Luke Taylor
  * @since 3.0
- */
+ *///空实现   未做任何处理
 public final class NullAuthenticatedSessionStrategy implements SessionAuthenticationStrategy {
 
 	@Override

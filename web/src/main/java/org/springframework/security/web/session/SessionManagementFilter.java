@@ -49,7 +49,7 @@ import org.springframework.web.filter.GenericFilterBean;
  * @author Martin Algesten
  * @author Luke Taylor
  * @since 2.0
- */
+ */ //主要用来处理RememberMe登录时的会话管理
 public class SessionManagementFilter extends GenericFilterBean {
 
 	static final String FILTER_APPLIED = "__spring_security_session_mgmt_filter_applied";
@@ -90,14 +90,14 @@ public class SessionManagementFilter extends GenericFilterBean {
 		if (request.getAttribute(FILTER_APPLIED) != null) {
 			chain.doFilter(request, response);
 			return;
-		}//根据securityContextHolder的当前内容检查securityContextRepository的内容，以确定用户是否已通过身份验证  如果包含context则不会做任何处理
+		}
 		request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
-		if (!this.securityContextRepository.containsContext(request)) {
-			Authentication authentication = this.securityContextHolderStrategy.getContext().getAuthentication();//如果包含一个非匿名的Authentication对象则调用配置的SessionAuthenticationStrategy
+		if (!this.securityContextRepository.containsContext(request)) { //查看当前会话中是否存在SPRING_SECURITY_CONTEXT变量  正常认证流程是存在的    如果是RememberMe和匿名访问则不存在
+			Authentication authentication = this.securityContextHolderStrategy.getContext().getAuthentication();//如果是RememberMe则获取到一个RememberMeAuthenticationToken   如果是匿名登录则获取到一个AnonymousAuthenticationToken
 			if (authentication != null && !this.trustResolver.isAnonymous(authentication)) {
 				// The user has been authenticated during the current request, so call the
 				// session strategy
-				try { //调用session策略进行认证
+				try { //调用sessionAuthenticationStrategy进行会话管理
 					this.sessionAuthenticationStrategy.onAuthentication(authentication, request, response);
 				}
 				catch (SessionAuthenticationException ex) {
@@ -115,12 +115,12 @@ public class SessionManagementFilter extends GenericFilterBean {
 			}
 			else {
 				// No security context or authentication present. Check for a session
-				// timeout 当前未被认证检查session是否过期
+				// timeout 如果是匿名登录的方式则直接进行失效处理
 				if (request.getRequestedSessionId() != null && !request.isRequestedSessionIdValid()) {
 					if (this.logger.isDebugEnabled()) {
 						this.logger.debug(LogMessage.format("Request requested invalid session id %s",
 								request.getRequestedSessionId()));
-					}//如果设置了invalidSessionStrategy则进行调用
+					}
 					if (this.invalidSessionStrategy != null) {
 						this.invalidSessionStrategy.onInvalidSessionDetected(request, response);
 						return;

@@ -22,7 +22,7 @@ import java.util.List;
  * Maintains a registry of <code>SessionInformation</code> instances.
  *
  * @author Ben Alex
- */
+ */ //主要用于维护sessionInformation实例
 public interface SessionRegistry {
 
 	/**

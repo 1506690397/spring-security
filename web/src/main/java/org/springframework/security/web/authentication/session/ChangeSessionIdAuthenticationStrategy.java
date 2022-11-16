@@ -25,7 +25,7 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author Rob Winch
  * @since 3.2
- */
+ */ //通过修改sessionId来防止会话固定攻击
 public final class ChangeSessionIdAuthenticationStrategy extends AbstractSessionFixationProtectionStrategy {
 
 	@Override

@@ -30,7 +30,7 @@ import org.springframework.security.core.Authentication;
  *
  * @author Luke Taylor
  * @since
- */
+ *///对httpSession进行处理操作
 public interface SessionAuthenticationStrategy {
 
 	/**

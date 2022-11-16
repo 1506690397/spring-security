@@ -56,7 +56,7 @@ import org.springframework.core.log.LogMessage;
  *
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //通过创建一个新的新的会话来防止会话固定攻击
 public class SessionFixationProtectionStrategy extends AbstractSessionFixationProtectionStrategy {
 
 	/**

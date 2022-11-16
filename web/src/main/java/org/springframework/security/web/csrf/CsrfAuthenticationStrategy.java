@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
  *
  * @author Rob Winch
  * @since 3.2
- */
+ */ //和CSRF攻击有关，该类主要负责在身份验证后删除旧的CsrfToken并生成一个新的CsrfToken
 public final class CsrfAuthenticationStrategy implements SessionAuthenticationStrategy {
 
 	private final Log logger = LogFactory.getLog(getClass());

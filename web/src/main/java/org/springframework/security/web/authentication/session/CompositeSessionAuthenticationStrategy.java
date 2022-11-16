@@ -53,7 +53,7 @@ import org.springframework.util.Assert;
  *
  * @author Rob Winch
  * @since 3.2
- */
+ */ //这个类保存了许多SessionAuthenticationStrategy对象 相当于代理了多个SessionAuthenticationStrategy
 public class CompositeSessionAuthenticationStrategy implements SessionAuthenticationStrategy {
 
 	private final Log logger = LogFactory.getLog(getClass());
@@ -73,7 +73,7 @@ public class CompositeSessionAuthenticationStrategy implements SessionAuthentica
 			HttpServletResponse response) throws SessionAuthenticationException {
 		int currentPosition = 0;
 		int size = this.delegateStrategies.size();
-		for (SessionAuthenticationStrategy delegate : this.delegateStrategies) {
+		for (SessionAuthenticationStrategy delegate : this.delegateStrategies) { //分别调用集合中的SessionAuthenticationStrategy的onAuthentication
 			if (this.logger.isTraceEnabled()) {
 				this.logger.trace(LogMessage.format("Preparing session with %s (%d/%d)",
 						delegate.getClass().getSimpleName(), ++currentPosition, size));

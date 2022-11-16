@@ -43,7 +43,7 @@ import org.springframework.util.Assert;
  * @author Rob Winch
  * @since 3.2
  * @see CompositeSessionAuthenticationStrategy
- */
+ */ //主要用于认证成功后将HttpSession信息记录到SessionRegistry中
 public class RegisterSessionAuthenticationStrategy implements SessionAuthenticationStrategy {
 
 	private final SessionRegistry sessionRegistry;
@@ -63,7 +63,7 @@ public class RegisterSessionAuthenticationStrategy implements SessionAuthenticat
 	 */
 	@Override
 	public void onAuthentication(Authentication authentication, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response) { //想sessionRegistry中添加一天登录会话信息
 		this.sessionRegistry.registerNewSession(request.getSession().getId(), authentication.getPrincipal());
 	}
 
