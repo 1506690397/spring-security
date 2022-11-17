@@ -64,7 +64,7 @@ public interface Authentication extends Principal, Serializable {
 	 * @return the authorities granted to the principal, or an empty collection if the
 	 * token has not been authenticated. Never null.
 	 */
-	Collection<? extends GrantedAuthority> getAuthorities();
+	Collection<? extends GrantedAuthority> getAuthorities(); //获取用户权限
 
 	/**
 	 * The credentials that prove the principal is correct. This is usually a password,
@@ -72,7 +72,7 @@ public interface Authentication extends Principal, Serializable {
 	 * are expected to populate the credentials.
 	 * @return the credentials that prove the identity of the <code>Principal</code>
 	 */
-	Object getCredentials();
+	Object getCredentials(); //获取用户凭证
 
 	/**
 	 * Stores additional details about the authentication request. These might be an IP
@@ -80,7 +80,7 @@ public interface Authentication extends Principal, Serializable {
 	 * @return additional details about the authentication request, or <code>null</code>
 	 * if not used
 	 */
-	Object getDetails();
+	Object getDetails(); //用来获取用户携带的详细信息
 
 	/**
 	 * The identity of the principal being authenticated. In the case of an authentication
@@ -94,7 +94,7 @@ public interface Authentication extends Principal, Serializable {
 	 * @return the <code>Principal</code> being authenticated or the authenticated
 	 * principal after authentication.
 	 */
-	Object getPrincipal();
+	Object getPrincipal(); //获取当前用户
 
 	/**
 	 * Used to indicate to {@code AbstractSecurityInterceptor} whether it should present
@@ -114,7 +114,7 @@ public interface Authentication extends Principal, Serializable {
 	 * <code>AbstractSecurityInterceptor</code> does not need to present the token to the
 	 * <code>AuthenticationManager</code> again for re-authentication.
 	 */
-	boolean isAuthenticated();
+	boolean isAuthenticated(); //用户是否认证成功
 
 	/**
 	 * See {@link #isAuthenticated()} for a full description.

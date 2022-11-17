@@ -232,7 +232,7 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 			if (authenticationResult == null) {
 				// return immediately as subclass has indicated that it hasn't completed
 				return;
-			} //session进行处理（不同策略处理不同）
+			} //触发session并发管理
 			this.sessionStrategy.onAuthentication(authenticationResult, request, response);
 			// Authentication success
 			if (this.continueChainBeforeSuccessfulAuthentication) {

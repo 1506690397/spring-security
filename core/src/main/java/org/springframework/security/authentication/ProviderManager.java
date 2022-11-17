@@ -86,7 +86,7 @@ import org.springframework.util.CollectionUtils;
  * @author Ben Alex
  * @author Luke Taylor
  * @see DefaultAuthenticationEventPublisher
- */
+ */ //管理众多的AuthenticationProvider
 public class ProviderManager implements AuthenticationManager, MessageSourceAware, InitializingBean {
 
 	private static final Log logger = LogFactory.getLog(ProviderManager.class);
@@ -97,7 +97,7 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
-	private AuthenticationManager parent;
+	private AuthenticationManager parent; //相当于一个备用认证方式  所有AuthenticationProvider都无法处理认证问题时由parent收拾残局
 
 	private boolean eraseCredentialsAfterAuthentication = true;
 

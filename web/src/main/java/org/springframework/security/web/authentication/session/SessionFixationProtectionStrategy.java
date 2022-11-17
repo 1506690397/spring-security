@@ -81,7 +81,7 @@ public class SessionFixationProtectionStrategy extends AbstractSessionFixationPr
 	}
 
 	@Override
-	final HttpSession applySessionFixation(HttpServletRequest request) { //创建一个新的session并将原有session的信息放进去  再将原有的session无效化
+	final HttpSession applySessionFixation(HttpServletRequest request) { //创建一个新的session并将原有session的信息放进去  再将原有的session无效化 //根据策略的不同行为也不太   如果使用的是newSession策略则不会拷贝
 		HttpSession session = request.getSession();
 		String originalSessionId = session.getId();
 		this.logger.debug(LogMessage.of(() -> "Invalidating session with Id '" + originalSessionId + "' "

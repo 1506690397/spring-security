@@ -35,7 +35,7 @@ import org.springframework.security.access.intercept.RunAsManager;
  * target.
  *
  * @author Ben Alex
- */
+ */ //用户请求一个资源所需要的角色会被封装成一个ConfigAttribute对象
 public interface ConfigAttribute extends Serializable {
 
 	/**
@@ -54,6 +54,6 @@ public interface ConfigAttribute extends Serializable {
 	 * the configuration attribute cannot be expressed as a <code>String</code> with
 	 * sufficient precision).
 	 */
-	String getAttribute();
+	String getAttribute(); //返回角色名称
 
 }

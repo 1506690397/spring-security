@@ -284,7 +284,7 @@ public abstract class AbstractAuthenticationFilterConfigurer<B extends HttpSecur
 		}
 		SessionAuthenticationStrategy sessionAuthenticationStrategy = http
 				.getSharedObject(SessionAuthenticationStrategy.class);
-		if (sessionAuthenticationStrategy != null) {
+		if (sessionAuthenticationStrategy != null) { //配置sessionAuthenticationStrategy对象
 			this.authFilter.setSessionAuthenticationStrategy(sessionAuthenticationStrategy);
 		}
 		RememberMeServices rememberMeServices = http.getSharedObject(RememberMeServices.class);

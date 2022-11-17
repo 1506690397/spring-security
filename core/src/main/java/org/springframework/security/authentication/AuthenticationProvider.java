@@ -59,7 +59,7 @@ public interface AuthenticationProvider {
 	 * @param authentication
 	 * @return <code>true</code> if the implementation can more closely evaluate the
 	 * <code>Authentication</code> class presented
-	 */
+	 */ //用来判断当前AuthenticationProvider是否支持对应的Authentication  由AuthenticationManager统一管理
 	boolean supports(Class<?> authentication);
 
 }

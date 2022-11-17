@@ -30,7 +30,7 @@ import org.springframework.security.core.Authentication;
  *
  * @author Ben Alex
  * @deprecated Use {@link AuthorizationManager} instead
- */
+ */ //投票器   检查用户是否具有应有的角色从而进行投票或弃权票
 @Deprecated
 public interface AccessDecisionVoter<S> {
 

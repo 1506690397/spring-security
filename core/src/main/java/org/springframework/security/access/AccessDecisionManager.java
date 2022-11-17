@@ -27,7 +27,7 @@ import org.springframework.security.core.Authentication;
  *
  * @author Ben Alex
  * @deprecated Use {@link AuthorizationManager} instead
- */
+ */ //决策期  决定此次访问是否被允许  会对voter进行挨个遍历  从而进行判断
 @Deprecated
 public interface AccessDecisionManager {
 
