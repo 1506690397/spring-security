@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  *
  * @author Luke Taylor
  * @since 2.0
- */
+ */ //在UserDetailsService基础上继续定义了添加用户、更新用户、删除用户、修改密码和判断用户是否存在的接口
 public interface UserDetailsManager extends UserDetailsService {
 
 	/**

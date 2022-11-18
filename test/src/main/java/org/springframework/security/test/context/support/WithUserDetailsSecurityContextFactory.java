@@ -97,7 +97,7 @@ final class WithUserDetailsSecurityContextFactory implements WithSecurityContext
 			return null;
 		}
 	}
-
+	//是webflux-web-security模块定义的UserDetailsService实现
 	private final class ReactiveUserDetailsServiceAdapter implements UserDetailsService {
 
 		private final ReactiveUserDetailsService userDetailsService;

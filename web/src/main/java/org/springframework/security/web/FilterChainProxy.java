@@ -140,7 +140,7 @@ import org.springframework.web.filter.GenericFilterBean;
  * @author Ben Alex
  * @author Luke Taylor
  * @author Rob Winch
- */
+ */ //对过滤器进行统一管理  通过DelegatingFilterProxy整合到元素过滤器链中
 public class FilterChainProxy extends GenericFilterBean {
 
 	private static final Log logger = LogFactory.getLog(FilterChainProxy.class);

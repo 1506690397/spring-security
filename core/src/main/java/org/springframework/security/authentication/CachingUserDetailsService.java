@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
 /**
  * @author Luke Taylor
  * @since 2.0
- */
+ */ //会将UserDetailsService缓存起来
 public class CachingUserDetailsService implements UserDetailsService {
 
 	private UserCache userCache = new NullUserCache();

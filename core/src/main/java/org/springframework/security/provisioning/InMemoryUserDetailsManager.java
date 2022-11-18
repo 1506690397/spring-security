@@ -49,7 +49,7 @@ import org.springframework.util.Assert;
  *
  * @author Luke Taylor
  * @since 3.1
- */ //内存中的用户管理器
+ */ //实现了内存中用户增删改查的方法
 public class InMemoryUserDetailsManager implements UserDetailsManager, UserDetailsPasswordService {
 
 	protected final Log logger = LogFactory.getLog(getClass());

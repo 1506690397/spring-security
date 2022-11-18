@@ -49,7 +49,7 @@ import org.springframework.util.StringUtils;
  * @author Ben Alex
  * @author Rob Winch
  *
- */
+ */ //保存用户数据
 public class SecurityContextHolder {
 
 	public static final String MODE_THREADLOCAL = "MODE_THREADLOCAL";

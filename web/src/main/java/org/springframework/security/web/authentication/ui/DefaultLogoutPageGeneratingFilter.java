@@ -37,7 +37,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  *
  * @author Rob Winch
  * @since 5.1
- */
+ */ //生成默认注销页面的过滤器
 public class DefaultLogoutPageGeneratingFilter extends OncePerRequestFilter {
 
 	private RequestMatcher matcher = new AntPathRequestMatcher("/logout", "GET");
@@ -47,7 +47,7 @@ public class DefaultLogoutPageGeneratingFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		if (this.matcher.matches(request)) {
+		if (this.matcher.matches(request)) { //判断是否是注销请求  如果是注销请求则进行页面的渲染
 			renderLogout(request, response);
 		}
 		else {

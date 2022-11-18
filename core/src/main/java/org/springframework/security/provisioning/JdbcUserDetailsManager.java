@@ -62,7 +62,7 @@ import org.springframework.util.Assert;
  *
  * @author Luke Taylor
  * @since 2.0
- */
+ */ //可以通过此类进行对数据库中的用户进行增删改查   但有一定局限性（sql都是提前默认写好的）
 public class JdbcUserDetailsManager extends JdbcDaoImpl implements UserDetailsManager, GroupManager {
 
 	public static final String DEF_CREATE_USER_SQL = "insert into users (username, password, enabled) values (?,?,?)";

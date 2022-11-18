@@ -47,7 +47,7 @@ import org.springframework.web.util.HtmlUtils;
  *
  * @author Luke Taylor
  * @since 2.0
- */
+ */ //用来生成默认登录页面的过滤器
 public class DefaultLoginPageGeneratingFilter extends GenericFilterBean {
 
 	public static final String DEFAULT_LOGIN_PAGE_URL = "/login";
@@ -178,7 +178,7 @@ public class DefaultLoginPageGeneratingFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 		boolean loginError = isErrorPage(request);
 		boolean logoutSuccess = isLogoutSuccess(request);
-		if (isLoginUrlRequest(request) || loginError || logoutSuccess) {
+		if (isLoginUrlRequest(request) || loginError || logoutSuccess) { //校验是否是登录请求  登录出错请求和注销成功请求  如果是则进行页面的渲染
 			String loginPageHtml = generateLoginPageHtml(request, loginError, logoutSuccess);
 			response.setContentType("text/html;charset=UTF-8");
 			response.setContentLength(loginPageHtml.getBytes(StandardCharsets.UTF_8).length);
