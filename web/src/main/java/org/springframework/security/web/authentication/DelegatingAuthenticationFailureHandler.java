@@ -36,7 +36,7 @@ import org.springframework.util.Assert;
  *
  * @author Kazuki Shimizu
  * @since 4.0
- */
+ */ //可以配置不同异常类型配置不同失败的异常处理
 public class DelegatingAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
 	private final LinkedHashMap<Class<? extends AuthenticationException>, AuthenticationFailureHandler> handlers;

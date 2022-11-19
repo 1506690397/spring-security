@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
  *
  * @author Sergey Bespalov
  * @since 5.2.0
- */
+ */ //可以通过AuthenticationEntryPoint来处理登录异常
 public class AuthenticationEntryPointFailureHandler implements AuthenticationFailureHandler {
 
 	private boolean rethrowAuthenticationServiceException = true;

@@ -29,7 +29,7 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
  * user was logged into
  *
  * @author Ray Krueger
- */
+ */ //JAAS认证时封装的用户对象
 public class JaasAuthenticationToken extends UsernamePasswordAuthenticationToken {
 
 	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;

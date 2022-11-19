@@ -61,8 +61,8 @@ import org.springframework.util.StringUtils;
  * </ul>
  *
  * @author Luke Taylor
- * @since 3.0
- */
+ * @since 3.0 //注：用户可以自定义实现SavedRequestAwareAuthenticationSuccessHandler并且可以在配置时指定targetUrlParameter
+ */ //在SimpleUrlAuthenticationSuccessHandler基础上增加了请求缓存功能，可以记录之前请求的地址，进而在登录成功后重定向到一开始访问的地址
 public class SavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 	protected final Log logger = LogFactory.getLog(this.getClass());
@@ -72,21 +72,21 @@ public class SavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAuth
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws ServletException, IOException {
-		SavedRequest savedRequest = this.requestCache.getRequest(request, response);
-		if (savedRequest == null) {
+		SavedRequest savedRequest = this.requestCache.getRequest(request, response); //在requestCache中获取缓存下来的请求
+		if (savedRequest == null) { //如果没有则说明用户访问登录页面钱并没有访问其他页面，此时直接调用父类的onAuthenticationSuccess方法进行处理
 			super.onAuthenticationSuccess(request, response, authentication);
 			return;
 		}
-		String targetUrlParameter = getTargetUrlParameter();
+		String targetUrlParameter = getTargetUrlParameter(); //希望登录成功后重定向的地址例如：localhost:8080/doLogin?target=/hello表示用户登录成功后希望自动重定向到/hello接口
 		if (isAlwaysUseDefaultTargetUrl()
 				|| (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
-			this.requestCache.removeRequest(request, response);
-			super.onAuthenticationSuccess(request, response, authentication);
+			this.requestCache.removeRequest(request, response); //如果targetUrlParameter存在或者alwaysUseDefaultTargetUrl为true则缓存的请求就没有意义了
+			super.onAuthenticationSuccess(request, response, authentication); //调用父类方法进行重定向
 			return;
 		}
 		clearAuthenticationAttributes(request);
 		// Use the DefaultSavedRequest URL
-		String targetUrl = savedRequest.getRedirectUrl();
+		String targetUrl = savedRequest.getRedirectUrl(); //如果上面的条件都不满足则直接从缓存中获取重定向地址进行重定向
 		getRedirectStrategy().sendRedirect(request, response, targetUrl);//发送重定向  这里的targetUrl是在访问拒绝后保存的url
 	}
 

@@ -220,7 +220,7 @@ public final class FormLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
 	 * Forward Authentication Success Handler
 	 * @param forwardUrl the target URL in case of success
 	 * @return the {@link FormLoginConfigurer} for additional customization
-	 */
+	 */ //不考虑用户之前的访问地址，只要用户登录成功就跳转到successForwardUrl所指定的页面（转发）
 	public FormLoginConfigurer<H> successForwardUrl(String forwardUrl) {
 		successHandler(new ForwardAuthenticationSuccessHandler(forwardUrl));
 		return this;

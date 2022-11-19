@@ -28,7 +28,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
  * The corresponding authentication provider is {@link TestingAuthenticationProvider}.
  *
  * @author Ben Alex
- */
+ */ //单元测试时封装的用户对象
 public class TestingAuthenticationToken extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = 1L;

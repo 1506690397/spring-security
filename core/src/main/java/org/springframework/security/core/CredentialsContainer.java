@@ -28,7 +28,7 @@ package org.springframework.security.core;
  *
  * @author Luke Taylor
  * @since 3.0.3
- */
+ */ //擦除登录凭证（密码）
 public interface CredentialsContainer {
 
 	void eraseCredentials();

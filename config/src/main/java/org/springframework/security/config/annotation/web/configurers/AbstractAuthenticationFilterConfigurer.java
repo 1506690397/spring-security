@@ -111,7 +111,7 @@ public abstract class AbstractAuthenticationFilterConfigurer<B extends HttpSecur
 	 * calling {@link #defaultSuccessUrl(String, boolean)}.
 	 * @param defaultSuccessUrl the default success url
 	 * @return the {@link FormLoginConfigurer} for additional customization
-	 */
+	 *///表示用户登录成功后会自动重定向到登录之前的地址上 如果用户本身直接访问的登录页面那么直接重定向到defaultSuccessUrl指定的页面
 	public final T defaultSuccessUrl(String defaultSuccessUrl) {
 		return defaultSuccessUrl(defaultSuccessUrl, false);
 	}
@@ -125,7 +125,7 @@ public abstract class AbstractAuthenticationFilterConfigurer<B extends HttpSecur
 	 * @param alwaysUse true if the {@code defaultSuccesUrl} should be used after
 	 * authentication despite if a protected page had been previously visited
 	 * @return the {@link FormLoginConfigurer} for additional customization
-	 */
+	 */ //如果第二个参数为true则通过重定向的方式跳转到defaultSuccessUrl所指定的地址（不考虑用户之前请求地址）
 	public final T defaultSuccessUrl(String defaultSuccessUrl, boolean alwaysUse) {
 		SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
 		handler.setDefaultTargetUrl(defaultSuccessUrl);

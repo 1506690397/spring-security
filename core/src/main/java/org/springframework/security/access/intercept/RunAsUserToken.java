@@ -31,7 +31,7 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
  * @deprecated Authentication is now separated from authorization in Spring Security. This
  * class is only used by now-deprecated components. There is not yet an equivalent
  * replacement in Spring Security.
- */
+ */ //替换验证身份时的用户对象
 @Deprecated
 public class RunAsUserToken extends AbstractAuthenticationToken {
 

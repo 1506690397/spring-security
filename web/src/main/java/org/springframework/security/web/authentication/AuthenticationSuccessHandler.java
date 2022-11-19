@@ -37,7 +37,7 @@ import org.springframework.security.core.Authentication;
  *
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //处理登录成功事项  前后端分离项目可以实现该接口进行登录成功后的处理
 public interface AuthenticationSuccessHandler {
 
 	/**
@@ -49,7 +49,7 @@ public interface AuthenticationSuccessHandler {
 	 * @param authentication the <tt>Authentication</tt> object which was created during
 	 * the authentication process.
 	 * @since 5.2.0
-	 */
+	 */ //在处理特定的认证请求AuthenticationFilter中会用到
 	default void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authentication) throws IOException, ServletException {
 		onAuthenticationSuccess(request, response, authentication);
@@ -62,7 +62,7 @@ public interface AuthenticationSuccessHandler {
 	 * @param response the response
 	 * @param authentication the <tt>Authentication</tt> object which was created during
 	 * the authentication process.
-	 */
+	 */ //用来处理登录成功的具体事项
 	void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException;
 

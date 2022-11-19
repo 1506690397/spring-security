@@ -36,7 +36,7 @@ import org.springframework.util.Assert;
  *
  * @author Ben Alex
  * @author Luke Taylor
- */
+ */ //为Authentication接口中各个数据的获取提供了方法的 实现以及密码擦除方法的重写
 public abstract class AbstractAuthenticationToken implements Authentication, CredentialsContainer {
 
 	private final Collection<GrantedAuthority> authorities;

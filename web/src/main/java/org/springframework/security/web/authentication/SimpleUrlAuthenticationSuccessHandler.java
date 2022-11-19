@@ -35,7 +35,7 @@ import org.springframework.security.web.WebAttributes;
  *
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //进行重定向
 public class SimpleUrlAuthenticationSuccessHandler extends AbstractAuthenticationTargetUrlRequestHandler
 		implements AuthenticationSuccessHandler {
 
@@ -59,7 +59,7 @@ public class SimpleUrlAuthenticationSuccessHandler extends AbstractAuthenticatio
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		handle(request, response, authentication);
+		handle(request, response, authentication); //通过handle方法进行重定向
 		clearAuthenticationAttributes(request);
 	}
 

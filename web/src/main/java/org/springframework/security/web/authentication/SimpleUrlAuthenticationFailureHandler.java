@@ -45,7 +45,7 @@ import org.springframework.util.Assert;
  *
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //重定向到登录页面  可以配置forwardToDestination属性将重定向改为转发  failure方法的底层实现
 public class SimpleUrlAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -60,7 +60,7 @@ public class SimpleUrlAuthenticationFailureHandler implements AuthenticationFail
 
 	public SimpleUrlAuthenticationFailureHandler() {
 	}
-
+	//在构造时就传入了defaultFailureUrl
 	public SimpleUrlAuthenticationFailureHandler(String defaultFailureUrl) {
 		setDefaultFailureUrl(defaultFailureUrl);
 	}
@@ -75,7 +75,7 @@ public class SimpleUrlAuthenticationFailureHandler implements AuthenticationFail
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
-		if (this.defaultFailureUrl == null) {
+		if (this.defaultFailureUrl == null) { //如果发现defaultFailureUrl为空则通过response返回异常信息
 			if (this.logger.isTraceEnabled()) {
 				this.logger.trace("Sending 401 Unauthorized error since no failure URL is set");
 			}
@@ -86,11 +86,11 @@ public class SimpleUrlAuthenticationFailureHandler implements AuthenticationFail
 			return;
 		}
 		saveException(request, exception);
-		if (this.forwardToDestination) {
+		if (this.forwardToDestination) { //如果用户设置了forwardToDestination为true那么进行请求转发
 			this.logger.debug("Forwarding to " + this.defaultFailureUrl);
 			request.getRequestDispatcher(this.defaultFailureUrl).forward(request, response);
 		}
-		else { //重定向到默认的url
+		else { //否则重定向到登录页面
 			this.redirectStrategy.sendRedirect(request, response, this.defaultFailureUrl);
 		}
 	}
@@ -104,7 +104,7 @@ public class SimpleUrlAuthenticationFailureHandler implements AuthenticationFail
 	 * Otherwise the exception will not be stored.
 	 */
 	protected final void saveException(HttpServletRequest request, AuthenticationException exception) {
-		if (this.forwardToDestination) {
+		if (this.forwardToDestination) { //如果forwardToDestination为true就通过通过转发回到登录页面
 			request.setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, exception);
 			return;
 		}

@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
  * Represents an anonymous <code>Authentication</code>.
  *
  * @author Ben Alex
- */
+ */ //匿名登录时封装的用户对象
 public class AnonymousAuthenticationToken extends AbstractAuthenticationToken implements Serializable {
 
 	private static final long serialVersionUID = 1L;

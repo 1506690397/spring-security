@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
  *
  * @author Ben Alex
  * @author Norbert Nowak
- */
+ */ //表单登录时封装的用户对象
 public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;

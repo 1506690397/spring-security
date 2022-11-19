@@ -34,7 +34,7 @@ import org.springframework.security.core.Authentication;
  *
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //注销处理  前后端分离项目实现该接口进行自定义处理逻辑
 public interface LogoutSuccessHandler {
 
 	void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)

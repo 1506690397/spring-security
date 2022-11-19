@@ -49,7 +49,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * and authentication objects for you.
  *
  * @author Ben Alex
- */
+ */   //Principal  java本身提供的接口  用来描述认证主体
 public interface Authentication extends Principal, Serializable {
 
 	/**
@@ -94,7 +94,7 @@ public interface Authentication extends Principal, Serializable {
 	 * @return the <code>Principal</code> being authenticated or the authenticated
 	 * principal after authentication.
 	 */
-	Object getPrincipal(); //获取当前用户
+	Object getPrincipal(); //获取当前用户  通常就是一个UserDetails对象
 
 	/**
 	 * Used to indicate to {@code AbstractSecurityInterceptor} whether it should present

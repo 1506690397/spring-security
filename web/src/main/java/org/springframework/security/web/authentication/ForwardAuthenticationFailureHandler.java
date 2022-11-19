@@ -34,7 +34,7 @@ import org.springframework.util.Assert;
  *
  * @author Shazin Sadakath
  * @since 4.1
- */
+ */ //表示通过转发来重新回到登录页面 failureForwardUrl方法的底层实现
 public class ForwardAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
 	private final String forwardUrl;

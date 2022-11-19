@@ -33,8 +33,8 @@ import org.springframework.util.Assert;
  *
  * @author Shazin Sadakath
  * @since 4.1
- *
- */
+ * //使用.successForwardUrl来设置
+ */ //服务端跳转
 public class ForwardAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
 	private final String forwardUrl;

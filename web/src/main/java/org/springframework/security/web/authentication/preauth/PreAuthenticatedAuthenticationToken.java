@@ -28,7 +28,7 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
  *
  * @author Ruud Senden
  * @since 2.0
- */
+ */ //PreAuthentication场景下封装的用户对象
 public class PreAuthenticatedAuthenticationToken extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;

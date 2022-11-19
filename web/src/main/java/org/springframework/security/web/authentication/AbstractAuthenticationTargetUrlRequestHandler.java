@@ -109,7 +109,7 @@ public abstract class AbstractAuthenticationTargetUrlRequestHandler {
 		}
 		// Check for the parameter and use that if available
 		String targetUrl = null;
-		if (this.targetUrlParameter != null) {
+		if (this.targetUrlParameter != null) { //跳转到用户指定的url
 			targetUrl = request.getParameter(this.targetUrlParameter);
 			if (StringUtils.hasText(targetUrl)) {
 				if (this.logger.isTraceEnabled()) {
@@ -126,7 +126,7 @@ public abstract class AbstractAuthenticationTargetUrlRequestHandler {
 			}
 		}
 		if (!StringUtils.hasText(targetUrl)) {
-			targetUrl = this.defaultTargetUrl;
+			targetUrl = this.defaultTargetUrl; //是否使用默认的Url
 			if (this.logger.isTraceEnabled()) {
 				this.logger.trace(LogMessage.format("Using default url %s", targetUrl));
 			}

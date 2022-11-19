@@ -36,7 +36,7 @@ import org.springframework.security.core.AuthenticationException;
  *
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //规定失败处理的接口  前后端分离项目自定义进行实现返回json串
 public interface AuthenticationFailureHandler {
 
 	/**

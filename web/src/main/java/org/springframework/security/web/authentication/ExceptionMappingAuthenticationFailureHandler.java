@@ -40,7 +40,7 @@ import org.springframework.util.Assert;
  *
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //根据不同的异常类型映射到不同的路径
 public class ExceptionMappingAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
 	private final Map<String, String> failureUrlMap = new HashMap<>();

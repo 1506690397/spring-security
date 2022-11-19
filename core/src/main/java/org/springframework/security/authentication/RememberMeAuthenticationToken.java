@@ -29,7 +29,7 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
  *
  * @author Ben Alex
  * @author Luke Taylor
- */
+ */ //如果使用用户RememberMe的方式进行登录则用户的登录信息将会封装在此类
 public class RememberMeAuthenticationToken extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
