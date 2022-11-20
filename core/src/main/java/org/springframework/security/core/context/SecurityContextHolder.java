@@ -49,13 +49,13 @@ import org.springframework.util.StringUtils;
  * @author Ben Alex
  * @author Rob Winch
  *
- */ //保存用户数据
+ */ //保存用户数据 存储的是SecurityContext  SecurityContext中存储的是Authentication
 public class SecurityContextHolder {
-
+	//将SecurityContext存放在ThreadLocal中  默认存储策略   子线程在获取用户数据时获取不到
 	public static final String MODE_THREADLOCAL = "MODE_THREADLOCAL";
-
+	//在子线程中也可以获取到用户数据
 	public static final String MODE_INHERITABLETHREADLOCAL = "MODE_INHERITABLETHREADLOCAL";
-
+	//将数据保存在静态变量中
 	public static final String MODE_GLOBAL = "MODE_GLOBAL";
 
 	private static final String MODE_PRE_INITIALIZED = "MODE_PRE_INITIALIZED";
@@ -68,7 +68,7 @@ public class SecurityContextHolder {
 
 	private static int initializeCount = 0;
 
-	static {
+	static { //存储策略在静态代码快中进行初始化
 		initialize();
 	}
 
@@ -77,7 +77,7 @@ public class SecurityContextHolder {
 		initializeCount++;
 	}
 
-	private static void initializeStrategy() {
+	private static void initializeStrategy() { //strategyName表示目前证字啊使用的存储策略   根据strategyName进行初始化不同的存储策略
 		if (MODE_PRE_INITIALIZED.equals(strategyName)) {
 			Assert.state(strategy != null, "When using " + MODE_PRE_INITIALIZED
 					+ ", setContextHolderStrategy must be called with the fully constructed strategy");

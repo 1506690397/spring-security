@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
  * @author Ben Alex
  * @author Rob Winch
  * @see java.lang.ThreadLocal
- */
+ */ //InheritableThreadLocal在子线程创建的一瞬间，会将父线程中的数据复制到子线程中    实现子线程获取登录用户信息的功能
 final class InheritableThreadLocalSecurityContextHolderStrategy implements SecurityContextHolderStrategy {
 
 	private static final ThreadLocal<Supplier<SecurityContext>> contextHolder = new InheritableThreadLocal<>();

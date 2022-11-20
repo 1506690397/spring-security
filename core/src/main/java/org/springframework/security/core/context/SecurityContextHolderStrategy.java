@@ -26,19 +26,19 @@ import java.util.function.Supplier;
  *
  * @author Ben Alex
  * @author Rob Winch
- */
+ */ //规范存储策略中的方法
 public interface SecurityContextHolderStrategy {
 
 	/**
 	 * Clears the current context.
-	 */
+	 */ //清除SecurityContext对象
 	void clearContext();
 
 	/**
 	 * Obtains the current context.
 	 * @return a context (never <code>null</code> - create a default implementation if
 	 * necessary)
-	 */
+	 */ //获取存储的SecurityContext对象
 	SecurityContext getContext();
 
 	/**
@@ -56,7 +56,7 @@ public interface SecurityContextHolderStrategy {
 	 * @param context to the new argument (should never be <code>null</code>, although
 	 * implementations must check if <code>null</code> has been passed and throw an
 	 * <code>IllegalArgumentException</code> in such cases)
-	 */
+	 */ //设置存储的SecurityContext对象
 	void setContext(SecurityContext context);
 
 	/**
@@ -74,7 +74,7 @@ public interface SecurityContextHolderStrategy {
 	 * <tt>SecurityContextRepository</tt> implementations, when creating a new context for
 	 * the first time.
 	 * @return the empty context.
-	 */
+	 */ //创建一个空的SecurityContext对象
 	SecurityContext createEmptyContext();
 
 }

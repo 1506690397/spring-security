@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
  * @author Rob Winch
  * @see java.lang.ThreadLocal
  * @see org.springframework.security.core.context.web.SecurityContextPersistenceFilter
- */
+ */ //创建一个ThreadLocal  针对Security的清空、获取以及存储都是在ThreadLocal中进行操作
 final class ThreadLocalSecurityContextHolderStrategy implements SecurityContextHolderStrategy {
 
 	private static final ThreadLocal<Supplier<SecurityContext>> contextHolder = new ThreadLocal<>();

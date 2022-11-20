@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
  * This is generally useful with rich clients, such as Swing.
  *
  * @author Ben Alex
- */
+ */ //用一个静态变量来保存SecurityContext   所以可以在多线程环境下使用
 final class GlobalSecurityContextHolderStrategy implements SecurityContextHolderStrategy {
 
 	private static SecurityContext contextHolder;
