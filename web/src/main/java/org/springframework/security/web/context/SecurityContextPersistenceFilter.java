@@ -60,7 +60,7 @@ import org.springframework.web.filter.GenericFilterBean;
  * @author Luke Taylor
  * @since 3.0
  * @deprecated Use {@link SecurityContextHolderFilter}
- */
+ */ //为了存储SecurityContext而设计得
 @Deprecated
 public class SecurityContextPersistenceFilter extends GenericFilterBean {
 
@@ -90,21 +90,21 @@ public class SecurityContextPersistenceFilter extends GenericFilterBean {
 	private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		// ensure that filter is only applied once per request
-		if (request.getAttribute(FILTER_APPLIED) != null) {
+		if (request.getAttribute(FILTER_APPLIED) != null) { //确保请求只执行一次该过滤器  如果该request第一次经过该过滤器  则给其设置上FILTER_APPLIED属性
 			chain.doFilter(request, response);
 			return;
 		}
 		request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
-		if (this.forceEagerSessionCreation) {
+		if (this.forceEagerSessionCreation) { //表示过滤器执行之前确保会话有效  默认为false
 			HttpSession session = request.getSession();
 			if (this.logger.isDebugEnabled() && session.isNew()) {
 				this.logger.debug(LogMessage.format("Created session %s eagerly", session.getId()));
 			}
-		}
+		} //构造HttpRequestResponseHolder对象  将HttpServletRequest和HttpServletResponse存储进去
 		HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
-		SecurityContext contextBeforeChainExecution = this.repo.loadContext(holder);//从repository中获取context
+		SecurityContext contextBeforeChainExecution = this.repo.loadContext(holder);//加载SecurityContext（repo是HttpSessionContextRepository的实例）
 		try {
-			this.securityContextHolderStrategy.setContext(contextBeforeChainExecution);//将context舍之道contextHolder中
+			this.securityContextHolderStrategy.setContext(contextBeforeChainExecution);//将SecurityContext设置到SecurityContextHolder中
 			if (contextBeforeChainExecution.getAuthentication() == null) {
 				logger.debug("Set SecurityContextHolder to empty SecurityContext");
 			}
@@ -114,14 +114,14 @@ public class SecurityContextPersistenceFilter extends GenericFilterBean {
 							.debug(LogMessage.format("Set SecurityContextHolder to %s", contextBeforeChainExecution));
 				}
 			}
-			chain.doFilter(holder.getRequest(), holder.getResponse());
+			chain.doFilter(holder.getRequest(), holder.getResponse()); //此时request和response是封装后的对象即SaveToSessionRequestWrapper和SaveToSessionResponseWrapper
 		}
-		finally { //如果执行结束之后context发生了改变则保存当前的context
-			SecurityContext contextAfterChainExecution = this.securityContextHolderStrategy.getContext(); //获取context
+		finally {
+			SecurityContext contextAfterChainExecution = this.securityContextHolderStrategy.getContext(); //获取最新的SecurityContext对象实例
 			// Crucial removal of SecurityContextHolder contents before anything else.
-			this.securityContextHolderStrategy.clearContext(); //将holder中的context清除
-			this.repo.saveContext(contextAfterChainExecution, holder.getRequest(), holder.getResponse()); //保存当前的context
-			request.removeAttribute(FILTER_APPLIED);
+			this.securityContextHolderStrategy.clearContext(); //清空SecurityContextHolder中的数据
+			this.repo.saveContext(contextAfterChainExecution, holder.getRequest(), holder.getResponse()); //保存当前的SecurityContext
+			request.removeAttribute(FILTER_APPLIED); //移除FILTER_APPLIED属性
 			this.logger.debug("Cleared SecurityContextHolder to complete request");
 		}
 	}

@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 /**
  * @author Luke Taylor
  * @since 3.1
- */
+ */ //未做SecurityContext的存储工作
 public final class NullSecurityContextRepository implements SecurityContextRepository {
 
 	private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder

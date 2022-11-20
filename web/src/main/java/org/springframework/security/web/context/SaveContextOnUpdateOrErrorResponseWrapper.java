@@ -44,14 +44,14 @@ import org.springframework.util.Assert;
  * @since 3.0
  * @deprecated Use
  * {@link SecurityContextRepository#loadDeferredContext(HttpServletRequest)} instead.
- */
+ */ //对onResponseCommitted方法做了实现
 @Deprecated
 public abstract class SaveContextOnUpdateOrErrorResponseWrapper extends OnCommittedResponseWrapper {
 
 	private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
 			.getContextHolderStrategy();
 
-	private boolean contextSaved = false;
+	private boolean contextSaved = false; //是否已经存储成功
 
 	// See SEC-1052
 	private final boolean disableUrlRewriting;
@@ -98,7 +98,7 @@ public abstract class SaveContextOnUpdateOrErrorResponseWrapper extends OnCommit
 	 * Calls <code>saveContext()</code> with the current contents of the
 	 * <tt>SecurityContextHolder</tt> as long as {@link #disableSaveOnResponseCommitted()
 	 * ()} was not invoked.
-	 */
+	 */ //response提交时调用此方法
 	@Override
 	protected void onResponseCommitted() {
 		saveContext(this.securityContextHolderStrategy.getContext());

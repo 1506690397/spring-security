@@ -30,8 +30,8 @@ import jakarta.servlet.http.HttpServletResponseWrapper;
  * the {@link jakarta.servlet.http.HttpServletResponse} is committed.
  *
  * @author Rob Winch
- * @since 4.0.2
- */
+ * @since 4.0.2//HttpServletResponseWrapper接口时HttpServletResponse的封装类  可以方便的操作参数和输出流
+ *///OnCommittedResponseWrapper是对HttpServletResponseWrapper的增强  主要是可以获取HttpServletResponseWrapper的提交行为
 public abstract class OnCommittedResponseWrapper extends HttpServletResponseWrapper {
 
 	private boolean disableOnCommitted;

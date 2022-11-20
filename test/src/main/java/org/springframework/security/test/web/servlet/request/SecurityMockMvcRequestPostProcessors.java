@@ -763,7 +763,7 @@ public final class SecurityMockMvcRequestPostProcessors {
 		/**
 		 * Used to wrap the SecurityContextRepository to provide support for testing in
 		 * stateless mode
-		 */
+		 */ //为单元测试提供支持
 		static final class TestSecurityContextRepository implements SecurityContextRepository {
 
 			private static final String ATTR_NAME = TestSecurityContextRepository.class.getName().concat(".REPO");

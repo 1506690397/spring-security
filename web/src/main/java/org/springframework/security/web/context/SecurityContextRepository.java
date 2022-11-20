@@ -41,7 +41,7 @@ import org.springframework.util.function.SingletonSupplier;
  * @see SecurityContextPersistenceFilter
  * @see HttpSessionSecurityContextRepository
  * @see SaveContextOnUpdateOrErrorResponseWrapper
- */
+ */ //将SecurityContext存入HttpSession  或者从HttpSession中加载数据并转换为SecurityContext对象
 public interface SecurityContextRepository {
 
 	/**
@@ -64,7 +64,7 @@ public interface SecurityContextRepository {
 	 * @return The security context which should be used for the current request, never
 	 * null.
 	 * @deprecated Use {@link #loadDeferredContext(HttpServletRequest)} instead.
-	 */
+	 */ //加载SecurityContext对象出来
 	@Deprecated
 	SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder);
 
@@ -88,7 +88,7 @@ public interface SecurityContextRepository {
 	 * @param context the non-null context which was obtained from the holder.
 	 * @param request
 	 * @param response
-	 */
+	 */ //保存一个SecurityContext对象
 	void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response);
 
 	/**
@@ -96,7 +96,7 @@ public interface SecurityContextRepository {
 	 * for the current request.
 	 * @param request the current request
 	 * @return true if a context is found for the request, false otherwise
-	 */
+	 */ //判断SecurityContext对象是否存在
 	boolean containsContext(HttpServletRequest request);
 
 }
