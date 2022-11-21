@@ -178,7 +178,7 @@ public class JdbcDaoImpl extends JdbcDaoSupport implements UserDetailsService, M
 		Assert.isTrue(this.enableAuthorities || this.enableGroups,
 				"Use of either authorities or groups must be enabled");
 	}
-
+	//从数据库中查找出用户并封装成UserDetails进行返回
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		List<UserDetails> users = loadUsersByUsername(username);
