@@ -181,7 +181,7 @@ final class HttpServlet3RequestFactory implements HttpServletRequestFactory {
 		wrapper.setSecurityContextHolderStrategy(this.securityContextHolderStrategy);
 		return wrapper;
 	}
-
+	//servlet3.0中新增的三个安全管理相关的方法在这里实现
 	private class Servlet3SecurityContextHolderAwareRequestWrapper extends SecurityContextHolderAwareRequestWrapper {
 
 		private final HttpServletResponse response;

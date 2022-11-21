@@ -48,7 +48,7 @@ import org.springframework.util.Assert;
  * @author Luke Taylor
  * @author Rob Winch
  * @see SecurityContextHolderAwareRequestFilter
- */
+ */ //主要实现了servlet3.0之前和安全管理相关的三个方法
 public class SecurityContextHolderAwareRequestWrapper extends HttpServletRequestWrapper {
 
 	private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
@@ -90,8 +90,8 @@ public class SecurityContextHolderAwareRequestWrapper extends HttpServletRequest
 	/**
 	 * Obtain the current active <code>Authentication</code>
 	 * @return the authentication object or <code>null</code>
-	 */
-	private Authentication getAuthentication() {
+	 */ //该方法用来获取当前登录对象Authentication
+	private Authentication getAuthentication() { //从securityContextHolder中获取登录对象  不是匿名对象就返回  否则返回null
 		Authentication auth = this.securityContextHolderStrategy.getContext().getAuthentication();
 		return (!this.trustResolver.isAnonymous(auth)) ? auth : null;
 	}
@@ -101,7 +101,7 @@ public class SecurityContextHolderAwareRequestWrapper extends HttpServletRequest
 	 * <code>SecurityContextHolder</code>. Properly handles both <code>String</code>-based
 	 * and <code>UserDetails</code>-based principals.
 	 * @return the username or <code>null</code> if unavailable
-	 */
+	 */ //返回当前登录用户的用户名
 	@Override
 	public String getRemoteUser() {
 		Authentication auth = getAuthentication();
@@ -121,7 +121,7 @@ public class SecurityContextHolderAwareRequestWrapper extends HttpServletRequest
 	 * Returns the <code>Authentication</code> (which is a subclass of
 	 * <code>Principal</code>), or <code>null</code> if unavailable.
 	 * @return the <code>Authentication</code>, or <code>null</code>
-	 */
+	 */ //返回当前当前登录用户对象
 	@Override
 	public Principal getUserPrincipal() {
 		Authentication auth = getAuthentication();
@@ -130,7 +130,7 @@ public class SecurityContextHolderAwareRequestWrapper extends HttpServletRequest
 		}
 		return auth;
 	}
-
+	//判断用户是否具有某一个指定的角色
 	private boolean isGranted(String role) {
 		Authentication auth = getAuthentication();
 		if (this.rolePrefix != null && role != null && !role.startsWith(this.rolePrefix)) {
@@ -143,7 +143,7 @@ public class SecurityContextHolderAwareRequestWrapper extends HttpServletRequest
 		if (authorities == null) {
 			return false;
 		}
-		for (GrantedAuthority grantedAuthority : authorities) {
+		for (GrantedAuthority grantedAuthority : authorities) { //拿到所有角色与传过来的角色进行比较
 			if (role.equals(grantedAuthority.getAuthority())) {
 				return true;
 			}
@@ -162,7 +162,7 @@ public class SecurityContextHolderAwareRequestWrapper extends HttpServletRequest
 	 * check for
 	 * @return <code>true</code> if an <b>exact</b> (case sensitive) matching granted
 	 * authority is located, <code>false</code> otherwise
-	 */
+	 */ //判断当前用户是否具备某一个指定角色
 	@Override
 	public boolean isUserInRole(String role) {
 		return isGranted(role);

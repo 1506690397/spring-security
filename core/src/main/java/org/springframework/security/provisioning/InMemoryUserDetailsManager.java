@@ -54,7 +54,7 @@ public class InMemoryUserDetailsManager implements UserDetailsManager, UserDetai
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	private final Map<String, MutableUserDetails> users = new HashMap<>();
+	private final Map<String, MutableUserDetails> users = new HashMap<>(); //保存用户
 
 	private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
 			.getContextHolderStrategy();
@@ -96,7 +96,7 @@ public class InMemoryUserDetailsManager implements UserDetailsManager, UserDetai
 	@Override
 	public void createUser(UserDetails user) {
 		Assert.isTrue(!userExists(user.getUsername()), "user should not exist");
-		this.users.put(user.getUsername().toLowerCase(), new MutableUser(user));
+		this.users.put(user.getUsername().toLowerCase(), new MutableUser(user)); //就是往map中放数据
 	}
 
 	@Override

@@ -68,7 +68,7 @@ import org.springframework.web.filter.GenericFilterBean;
  * @author Luke Taylor
  * @author Rob Winch
  * @author Eddú Meléndez
- */
+ */ //将请求进行包装成Servlet3SecurityContextHolderAwareRequestWrapper实例
 public class SecurityContextHolderAwareRequestFilter extends GenericFilterBean {
 
 	private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
@@ -175,7 +175,7 @@ public class SecurityContextHolderAwareRequestFilter extends GenericFilterBean {
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-			throws IOException, ServletException {
+			throws IOException, ServletException { //在这里对请求进行包装
 		chain.doFilter(this.requestFactory.create((HttpServletRequest) req, (HttpServletResponse) res), res);
 	}
 
