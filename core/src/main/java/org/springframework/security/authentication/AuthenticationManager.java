@@ -23,7 +23,7 @@ import org.springframework.security.core.AuthenticationException;
  * Processes an {@link Authentication} request.
  *
  * @author Ben Alex
- */ //管理Authentication的类
+ */ //管理Authentication的类认证管理器
 public interface AuthenticationManager {
 
 	/**
@@ -48,7 +48,7 @@ public interface AuthenticationManager {
 	 * prevents credentials being tested against disabled or locked accounts.
 	 * @param authentication the authentication request object
 	 * @return a fully authenticated object including credentials
-	 * @throws AuthenticationException if authentication fails
+	 * @throws AuthenticationException if authentication fails  传入时只有用户名密码等简单的属性  如果认证成功则属性会得到完全填充
 	 */ //用来认证的方法  返回Authentication表示认证成功 返回null表示不能判断   抛出异常则表示用户输入了无效的凭证
 	Authentication authenticate(Authentication authentication) throws AuthenticationException;
 

@@ -42,9 +42,9 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 	/**
 	 * The plaintext password used to perform PasswordEncoder#matches(CharSequence,
 	 * String)} on when the user is not found to avoid SEC-2056.
-	 */
+	 */ //用户查找失败时的默认密码
 	private static final String USER_NOT_FOUND_PASSWORD = "userNotFoundPassword";
-
+	//密码加密和比对工具
 	private PasswordEncoder passwordEncoder;
 
 	/**
@@ -52,17 +52,17 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 	 * on when the user is not found to avoid SEC-2056. This is necessary, because some
 	 * {@link PasswordEncoder} implementations will short circuit if the password is not
 	 * in a valid format.
-	 */
+	 */ //存储保存默认密码加密后的值
 	private volatile String userNotFoundEncodedPassword;
-
+	//是一个用户查找工具
 	private UserDetailsService userDetailsService;
-
+	//提供密码修改服务
 	private UserDetailsPasswordService userDetailsPasswordService;
-
+	//默认指定PasswordEncoder
 	public DaoAuthenticationProvider() {
 		setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
 	}
-
+	//进行密码校验  第一个参数是从数据库中查询出来的用户对象  第二个则是用户输入的参数
 	@Override
 	@SuppressWarnings("deprecation")
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
@@ -84,20 +84,20 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 	protected void doAfterPropertiesSet() {
 		Assert.notNull(this.userDetailsService, "A UserDetailsService must be set");
 	}
-
+	//获取用户对象的方法
 	@Override
 	protected final UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
 		prepareTimingAttackProtection();
 		try { //加载用户
 			UserDetails loadedUser = this.getUserDetailsService().loadUserByUsername(username);
-			if (loadedUser == null) {
+			if (loadedUser == null) { //加载不到抛出异常
 				throw new InternalAuthenticationServiceException(
 						"UserDetailsService returned null, which is an interface contract violation");
 			}
 			return loadedUser;
 		}
-		catch (UsernameNotFoundException ex) {
+		catch (UsernameNotFoundException ex) { //如果抛出了UsernameNotFoundException调用mitigateAgainstTimingAttack方法进行密码比对  避免旁道攻击
 			mitigateAgainstTimingAttack(authentication);
 			throw ex;
 		}
@@ -108,7 +108,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 			throw new InternalAuthenticationServiceException(ex.getMessage(), ex);
 		}
 	}
-
+	//创建一个全新的UsernamePasswordAuthenticationToken对象  同时判断是否需要进行密码升级   如果需要进行密码升级就会在该方法中进行加密方案升级
 	@Override
 	protected Authentication createSuccessAuthentication(Object principal, Authentication authentication,
 			UserDetails user) {
@@ -121,7 +121,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 		}
 		return super.createSuccessAuthentication(principal, authentication, user);
 	}
-
+	//对用户查找失败时的默认密码进行加密并存储在userNotFoundEncodedPassword中
 	private void prepareTimingAttackProtection() {
 		if (this.userNotFoundEncodedPassword == null) {
 			this.userNotFoundEncodedPassword = this.passwordEncoder.encode(USER_NOT_FOUND_PASSWORD);

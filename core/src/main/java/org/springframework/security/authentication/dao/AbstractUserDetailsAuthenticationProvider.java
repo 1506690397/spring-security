@@ -81,15 +81,15 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
-	private UserCache userCache = new NullUserCache();
+	private UserCache userCache = new NullUserCache(); //先声明一个对象缓存（默认未启用）
 
-	private boolean forcePrincipalAsString = false;
+	private boolean forcePrincipalAsString = false; //是否强制将Principal对象当成字符串来处理  如果为true则获取Authentication对象的principal属性时返回用户名而不是用户对象
 
-	protected boolean hideUserNotFoundExceptions = true;
+	protected boolean hideUserNotFoundExceptions = true; //表示是否隐藏用户名查找失败的异常
 
-	private UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
+	private UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks(); //用作用户状态的检查
 
-	private UserDetailsChecker postAuthenticationChecks = new DefaultPostAuthenticationChecks();
+	private UserDetailsChecker postAuthenticationChecks = new DefaultPostAuthenticationChecks(); //检查密码是否过期
 
 	private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
@@ -108,7 +108,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 	 * @throws AuthenticationException AuthenticationException if the credentials could
 	 * not be validated (generally a <code>BadCredentialsException</code>, an
 	 * <code>AuthenticationServiceException</code>)
-	 */
+	 */ //校验密码
 	protected abstract void additionalAuthenticationChecks(UserDetails userDetails,
 			UsernamePasswordAuthenticationToken authentication) throws AuthenticationException;
 
@@ -126,10 +126,10 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 						"Only UsernamePasswordAuthenticationToken is supported"));
 		String username = determineUsername(authentication);
 		boolean cacheWasUsed = true;
-		UserDetails user = this.userCache.getUserFromCache(username);
+		UserDetails user = this.userCache.getUserFromCache(username); //先从缓存中查询用户对象
 		if (user == null) {
 			cacheWasUsed = false;
-			try { //查找用户  模板模式 留给子类进行实现
+			try { //从缓存中查找不到   调用retrieveUser从数据库中加载用户  模板模式 留给子类进行实现
 				user = retrieveUser(username, (UsernamePasswordAuthenticationToken) authentication);
 			}
 			catch (UsernameNotFoundException ex) {
@@ -143,7 +143,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 			Assert.notNull(user, "retrieveUser returned null - a violation of the interface contract");
 		}
 		try {
-			this.preAuthenticationChecks.check(user);
+			this.preAuthenticationChecks.check(user); //进行用户状态的检查
 			additionalAuthenticationChecks(user, (UsernamePasswordAuthenticationToken) authentication); //检查密码是否正确
 		}
 		catch (AuthenticationException ex) {
@@ -157,7 +157,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 			this.preAuthenticationChecks.check(user);
 			additionalAuthenticationChecks(user, (UsernamePasswordAuthenticationToken) authentication);
 		}
-		this.postAuthenticationChecks.check(user);
+		this.postAuthenticationChecks.check(user); //检查密码是否过期
 		if (!cacheWasUsed) {
 			this.userCache.putUserInCache(user);
 		}
@@ -165,7 +165,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 		if (this.forcePrincipalAsString) {
 			principalToReturn = user.getUsername();
 		}
-		return createSuccessAuthentication(principalToReturn, authentication, user);
+		return createSuccessAuthentication(principalToReturn, authentication, user); //创建一个UsernamePasswordAuthenticationToken对象并返回  认证后的对象中包含了认证主体、凭证以及角色等信息
 	}
 
 	private String determineUsername(Authentication authentication) {
@@ -186,7 +186,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider
 	 * @param authentication that was presented to the provider for validation
 	 * @param user that was loaded by the implementation
 	 * @return the successful authentication token
-	 */
+	 */ //创建一个UsernamePasswordAuthenticationToken对象进行返回
 	protected Authentication createSuccessAuthentication(Object principal, Authentication authentication,
 			UserDetails user) {
 		// Ensure we return the original credentials the user supplied,

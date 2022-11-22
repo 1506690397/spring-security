@@ -44,13 +44,13 @@ import org.springframework.util.Assert;
  * @author Colin Sampaleanu
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //处理认证
 public class UsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-
+	//声明默认的表单登录时的用户名字段
 	public static final String SPRING_SECURITY_FORM_USERNAME_KEY = "username";
-
+	//声明默认的表单登录时的密码字段
 	public static final String SPRING_SECURITY_FORM_PASSWORD_KEY = "password";
-
+	//默认登录请求是/login
 	private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = new AntPathRequestMatcher("/login",
 			"POST");
 
@@ -71,12 +71,12 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
-		if (this.postOnly && !request.getMethod().equals("POST")) {
+		if (this.postOnly && !request.getMethod().equals("POST")) { //先确认是否是POST请求
 			throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
 		}
-		String username = obtainUsername(request);
+		String username = obtainUsername(request); //提取用户名
 		username = (username != null) ? username.trim() : "";
-		String password = obtainPassword(request);
+		String password = obtainPassword(request); //提取密码
 		password = (password != null) ? password : "";
 		UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(username,
 				password);//用用户名和密码生成一个Token 会将此token传递给ProviderManager进行认证

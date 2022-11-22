@@ -111,7 +111,7 @@ import org.springframework.web.filter.GenericFilterBean;
  *
  * @author Ben Alex
  * @author Luke Taylor
- */
+ */ //处理任何提交给它的身份认证
 public abstract class AbstractAuthenticationProcessingFilter extends GenericFilterBean
 		implements ApplicationEventPublisherAware, MessageSourceAware {
 
@@ -223,21 +223,21 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 
 	private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		if (!requiresAuthentication(request, response)) {
+		if (!requiresAuthentication(request, response)) { //判断是不是登录认证请求 如果不是直接放过
 			chain.doFilter(request, response);
 			return;
 		}
-		try { //尝试进行认证
+		try { //获取经过认证后的Authentication对象
 			Authentication authenticationResult = attemptAuthentication(request, response);
 			if (authenticationResult == null) {
 				// return immediately as subclass has indicated that it hasn't completed
 				return;
-			} //触发session并发管理
+			} //触发session并发问题
 			this.sessionStrategy.onAuthentication(authenticationResult, request, response);
-			// Authentication success
+			// Authentication success 判断请求是否需要继续往下走默认为false  认证成功后  后续过滤器将不再执行
 			if (this.continueChainBeforeSuccessfulAuthentication) {
 				chain.doFilter(request, response);
-			} //认证成功
+			} //处理认证成功的事宜
 			successfulAuthentication(request, response, chain, authenticationResult);
 		}
 		catch (InternalAuthenticationServiceException failed) {
@@ -328,7 +328,7 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 		}
 		this.rememberMeServices.loginSuccess(request, response, authResult); //对rememberMeServices进行登录成功的处理（如果未设置则是空操作）
 		if (this.eventPublisher != null) {
-			this.eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));//发布时间
+			this.eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));//发布事件
 		}//调用successHandler执行认证成功后的处理流程
 		this.successHandler.onAuthenticationSuccess(request, response, authResult);
 	}

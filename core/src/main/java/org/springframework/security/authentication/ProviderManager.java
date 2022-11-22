@@ -163,15 +163,15 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 	 */
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		Class<? extends Authentication> toTest = authentication.getClass();
-		AuthenticationException lastException = null;
-		AuthenticationException parentException = null;
-		Authentication result = null;
-		Authentication parentResult = null;
+		Class<? extends Authentication> toTest = authentication.getClass(); //获取authentication对象类型
+		AuthenticationException lastException = null; //定义当前认证过程抛出的异常
+		AuthenticationException parentException = null; //parent中抛出的异常
+		Authentication result = null; //当前认证结果
+		Authentication parentResult = null; //parent中的认证结果
 		int currentPosition = 0;
 		int size = this.providers.size();
 		for (AuthenticationProvider provider : getProviders()) { //遍历provider进行认证
-			if (!provider.supports(toTest)) {
+			if (!provider.supports(toTest)) { //判断当前AuthenticationProvider是否支持当前Authentication对象   如果不支持则继续处理列表中的下一个AuthenticationProvider对象
 				continue;
 			}
 			if (logger.isTraceEnabled()) {
@@ -179,9 +179,9 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 						provider.getClass().getSimpleName(), ++currentPosition, size));
 			}
 			try {
-				result = provider.authenticate(authentication); //调用具体认证方法
+				result = provider.authenticate(authentication); //调用具体认证方法  如果认证成功返回认证后的Authentication对象
 				if (result != null) {
-					copyDetails(authentication, result);
+					copyDetails(authentication, result); //对Authentication对象的details属性赋值
 					break;
 				}
 			}
@@ -192,10 +192,10 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 				throw ex;
 			}
 			catch (AuthenticationException ex) {
-				lastException = ex;
+				lastException = ex; //由于可能时多个AuthenticationProvider执行认证操作抛出异常通过lastException来记录
 			}
 		}
-		if (result == null && this.parent != null) { //如果没有provider认证成功parent进行兜底处理
+		if (result == null && this.parent != null) { //如果没有provider认证成功且parent不为空则parent进行兜底处理
 			// Allow the parent to try.
 			try {
 				parentResult = this.parent.authenticate(authentication);
@@ -212,7 +212,7 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 				lastException = ex;
 			}
 		}
-		if (result != null) {
+		if (result != null) { //如果result不为空则擦除其中的凭证防止泄露
 			if (this.eraseCredentialsAfterAuthentication && (result instanceof CredentialsContainer)) {
 				// Authentication is complete. Remove credentials and other secret data
 				// from authentication
@@ -222,15 +222,15 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 			// will publish an AuthenticationSuccessEvent
 			// This check prevents a duplicate AuthenticationSuccessEvent if the parent
 			// AuthenticationManager already published it
-			if (parentResult == null) {
+			if (parentResult == null) { //发送认证成功事件  如果parentResult不为空则表示在parent中已经认证成功  此事件已经被发送了  无需再次发送
 				this.eventPublisher.publishAuthenticationSuccess(result);
 			}
 
-			return result;
+			return result; //认证成功将result返回
 		}
 
 		// Parent was null, or didn't authenticate (or throw an exception).
-		if (lastException == null) {
+		if (lastException == null) { //说明parent为null或者没有认证或者认证失败了但是没有抛出异常
 			lastException = new ProviderNotFoundException(this.messages.getMessage("ProviderManager.providerNotFound",
 					new Object[] { toTest.getName() }, "No AuthenticationProvider found for {0}"));
 		}
@@ -238,10 +238,10 @@ public class ProviderManager implements AuthenticationManager, MessageSourceAwar
 		// publish an AbstractAuthenticationFailureEvent
 		// This check prevents a duplicate AbstractAuthenticationFailureEvent if the
 		// parent AuthenticationManager already published it
-		if (parentException == null) {
+		if (parentException == null) { //parentException为null抛出认证失败事件（如果不为null说明认证失败事件已经发布过了）
 			prepareException(lastException, authentication);
 		}
-		throw lastException;
+		throw lastException; //抛出异常
 	}
 
 	@SuppressWarnings("deprecation")

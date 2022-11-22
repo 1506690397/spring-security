@@ -24,7 +24,7 @@ import org.springframework.security.core.AuthenticationException;
  * {@link org.springframework.security.core.Authentication} implementation.
  *
  * @author Ben Alex
- */
+ */ //针对不同的身份类型执行具体的身份认证
 public interface AuthenticationProvider {
 
 	/**
@@ -38,7 +38,7 @@ public interface AuthenticationProvider {
 	 * the next <code>AuthenticationProvider</code> that supports the presented
 	 * <code>Authentication</code> class will be tried.
 	 * @throws AuthenticationException if authentication fails.
-	 */
+	 */ //执行具体的身份认证
 	Authentication authenticate(Authentication authentication) throws AuthenticationException;
 
 	/**
