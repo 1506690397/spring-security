@@ -140,7 +140,7 @@ import org.springframework.web.filter.GenericFilterBean;
  * @author Ben Alex
  * @author Luke Taylor
  * @author Rob Winch
- */ //对过滤器进行统一管理  通过DelegatingFilterProxy整合到元素过滤器链中
+ */ //对过滤器进行统一管理  通过DelegatingFilterProxy整合到原生过滤器链中
 public class FilterChainProxy extends GenericFilterBean {
 
 	private static final Log logger = LogFactory.getLog(FilterChainProxy.class);
@@ -149,11 +149,11 @@ public class FilterChainProxy extends GenericFilterBean {
 
 	private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
 			.getContextHolderStrategy();
-
+	//保存过滤器链的
 	private List<SecurityFilterChain> filterChains;
-
+	//过滤器链配置完成后的验证器   默认不做任何验证
 	private FilterChainValidator filterChainValidator = new NullFilterChainValidator();
-
+	//创建了一个默认的防火墙对象firewall
 	private HttpFirewall firewall = new StrictHttpFirewall();
 
 	private RequestRejectedHandler requestRejectedHandler = new HttpStatusRequestRejectedHandler();
@@ -168,7 +168,7 @@ public class FilterChainProxy extends GenericFilterBean {
 	public FilterChainProxy(SecurityFilterChain chain) {
 		this(Arrays.asList(chain));
 	}
-
+	//对filterChains集合进行赋值
 	public FilterChainProxy(List<SecurityFilterChain> filterChains) {
 		this.filterChains = filterChains;
 	}
@@ -188,7 +188,7 @@ public class FilterChainProxy extends GenericFilterBean {
 		}
 		try {
 			request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
-			doFilterInternal(request, response, chain);
+			doFilterInternal(request, response, chain); //具体执行
 		}
 		catch (Exception ex) {
 			Throwable[] causeChain = this.throwableAnalyzer.determineCauseChain(ex);
@@ -201,21 +201,21 @@ public class FilterChainProxy extends GenericFilterBean {
 					(RequestRejectedException) requestRejectedException);
 		}
 		finally {
-			this.securityContextHolderStrategy.clearContext();
+			this.securityContextHolderStrategy.clearContext(); //清除用户信息   防止用户没有正确配置SecurityContextPersistenceFilter从而导致用户信息没有被清除，进而发生内存泄露
 			request.removeAttribute(FILTER_APPLIED);
 		}
 	}
 
 	private void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		FirewalledRequest firewallRequest = this.firewall.getFirewalledRequest((HttpServletRequest) request);
-		HttpServletResponse firewallResponse = this.firewall.getFirewalledResponse((HttpServletResponse) response);
-		List<Filter> filters = getFilters(firewallRequest);
-		if (filters == null || filters.size() == 0) {
+		FirewalledRequest firewallRequest = this.firewall.getFirewalledRequest((HttpServletRequest) request); //将request对象转换成FirewalledRequest对象
+		HttpServletResponse firewallResponse = this.firewall.getFirewalledResponse((HttpServletResponse) response); //将response对象转换成HttpServletResponse对象
+		List<Filter> filters = getFilters(firewallRequest); //获取当前请求对应的过滤器链
+		if (filters == null || filters.size() == 0) { //如果返回为null或者filters中没有元素说明不需要经过SpringSecurity过滤器链  进而执行firewallRequest.reset();
 			if (logger.isTraceEnabled()) {
 				logger.trace(LogMessage.of(() -> "No security for " + requestLine(firewallRequest)));
 			}
-			firewallRequest.reset();
+			firewallRequest.reset(); //对防火墙中的属性进行重置再执行doFilter方法
 			this.filterChainDecorator.decorate(chain).doFilter(firewallRequest, firewallResponse);
 			return;
 		}
@@ -229,8 +229,8 @@ public class FilterChainProxy extends GenericFilterBean {
 			// Deactivate path stripping as we exit the security filter chain
 			firewallRequest.reset();
 			chain.doFilter(req, res);
-		};
-		this.filterChainDecorator.decorate(reset, filters).doFilter(firewallRequest, firewallResponse);
+		};//如果filters集合中是有元素的也就是说当前请求需要经filters集合中元素所构成的过滤器链
+		this.filterChainDecorator.decorate(reset, filters).doFilter(firewallRequest, firewallResponse); //decorate(reset, filters)创建一个VirtualFilterChain对象  并执行其doFilter方法
 	}
 
 	/**
@@ -240,16 +240,16 @@ public class FilterChainProxy extends GenericFilterBean {
 	 */
 	private List<Filter> getFilters(HttpServletRequest request) {
 		int count = 0;
-		for (SecurityFilterChain chain : this.filterChains) {
+		for (SecurityFilterChain chain : this.filterChains) { //遍历遍历filterChains集合判断当前请求和哪一个过滤器是对应的
 			if (logger.isTraceEnabled()) {
 				logger.trace(LogMessage.format("Trying to match request against %s (%d/%d)", chain, ++count,
 						this.filterChains.size()));
 			}
-			if (chain.matches(request)) {
+			if (chain.matches(request)) { //用匹配器进行匹配
 				return chain.getFilters();
 			}
 		}
-		return null;
+		return null; //如果没有对应的则返回null
 	}
 
 	/**
@@ -344,13 +344,13 @@ public class FilterChainProxy extends GenericFilterBean {
 	 * the additional internal list of filters which match the request.
 	 */
 	private static final class VirtualFilterChain implements FilterChain {
-
+		//原生的过滤器链  执行它的doFilter方法会回到WebFilter中
 		private final FilterChain originalChain;
-
+		//这个集合存储的Filter就是本次请求的Filter
 		private final List<Filter> additionalFilters;
-
+		//过滤器链的大小
 		private final int size;
-
+		//过滤器链执行的下标
 		private int currentPosition = 0;
 
 		private VirtualFilterChain(FilterChain chain, List<Filter> additionalFilters) {
@@ -361,17 +361,17 @@ public class FilterChainProxy extends GenericFilterBean {
 
 		@Override
 		public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-			if (this.currentPosition == this.size) {
-				this.originalChain.doFilter(request, response);
+			if (this.currentPosition == this.size) { //先判断当前下标是否登录过滤器链的大小  如果相等则说明过滤器链中的过滤器都已经挨个走一遍了
+				this.originalChain.doFilter(request, response); //跳出SpringSecurity Filter回到WebFilter中
 				return;
 			}
-			this.currentPosition++;
-			Filter nextFilter = this.additionalFilters.get(this.currentPosition - 1);
+			this.currentPosition++; //当前下标自增
+			Filter nextFilter = this.additionalFilters.get(this.currentPosition - 1); //从过滤器链集合中取出一个过滤器去执行
 			if (logger.isTraceEnabled()) {
 				String name = nextFilter.getClass().getSimpleName();
 				logger.trace(LogMessage.format("Invoking %s (%d/%d)", name, this.currentPosition, this.size));
 			}
-			nextFilter.doFilter(request, response, this);
+			nextFilter.doFilter(request, response, this); //注意第三个参数this（FilterChainProxy）每个过滤器执行完后会回到当前的doFilter方法中
 		}
 
 	}
