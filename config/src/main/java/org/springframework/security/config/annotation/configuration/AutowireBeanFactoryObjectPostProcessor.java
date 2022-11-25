@@ -37,7 +37,7 @@ import org.springframework.util.Assert;
  *
  * @author Rob Winch
  * @since 3.2
- */
+ */ //将new出来的对象注入到Spring容器中
 final class AutowireBeanFactoryObjectPostProcessor
 		implements ObjectPostProcessor<Object>, DisposableBean, SmartInitializingSingleton {
 

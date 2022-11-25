@@ -70,7 +70,7 @@ public class AuthenticationManagerBuilder
 	 * @param objectPostProcessor the {@link ObjectPostProcessor} instance to use.
 	 */
 	public AuthenticationManagerBuilder(ObjectPostProcessor<Object> objectPostProcessor) {
-		super(objectPostProcessor, true);
+		super(objectPostProcessor, true); //第二个参数为true表示允许想用的配置类同时存在
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class AuthenticationManagerBuilder
 	 * the provided {@link Authentication}.
 	 * @return the {@link AuthenticationManagerBuilder} for further adding types of
 	 * authentication
-	 */
+	 */ //给AuthenticationManager对象设置parent
 	public AuthenticationManagerBuilder parentAuthenticationManager(AuthenticationManager authenticationManager) {
 		if (authenticationManager instanceof ProviderManager) {
 			eraseCredentials(((ProviderManager) authenticationManager).isEraseCredentialsAfterAuthentication());
@@ -126,7 +126,7 @@ public class AuthenticationManagerBuilder
 	 * @return a {@link InMemoryUserDetailsManagerConfigurer} to allow customization of
 	 * the in memory authentication
 	 * @throws Exception if an error occurs when adding the in memory authentication
-	 */
+	 */ //配置基于内存的数据源 该方法会自动创建InMemoryUserDetailsManagerConfigurer配置类  并最终添加到父类的configures变量中
 	public InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> inMemoryAuthentication()
 			throws Exception {
 		return apply(new InMemoryUserDetailsManagerConfigurer<>());
@@ -155,7 +155,7 @@ public class AuthenticationManagerBuilder
 	 * @return a {@link JdbcUserDetailsManagerConfigurer} to allow customization of the
 	 * JDBC authentication
 	 * @throws Exception if an error occurs when adding the JDBC authentication
-	 */
+	 */ //配置数据源
 	public JdbcUserDetailsManagerConfigurer<AuthenticationManagerBuilder> jdbcAuthentication() throws Exception {
 		return apply(new JdbcUserDetailsManagerConfigurer<>());
 	}
@@ -212,13 +212,13 @@ public class AuthenticationManagerBuilder
 	 * {@link AuthenticationProvider}.
 	 * @return a {@link AuthenticationManagerBuilder} to allow further authentication to
 	 * be provided to the {@link AuthenticationManagerBuilder}
-	 */
+	 */ //向authenticationProviders集合中添加AuthenticationProvider对象
 	@Override
 	public AuthenticationManagerBuilder authenticationProvider(AuthenticationProvider authenticationProvider) {
 		this.authenticationProviders.add(authenticationProvider);
 		return this;
 	}
-
+	//执行具体的构建工作
 	@Override
 	protected ProviderManager performBuild() throws Exception {
 		if (!isConfigured()) {
@@ -226,14 +226,14 @@ public class AuthenticationManagerBuilder
 			return null;
 		}
 		ProviderManager providerManager = new ProviderManager(this.authenticationProviders,
-				this.parentAuthenticationManager);
+				this.parentAuthenticationManager); //创建ProviderManager对象 并配置authenticationProviders和parentAuthenticationManager对象
 		if (this.eraseCredentials != null) {
 			providerManager.setEraseCredentialsAfterAuthentication(this.eraseCredentials);
 		}
 		if (this.eventPublisher != null) {
 			providerManager.setAuthenticationEventPublisher(this.eventPublisher);
 		}
-		providerManager = postProcess(providerManager);
+		providerManager = postProcess(providerManager); //后置处理
 		return providerManager;
 	}
 

@@ -25,17 +25,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @param <O> the type of Object that is being built
  * @author Rob Winch
  *
- */
+ */ //确保只build一次
 public abstract class AbstractSecurityBuilder<O> implements SecurityBuilder<O> {
 
-	private AtomicBoolean building = new AtomicBoolean();
+	private AtomicBoolean building = new AtomicBoolean(); //确保即使是多线程环境下配置类也只构建一次
 
 	private O object;
 
 	@Override
 	public final O build() throws Exception {
-		if (this.building.compareAndSet(false, true)) {
-			this.object = doBuild();
+		if (this.building.compareAndSet(false, true)) { //确保只构建一次
+			this.object = doBuild(); //具体构建工作交给doBuild去完成
 			return this.object;
 		}
 		throw new AlreadyBuiltException("This object has already been built");
@@ -45,7 +45,7 @@ public abstract class AbstractSecurityBuilder<O> implements SecurityBuilder<O> {
 	 * Gets the object that was built. If it has not been built yet an Exception is
 	 * thrown.
 	 * @return the Object that was built
-	 */
+	 */ //用来返回构建的对象
 	public final O getObject() {
 		if (!this.building.get()) {
 			throw new IllegalStateException("This object has not been built");
@@ -57,7 +57,7 @@ public abstract class AbstractSecurityBuilder<O> implements SecurityBuilder<O> {
 	 * Subclasses should implement this to perform the build.
 	 * @return the object that should be returned by {@link #build()}.
 	 * @throws Exception if an error occurs
-	 */
+	 */ //具体的构建方法
 	protected abstract O doBuild() throws Exception;
 
 }

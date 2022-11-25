@@ -33,7 +33,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
  *
  * @author Luke Taylor
  * @since 3.1
- */
+ */ //默认实现
 public final class DefaultSecurityFilterChain implements SecurityFilterChain {
 
 	private static final Log logger = LogFactory.getLog(DefaultSecurityFilterChain.class);

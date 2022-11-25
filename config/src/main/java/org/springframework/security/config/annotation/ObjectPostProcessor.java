@@ -28,7 +28,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @param <T> the bound of the types of Objects this {@link ObjectPostProcessor} supports.
  * @author Rob Winch
  * @since 3.2
- */
+ */ //对象后置处理器
 public interface ObjectPostProcessor<T> {
 
 	/**

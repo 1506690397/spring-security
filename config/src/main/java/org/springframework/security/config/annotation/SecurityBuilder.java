@@ -22,14 +22,14 @@ package org.springframework.security.config.annotation;
  * @param <O> The type of the Object being built
  * @author Rob Winch
  * @since 3.2
- */
+ */ //所有需要构建的对象都可以通过SecurityBuilder来实现
 public interface SecurityBuilder<O> {
 
 	/**
 	 * Builds the object and returns it or null.
 	 * @return the Object to be built or null if the implementation allows it.
 	 * @throws Exception if an error occurred when building the Object
-	 */
+	 */ //对象的构建方法
 	O build() throws Exception;
 
 }

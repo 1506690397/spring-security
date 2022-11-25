@@ -138,7 +138,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
  * @author Joe Grandja
  * @since 3.2
  * @see EnableWebSecurity
- */
+ */ //主要构建一条过滤器链
 public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<DefaultSecurityFilterChain, HttpSecurity>
 		implements SecurityBuilder<DefaultSecurityFilterChain>, HttpSecurityBuilder<HttpSecurity> {
 
@@ -2015,7 +2015,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * @return the {@link FormLoginConfigurer} for further customizations
 	 * @throws Exception
 	 * @see FormLoginConfigurer#loginPage(String)
-	 */
+	 */ //表单登录配置   用户可以在该对象基础上继续配置
 	public FormLoginConfigurer<HttpSecurity> formLogin() throws Exception {
 		return getOrApply(new FormLoginConfigurer<>());
 	}
@@ -2101,7 +2101,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * @return the {@link HttpSecurity} for further customizations
 	 * @throws Exception
 	 * @see FormLoginConfigurer#loginPage(String)
-	 */
+	 */ //用户可以在外面配置好FormLoginConfigurer对象直接传进来进行配置
 	public HttpSecurity formLogin(Customizer<FormLoginConfigurer<HttpSecurity>> formLoginCustomizer) throws Exception {
 		formLoginCustomizer.customize(getOrApply(new FormLoginConfigurer<>()));
 		return HttpSecurity.this;
@@ -2997,7 +2997,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 		}
 		else {
 			ObservationRegistry registry = getObservationRegistry();
-			AuthenticationManager manager = getAuthenticationRegistry().build();
+			AuthenticationManager manager = getAuthenticationRegistry().build(); //触发AuthenticationManager对象的构建
 			if (!registry.isNoop()) {
 				setSharedObject(AuthenticationManager.class, new ObservationAuthenticationManager(registry, manager));
 			}
@@ -3006,7 +3006,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 			}
 		}
 	}
-
+	//进行DefaultSecurityFilterChain对象的构建
 	@SuppressWarnings("unchecked")
 	@Override
 	protected DefaultSecurityFilterChain performBuild() {
@@ -3016,20 +3016,20 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 		boolean oneConfigurerPresent = expressionConfigurer == null ^ httpConfigurer == null;
 		Assert.state((expressionConfigurer == null && httpConfigurer == null) || oneConfigurerPresent,
 				"authorizeHttpRequests cannot be used in conjunction with authorizeRequests. Please select just one.");
-		this.filters.sort(OrderComparator.INSTANCE);
+		this.filters.sort(OrderComparator.INSTANCE); //对过滤器进行排序
 		List<Filter> sortedFilters = new ArrayList<>(this.filters.size());
 		for (Filter filter : this.filters) {
 			sortedFilters.add(((OrderedFilter) filter).filter);
 		}
-		return new DefaultSecurityFilterChain(this.requestMatcher, sortedFilters);
+		return new DefaultSecurityFilterChain(this.requestMatcher, sortedFilters); //传入请求匹配器和已经排好序的过滤器
 	}
-
+	//配置authenticationProvider对象
 	@Override
 	public HttpSecurity authenticationProvider(AuthenticationProvider authenticationProvider) {
 		getAuthenticationRegistry().authenticationProvider(authenticationProvider);
 		return this;
 	}
-
+	//配置UserDetailsService
 	@Override
 	public HttpSecurity userDetailsService(UserDetailsService userDetailsService) throws Exception {
 		getAuthenticationRegistry().userDetailsService(userDetailsService);
@@ -3039,12 +3039,12 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	private AuthenticationManagerBuilder getAuthenticationRegistry() {
 		return getSharedObject(AuthenticationManagerBuilder.class);
 	}
-
+	//在某个过滤器之后添加过滤器
 	@Override
 	public HttpSecurity addFilterAfter(Filter filter, Class<? extends Filter> afterFilter) {
 		return addFilterAtOffsetOf(filter, 1, afterFilter);
 	}
-
+	//在某个过滤器之前添加过滤器
 	@Override
 	public HttpSecurity addFilterBefore(Filter filter, Class<? extends Filter> beforeFilter) {
 		return addFilterAtOffsetOf(filter, -1, beforeFilter);
@@ -3056,7 +3056,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 		this.filterOrders.put(filter.getClass(), order);
 		return this;
 	}
-
+	//向过滤器链中添加过滤器 其过滤器必须是SpringSecurity框架提供的过滤器的实例或其扩展
 	@Override
 	public HttpSecurity addFilter(Filter filter) {
 		Integer order = this.filterOrders.getOrder(filter.getClass());
@@ -3085,7 +3085,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * @param atFilter the location of another {@link Filter} that is already registered
 	 * (i.e. known) with Spring Security.
 	 * @return the {@link HttpSecurity} for further customizations
-	 */
+	 */ //可以指定一个位置添加过滤器 注：在同一个位置添加多个过滤器不会覆盖原有的过滤器
 	public HttpSecurity addFilterAt(Filter filter, Class<? extends Filter> atFilter) {
 		return addFilterAtOffsetOf(filter, 0, atFilter);
 	}
@@ -3416,7 +3416,7 @@ public final class HttpSecurity extends AbstractConfiguredSecurityBuilder<Defaul
 	 * this {@link SecurityConfigurer} class.
 	 * @return the current {@link SecurityConfigurer} for the configurer passed in
 	 * @throws Exception
-	 */
+	 */ //调用父类中的getConfigurer方法查看是否已经有对应的配置类  如果有直接返回  如果没有则调用父类的apply方法添加到configurers中
 	@SuppressWarnings("unchecked")
 	private <C extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity>> C getOrApply(C configurer)
 			throws Exception {

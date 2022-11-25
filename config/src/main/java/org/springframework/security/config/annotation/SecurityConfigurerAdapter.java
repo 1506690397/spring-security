@@ -103,14 +103,14 @@ public abstract class SecurityConfigurerAdapter<O, B extends SecurityBuilder<O>>
 	 * {@link ObjectPostProcessor} implementations.
 	 *
 	 * @author Rob Winch
-	 */
+	 */ //后置处理器
 	private static final class CompositeObjectPostProcessor implements ObjectPostProcessor<Object> {
 
 		private List<ObjectPostProcessor<?>> postProcessors = new ArrayList<>();
 
 		@Override
 		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public Object postProcess(Object object) {
+		public Object postProcess(Object object) { //遍历后置处理器进行增强
 			for (ObjectPostProcessor opp : this.postProcessors) {
 				Class<?> oppClass = opp.getClass();
 				Class<?> oppType = GenericTypeResolver.resolveTypeArgument(oppClass, ObjectPostProcessor.class);

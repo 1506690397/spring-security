@@ -49,7 +49,7 @@ import org.springframework.security.web.session.SessionManagementFilter;
 /**
  * @param <H>
  * @author Rob Winch
- */
+ */ //构建HttpSecurity对象
 public interface HttpSecurityBuilder<H extends HttpSecurityBuilder<H>>
 		extends SecurityBuilder<DefaultSecurityFilterChain> {
 
@@ -57,7 +57,7 @@ public interface HttpSecurityBuilder<H extends HttpSecurityBuilder<H>>
 	 * Gets the {@link SecurityConfigurer} by its class name or <code>null</code> if not
 	 * found. Note that object hierarchies are not considered.
 	 * @param clazz the Class of the {@link SecurityConfigurer} to attempt to get.
-	 */
+	 */ //获取一个配置器
 	<C extends SecurityConfigurer<DefaultSecurityFilterChain, H>> C getConfigurer(Class<C> clazz);
 
 	/**
@@ -65,35 +65,35 @@ public interface HttpSecurityBuilder<H extends HttpSecurityBuilder<H>>
 	 * not found. Note that object hierarchies are not considered.
 	 * @param clazz the Class of the {@link SecurityConfigurer} to attempt to remove.
 	 * @return the {@link SecurityConfigurer} that was removed or null if not found
-	 */
+	 */ //移除一个配置器  相当于从过滤器链中移除一个过滤器
 	<C extends SecurityConfigurer<DefaultSecurityFilterChain, H>> C removeConfigurer(Class<C> clazz);
 
 	/**
 	 * Sets an object that is shared by multiple {@link SecurityConfigurer}.
 	 * @param sharedType the Class to key the shared object by.
 	 * @param object the Object to store
-	 */
+	 */ //设置一个可以在多个配置器之间共享的对象
 	<C> void setSharedObject(Class<C> sharedType, C object);
 
 	/**
 	 * Gets a shared Object. Note that object heirarchies are not considered.
 	 * @param sharedType the type of the shared Object
 	 * @return the shared Object or null if it is not found
-	 */
+	 */ //设置一个可以在多个配置器之间共享的对象
 	<C> C getSharedObject(Class<C> sharedType);
 
 	/**
 	 * Allows adding an additional {@link AuthenticationProvider} to be used
 	 * @param authenticationProvider the {@link AuthenticationProvider} to be added
 	 * @return the {@link HttpSecurity} for further customizations
-	 */
+	 */ //配置一个认证器
 	H authenticationProvider(AuthenticationProvider authenticationProvider);
 
 	/**
 	 * Allows adding an additional {@link UserDetailsService} to be used
 	 * @param userDetailsService the {@link UserDetailsService} to be added
 	 * @return the {@link HttpSecurity} for further customizations
-	 */
+	 */ //配置一个数据源
 	H userDetailsService(UserDetailsService userDetailsService) throws Exception;
 
 	/**
@@ -104,7 +104,7 @@ public interface HttpSecurityBuilder<H extends HttpSecurityBuilder<H>>
 	 * @param filter the {@link Filter} to register after the type {@code afterFilter}
 	 * @param afterFilter the Class of the known {@link Filter}.
 	 * @return the {@link HttpSecurity} for further customizations
-	 */
+	 */ //在某个过滤器之后添加一个自定义过滤器
 	H addFilterAfter(Filter filter, Class<? extends Filter> afterFilter);
 
 	/**
@@ -115,7 +115,7 @@ public interface HttpSecurityBuilder<H extends HttpSecurityBuilder<H>>
 	 * @param filter the {@link Filter} to register before the type {@code beforeFilter}
 	 * @param beforeFilter the Class of the known {@link Filter}.
 	 * @return the {@link HttpSecurity} for further customizations
-	 */
+	 */ //在某个过滤器之前添加一个自定义过滤器
 	H addFilterBefore(Filter filter, Class<? extends Filter> beforeFilter);
 
 	/**
@@ -154,7 +154,7 @@ public interface HttpSecurityBuilder<H extends HttpSecurityBuilder<H>>
 	 * </ul>
 	 * @param filter the {@link Filter} to add
 	 * @return the {@link HttpSecurity} for further customizations
-	 */
+	 */ //添加一个过滤器（此过滤器必须是SpringSecurity框架提供的一个实例或其扩展）
 	H addFilter(Filter filter);
 
 }

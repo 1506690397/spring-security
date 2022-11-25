@@ -63,7 +63,7 @@ public class RegisterSessionAuthenticationStrategy implements SessionAuthenticat
 	 */
 	@Override
 	public void onAuthentication(Authentication authentication, HttpServletRequest request,
-			HttpServletResponse response) { //想sessionRegistry中添加一天登录会话信息
+			HttpServletResponse response) { //向sessionRegistry中添加一天登录会话信息
 		this.sessionRegistry.registerNewSession(request.getSession().getId(), authentication.getPrincipal());
 	}
 

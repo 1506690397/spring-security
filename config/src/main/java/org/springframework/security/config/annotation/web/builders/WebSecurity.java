@@ -84,18 +84,18 @@ import org.springframework.web.filter.DelegatingFilterProxy;
  * @since 3.2
  * @see EnableWebSecurity
  * @see WebSecurityConfiguration
- */
+ */ //在一个更大的层面上去构建过滤器   负责将HttpSecurity所构建的DefaultSecurityFilterChain对象（可能有多个）以及其他一些需要忽略的请求，再次重新构造为一个FilterChainProxy对象，同时添加上Http防火墙
 public final class WebSecurity extends AbstractConfiguredSecurityBuilder<Filter, WebSecurity>
 		implements SecurityBuilder<Filter>, ApplicationContextAware, ServletContextAware {
 
 	private final Log logger = LogFactory.getLog(getClass());
-
+	//保存所有被忽略的请求
 	private final List<RequestMatcher> ignoredRequests = new ArrayList<>();
-
+	//保存所有的HttpSecurity对象   HttpSecurity对象构建成功后通过addSecurityFilterChain方法将其添加到securityFilterChainBuilders集合中
 	private final List<SecurityBuilder<? extends SecurityFilterChain>> securityFilterChainBuilders = new ArrayList<>();
 
 	private IgnoredRequestConfigurer ignoredRequestRegistry;
-
+	//配置请求防火墙
 	private HttpFirewall httpFirewall;
 
 	private RequestRejectedHandler requestRejectedHandler;
@@ -272,7 +272,7 @@ public final class WebSecurity extends AbstractConfiguredSecurityBuilder<Filter,
 		this.requestRejectedHandler = requestRejectedHandler;
 		return this;
 	}
-
+	//具体的构建方法
 	@Override
 	protected Filter performBuild() throws Exception {
 		Assert.state(!this.securityFilterChainBuilders.isEmpty(),
@@ -280,20 +280,20 @@ public final class WebSecurity extends AbstractConfiguredSecurityBuilder<Filter,
 						+ "Typically this is done by exposing a SecurityFilterChain bean. "
 						+ "More advanced users can invoke " + WebSecurity.class.getSimpleName()
 						+ ".addSecurityFilterChainBuilder directly");
-		int chainSize = this.ignoredRequests.size() + this.securityFilterChainBuilders.size();
-		List<SecurityFilterChain> securityFilterChains = new ArrayList<>(chainSize);
+		int chainSize = this.ignoredRequests.size() + this.securityFilterChainBuilders.size(); //统计出过滤器链的总个数   被忽略的请求个数+通过HttpSecurity构建出来的过滤器链个数
+		List<SecurityFilterChain> securityFilterChains = new ArrayList<>(chainSize); //创建一个securityFilterChains集合
 		List<RequestMatcherEntry<List<WebInvocationPrivilegeEvaluator>>> requestMatcherPrivilegeEvaluatorsEntries = new ArrayList<>();
-		for (RequestMatcher ignoredRequest : this.ignoredRequests) {
+		for (RequestMatcher ignoredRequest : this.ignoredRequests) { //遍历被忽略的请求  并且构造成一个DefaultSecurityFilterChain添加到securityFilterChains集合中
 			WebSecurity.this.logger.warn("You are asking Spring Security to ignore " + ignoredRequest
 					+ ". This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.");
-			SecurityFilterChain securityFilterChain = new DefaultSecurityFilterChain(ignoredRequest);
+			SecurityFilterChain securityFilterChain = new DefaultSecurityFilterChain(ignoredRequest); //只传入了请求匹配器并没有过滤器链
 			securityFilterChains.add(securityFilterChain);
 			requestMatcherPrivilegeEvaluatorsEntries
 					.add(getRequestMatcherPrivilegeEvaluatorsEntry(securityFilterChain));
 		}
 		for (SecurityBuilder<? extends SecurityFilterChain> securityFilterChainBuilder : this.securityFilterChainBuilders) {
-			SecurityFilterChain securityFilterChain = securityFilterChainBuilder.build();
-			securityFilterChains.add(securityFilterChain);
+			SecurityFilterChain securityFilterChain = securityFilterChainBuilder.build(); //调用每个方法的build方法进行构建
+			securityFilterChains.add(securityFilterChain); //添加到securityFilterChains集合中
 			requestMatcherPrivilegeEvaluatorsEntries
 					.add(getRequestMatcherPrivilegeEvaluatorsEntry(securityFilterChain));
 		}
@@ -301,9 +301,9 @@ public final class WebSecurity extends AbstractConfiguredSecurityBuilder<Filter,
 			this.privilegeEvaluator = new RequestMatcherDelegatingWebInvocationPrivilegeEvaluator(
 					requestMatcherPrivilegeEvaluatorsEntries);
 		}
-		FilterChainProxy filterChainProxy = new FilterChainProxy(securityFilterChains);
+		FilterChainProxy filterChainProxy = new FilterChainProxy(securityFilterChains); //构建FilterChainProxy对象
 		if (this.httpFirewall != null) {
-			filterChainProxy.setFirewall(this.httpFirewall);
+			filterChainProxy.setFirewall(this.httpFirewall); //设置Http防火墙
 		}
 		if (this.requestRejectedHandler != null) {
 			filterChainProxy.setRequestRejectedHandler(this.requestRejectedHandler);
@@ -326,7 +326,7 @@ public final class WebSecurity extends AbstractConfiguredSecurityBuilder<Filter,
 		}
 
 		this.postBuildAction.run();
-		return result;
+		return result; //返回FilterChainProxy对象
 	}
 
 	private RequestMatcherEntry<List<WebInvocationPrivilegeEvaluator>> getRequestMatcherPrivilegeEvaluatorsEntry(

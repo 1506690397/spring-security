@@ -54,7 +54,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 		extends AbstractSecurityBuilder<O> {
 
 	private final Log logger = LogFactory.getLog(getClass());
-
+	//用来保存所有的配置类  key是Class对象 value是配置类集合
 	private final LinkedHashMap<Class<? extends SecurityConfigurer<O, B>>, List<SecurityConfigurer<O, B>>> configurers = new LinkedHashMap<>();
 
 	private final List<SecurityConfigurer<O, B>> configurersAddedInInitializing = new ArrayList<>();
@@ -117,7 +117,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	 * @param configurer
 	 * @return the {@link SecurityConfigurerAdapter} for further customizations
 	 * @throws Exception
-	 */
+	 */ //向configurers中添加配置类
 	@SuppressWarnings("unchecked")
 	public <C extends SecurityConfigurerAdapter<O, B>> C apply(C configurer) throws Exception {
 		configurer.addObjectPostProcessor(this.objectPostProcessor);
@@ -133,7 +133,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	 * @param configurer
 	 * @return the {@link SecurityConfigurerAdapter} for further customizations
 	 * @throws Exception
-	 */
+	 */ //向configurers中添加配置类
 	public <C extends SecurityConfigurer<O, B>> C apply(C configurer) throws Exception {
 		add(configurer);
 		return configurer;
@@ -171,7 +171,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	 * Adds {@link SecurityConfigurer} ensuring that it is allowed and invoking
 	 * {@link SecurityConfigurer#init(SecurityBuilder)} immediately if necessary.
 	 * @param configurer the {@link SecurityConfigurer} to add
-	 */
+	 */ //将所有的配置类添加到configurers中
 	@SuppressWarnings("unchecked")
 	private <C extends SecurityConfigurer<O, B>> void add(C configurer) {
 		Assert.notNull(configurer, "configurer cannot be null");
@@ -182,7 +182,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 				throw new IllegalStateException("Cannot apply " + configurer + " to already built object");
 			}
 			List<SecurityConfigurer<O, B>> configs = null;
-			if (this.allowConfigurersOfSameType) {
+			if (this.allowConfigurersOfSameType) { //allowConfigurersOfSameType表示是否允许有相同类型的配置类存在
 				configs = this.configurers.get(clazz);
 			}
 			configs = (configs != null) ? configs : new ArrayList<>(1);
@@ -199,7 +199,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	 * List if not found. Note that object hierarchies are not considered.
 	 * @param clazz the {@link SecurityConfigurer} class to look for
 	 * @return a list of {@link SecurityConfigurer}s for further customization
-	 */
+	 */ //获取configurers中某一个配置类中的所有实例
 	@SuppressWarnings("unchecked")
 	public <C extends SecurityConfigurer<O, B>> List<C> getConfigurers(Class<C> clazz) {
 		List<C> configs = (List<C>) this.configurers.get(clazz);
@@ -214,7 +214,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	 * List if not found. Note that object hierarchies are not considered.
 	 * @param clazz the {@link SecurityConfigurer} class to look for
 	 * @return a list of {@link SecurityConfigurer}s for further customization
-	 */
+	 */ //从configurers中移除某一个配置类对应的所有配置类实例  并返回移除掉的配置类的第一项
 	@SuppressWarnings("unchecked")
 	public <C extends SecurityConfigurer<O, B>> List<C> removeConfigurers(Class<C> clazz) {
 		List<C> configs = (List<C>) this.configurers.remove(clazz);
@@ -229,7 +229,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	 * found. Note that object hierarchies are not considered.
 	 * @param clazz
 	 * @return the {@link SecurityConfigurer} for further customizations
-	 */
+	 */ //获取配置类实例  只获取集合中的第一项
 	@SuppressWarnings("unchecked")
 	public <C extends SecurityConfigurer<O, B>> C getConfigurer(Class<C> clazz) {
 		List<SecurityConfigurer<O, B>> configs = this.configurers.get(clazz);
@@ -246,7 +246,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	 * <code>null</code> if not found. Note that object hierarchies are not considered.
 	 * @param clazz
 	 * @return
-	 */
+	 */ //从configurers中移除某一个配置类对应的所有实例  并返回被移除掉的第一项
 	@SuppressWarnings("unchecked")
 	public <C extends SecurityConfigurer<O, B>> C removeConfigurer(Class<C> clazz) {
 		List<SecurityConfigurer<O, B>> configs = this.configurers.remove(clazz);
@@ -291,16 +291,16 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	 * <li>Invokes {@link #beforeConfigure()} for any subclass to hook into</li>
 	 * <li>Invokes {@link #performBuild()} which actually builds the Object</li>
 	 * </ul>
-	 */
+	 */ //一边更新状态一般执行构建方法
 	@Override
 	protected final O doBuild() throws Exception {
 		synchronized (this.configurers) {
 			this.buildState = BuildState.INITIALIZING;
-			beforeInit();
-			init();
+			beforeInit(); //空方法  如果在构建之前需要做一些准备工作  则可以通过该方法实现
+			init(); //遍历所有配置类的初始化方法
 			this.buildState = BuildState.CONFIGURING;
-			beforeConfigure();
-			configure();
+			beforeConfigure(); //configure方法执行前的一些准备工作 默认为空方法
+			configure(); //完成所有配置类的配置
 			this.buildState = BuildState.BUILDING;
 			O result = performBuild();
 			this.buildState = BuildState.BUILT;
@@ -334,7 +334,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	@SuppressWarnings("unchecked")
 	private void init() throws Exception {
 		Collection<SecurityConfigurer<O, B>> configurers = getConfigurers();
-		for (SecurityConfigurer<O, B> configurer : configurers) {
+		for (SecurityConfigurer<O, B> configurer : configurers) { //遍历所有配置类调用其初始化方法
 			configurer.init((B) this);
 		}
 		for (SecurityConfigurer<O, B> configurer : this.configurersAddedInInitializing) {
@@ -345,11 +345,11 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 	@SuppressWarnings("unchecked")
 	private void configure() throws Exception {
 		Collection<SecurityConfigurer<O, B>> configurers = getConfigurers();
-		for (SecurityConfigurer<O, B> configurer : configurers) {
+		for (SecurityConfigurer<O, B> configurer : configurers) { //遍历所有配置类调用其configure方法完成配置
 			configurer.configure((B) this);
 		}
 	}
-
+	//把所有配置类实例放到一个集合中返回
 	private Collection<SecurityConfigurer<O, B>> getConfigurers() {
 		List<SecurityConfigurer<O, B>> result = new ArrayList<>();
 		for (List<SecurityConfigurer<O, B>> configs : this.configurers.values()) {
@@ -379,13 +379,13 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 		/**
 		 * This is the state before the {@link Builder#build()} is invoked
 		 */
-		UNBUILT(0),
+		UNBUILT(0), //配置类构建前
 
 		/**
 		 * The state from when {@link Builder#build()} is first invoked until all the
 		 * {@link SecurityConfigurer#init(SecurityBuilder)} methods have been invoked.
 		 */
-		INITIALIZING(1),
+		INITIALIZING(1), //初始化中
 
 		/**
 		 * The state from after all {@link SecurityConfigurer#init(SecurityBuilder)} have
@@ -393,26 +393,26 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 		 * {@link SecurityConfigurer#configure(SecurityBuilder)} methods have been
 		 * invoked.
 		 */
-		CONFIGURING(2),
+		CONFIGURING(2), //配置中
 
 		/**
 		 * From the point after all the
 		 * {@link SecurityConfigurer#configure(SecurityBuilder)} have completed to just
 		 * after {@link AbstractConfiguredSecurityBuilder#performBuild()}.
 		 */
-		BUILDING(3),
+		BUILDING(3), //构建中
 
 		/**
 		 * After the object has been completely built.
 		 */
-		BUILT(4);
+		BUILT(4); //构建完成
 
 		private final int order;
 
 		BuildState(int order) {
 			this.order = order;
 		}
-
+		//是否在初始化中
 		public boolean isInitializing() {
 			return INITIALIZING.order == this.order;
 		}
@@ -420,7 +420,7 @@ public abstract class AbstractConfiguredSecurityBuilder<O, B extends SecurityBui
 		/**
 		 * Determines if the state is CONFIGURING or later
 		 * @return
-		 */
+		 */ //是否完成配置
 		public boolean isConfigured() {
 			return this.order >= CONFIGURING.order;
 		}

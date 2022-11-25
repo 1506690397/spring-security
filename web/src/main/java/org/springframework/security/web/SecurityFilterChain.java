@@ -29,11 +29,11 @@ import jakarta.servlet.http.HttpServletRequest;
  *
  * @author Luke Taylor
  * @since 3.1
- */
+ */ //过滤器链对象
 public interface SecurityFilterChain {
-
+	//判断当前请求是否应该被当爱你过滤器链所处理
 	boolean matches(HttpServletRequest request);
-
+	//返回一个过滤器的集合
 	List<Filter> getFilters();
 
 }

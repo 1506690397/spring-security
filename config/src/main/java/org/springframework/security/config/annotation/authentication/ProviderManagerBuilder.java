@@ -26,7 +26,7 @@ import org.springframework.security.config.annotation.SecurityBuilder;
  *
  * @param <B> the type of the {@link SecurityBuilder}
  * @author Rob Winch
- */
+ */ //制定了构建对象为AuthenticationManager
 public interface ProviderManagerBuilder<B extends ProviderManagerBuilder<B>>
 		extends SecurityBuilder<AuthenticationManager> {
 
