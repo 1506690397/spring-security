@@ -32,7 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * @author Rob Winch
  * @since 4.1
- */
+ */ //初始化全局的UserDetailsService对象
 @Order(InitializeUserDetailsBeanManagerConfigurer.DEFAULT_ORDER)
 class InitializeUserDetailsBeanManagerConfigurer extends GlobalAuthenticationConfigurerAdapter {
 
@@ -51,7 +51,7 @@ class InitializeUserDetailsBeanManagerConfigurer extends GlobalAuthenticationCon
 	public void init(AuthenticationManagerBuilder auth) throws Exception {
 		auth.apply(new InitializeUserDetailsManagerConfigurer());
 	}
-
+	//配置全局的UserDetailsService对象
 	class InitializeUserDetailsManagerConfigurer extends GlobalAuthenticationConfigurerAdapter {
 
 		@Override
@@ -59,14 +59,14 @@ class InitializeUserDetailsBeanManagerConfigurer extends GlobalAuthenticationCon
 			if (auth.isConfigured()) {
 				return;
 			}
-			UserDetailsService userDetailsService = getBeanOrNull(UserDetailsService.class);
+			UserDetailsService userDetailsService = getBeanOrNull(UserDetailsService.class); //从容器中查找UserDetailsService
 			if (userDetailsService == null) {
 				return;
 			}
 			PasswordEncoder passwordEncoder = getBeanOrNull(PasswordEncoder.class);
 			UserDetailsPasswordService passwordManager = getBeanOrNull(UserDetailsPasswordService.class);
 			DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-			provider.setUserDetailsService(userDetailsService);
+			provider.setUserDetailsService(userDetailsService); //将其设置给全局的AuthenticationManagerBuilder对象
 			if (passwordEncoder != null) {
 				provider.setPasswordEncoder(passwordEncoder);
 			}

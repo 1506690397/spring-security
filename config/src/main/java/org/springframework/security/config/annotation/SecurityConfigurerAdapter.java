@@ -103,7 +103,7 @@ public abstract class SecurityConfigurerAdapter<O, B extends SecurityBuilder<O>>
 	 * {@link ObjectPostProcessor} implementations.
 	 *
 	 * @author Rob Winch
-	 */ //后置处理器
+	 */ //这是一个复合的后置处理器
 	private static final class CompositeObjectPostProcessor implements ObjectPostProcessor<Object> {
 
 		private List<ObjectPostProcessor<?>> postProcessors = new ArrayList<>();
@@ -125,7 +125,7 @@ public abstract class SecurityConfigurerAdapter<O, B extends SecurityBuilder<O>>
 		 * Adds an {@link ObjectPostProcessor} to use
 		 * @param objectPostProcessor the {@link ObjectPostProcessor} to add
 		 * @return true if the {@link ObjectPostProcessor} was added, else false
-		 */
+		 */ //添加新的ObjectPostProcessor
 		private boolean addObjectPostProcessor(ObjectPostProcessor<?> objectPostProcessor) {
 			boolean result = this.postProcessors.add(objectPostProcessor);
 			this.postProcessors.sort(AnnotationAwareOrderComparator.INSTANCE);

@@ -37,7 +37,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
  * @param <C> the type of {@link UserDetailsManagerConfigurer}
  * @author Rob Winch
  * @since 3.2
- */
+ */ //使用UserDetailsManager构建用户对象  完成对AuthenticationManagerBuilder的填充
 public class UserDetailsManagerConfigurer<B extends ProviderManagerBuilder<B>, C extends UserDetailsManagerConfigurer<B, C>>
 		extends UserDetailsServiceConfigurer<B, C, UserDetailsManager> {
 

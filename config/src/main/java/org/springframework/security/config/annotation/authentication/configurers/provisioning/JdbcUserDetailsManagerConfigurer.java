@@ -43,7 +43,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
  * @param <B> the type of the {@link ProviderManagerBuilder} that is being configured
  * @author Rob Winch
  * @since 3.2
- */
+ */ //配置UserDetailsManager并填充到AuthenticationManagerBuilder中
 public class JdbcUserDetailsManagerConfigurer<B extends ProviderManagerBuilder<B>>
 		extends UserDetailsManagerConfigurer<B, JdbcUserDetailsManagerConfigurer<B>> {
 

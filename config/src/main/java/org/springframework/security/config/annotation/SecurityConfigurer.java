@@ -27,7 +27,7 @@ package org.springframework.security.config.annotation;
  * {@link SecurityBuilder} that is being configured.
  * @author Rob Winch
  * @see AbstractConfiguredSecurityBuilder
- */
+ */ //对SecurityBuilder进行初始化和配置
 public interface SecurityConfigurer<O, B extends SecurityBuilder<O>> {
 
 	/**
@@ -37,7 +37,7 @@ public interface SecurityConfigurer<O, B extends SecurityBuilder<O>> {
 	 * the correct shared objects when building. Configurers should be applied here.
 	 * @param builder
 	 * @throws Exception
-	 */
+	 */ //完成配置类的初始化工作
 	void init(B builder) throws Exception;
 
 	/**
@@ -45,7 +45,7 @@ public interface SecurityConfigurer<O, B extends SecurityBuilder<O>> {
 	 * {@link SecurityBuilder}.
 	 * @param builder
 	 * @throws Exception
-	 */
+	 */ //进行配置类的配置
 	void configure(B builder) throws Exception;
 
 }

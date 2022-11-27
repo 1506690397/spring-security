@@ -30,7 +30,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  * @param <B> the type of the {@link ProviderManagerBuilder} that is being configured
  * @author Rob Winch
  * @since 3.2
- */
+ */ //配置InMemoryUserDetailsManager
 public class InMemoryUserDetailsManagerConfigurer<B extends ProviderManagerBuilder<B>>
 		extends UserDetailsManagerConfigurer<B, InMemoryUserDetailsManagerConfigurer<B>> {
 

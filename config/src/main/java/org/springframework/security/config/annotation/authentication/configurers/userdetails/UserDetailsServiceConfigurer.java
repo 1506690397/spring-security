@@ -30,7 +30,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * concrete UserDetailsService.
  * @author Rob Winch
  * @since 3.2
- */
+ */ //完成对UserDetailsService的配置
 public class UserDetailsServiceConfigurer<B extends ProviderManagerBuilder<B>, C extends UserDetailsServiceConfigurer<B, C, U>, U extends UserDetailsService>
 		extends AbstractDaoAuthenticationConfigurer<B, C, U> {
 

@@ -204,7 +204,7 @@ public class AuthenticationConfiguration {
 			return null;
 		}
 	}
-
+	//从Spring容器中加载被@EnableGlobalAuthentication注解标记的Bean
 	private static class EnableGlobalAuthenticationAutowiredConfigurer extends GlobalAuthenticationConfigurerAdapter {
 
 		private final ApplicationContext context;

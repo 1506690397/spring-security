@@ -63,14 +63,14 @@ import org.springframework.security.web.context.AbstractSecurityWebApplicationIn
  * @since 3.2
  * @see EnableWebSecurity
  * @see WebSecurity
- */
+ */ //主要构建过滤器链代码对象FilterChainProxy
 @Configuration(proxyBeanMethods = false)
 public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAware {
 
 	private WebSecurity webSecurity;
 
 	private Boolean debugEnabled;
-
+	//保存了所有的配置类
 	private List<SecurityConfigurer<Filter, WebSecurity>> webSecurityConfigurers;
 
 	private List<SecurityFilterChain> securityFilterChains = Collections.emptyList();
@@ -78,7 +78,7 @@ public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAwa
 	private List<WebSecurityCustomizer> webSecurityCustomizers = Collections.emptyList();
 
 	private ClassLoader beanClassLoader;
-
+	//是一个对象后置处理器
 	@Autowired(required = false)
 	private ObjectPostProcessor<Object> objectObjectPostProcessor;
 
@@ -104,7 +104,7 @@ public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAwa
 	@Bean(name = AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME)
 	public Filter springSecurityFilterChain() throws Exception {
 		boolean hasFilterChain = !this.securityFilterChains.isEmpty();
-		if (!hasFilterChain) {
+		if (!hasFilterChain) { //如果不存在filterChain则创建一个默认的FilterChain
 			this.webSecurity.addSecurityFilterChainBuilder(() -> {
 				this.httpSecurity.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
 				this.httpSecurity.formLogin(Customizer.withDefaults());
@@ -141,7 +141,7 @@ public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAwa
 	 * {@code <SecurityConfigurer<FilterChainProxy, WebSecurityBuilder>} instances used to
 	 * create the web configuration
 	 * @throws Exception
-	 */
+	 */ //主要用来构建一个WebSecurity对象  并加载所有的配置类对象
 	@Autowired(required = false)
 	public void setFilterChainProxySecurityConfigurer(ObjectPostProcessor<Object> objectPostProcessor,
 			ConfigurableListableBeanFactory beanFactory) throws Exception {
@@ -154,9 +154,9 @@ public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAwa
 		webSecurityConfigurers.sort(AnnotationAwareOrderComparator.INSTANCE);
 		Integer previousOrder = null;
 		Object previousConfig = null;
-		for (SecurityConfigurer<Filter, WebSecurity> config : webSecurityConfigurers) {
+		for (SecurityConfigurer<Filter, WebSecurity> config : webSecurityConfigurers) { //按照优先级进行匹配
 			Integer order = AnnotationAwareOrderComparator.lookupOrder(config);
-			if (previousOrder != null && previousOrder.equals(order)) {
+			if (previousOrder != null && previousOrder.equals(order)) { //如果有优先级相等的配置类直接抛出异常
 				throw new IllegalStateException("@Order on WebSecurityConfigurers must be unique. Order of " + order
 						+ " was already used on " + previousConfig + ", so it cannot be used on " + config + " too.");
 			}
@@ -164,7 +164,7 @@ public class WebSecurityConfiguration implements ImportAware, BeanClassLoaderAwa
 			previousConfig = config;
 		}
 		for (SecurityConfigurer<Filter, WebSecurity> webSecurityConfigurer : webSecurityConfigurers) {
-			this.webSecurity.apply(webSecurityConfigurer);
+			this.webSecurity.apply(webSecurityConfigurer); //添加到父类的configurers集合中
 		}
 		this.webSecurityConfigurers = webSecurityConfigurers;
 	}

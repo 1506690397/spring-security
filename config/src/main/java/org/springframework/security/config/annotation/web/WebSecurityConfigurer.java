@@ -34,7 +34,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * @author Rob Winch
  * @since 3.2
  * @see SecurityFilterChain
- */
+ */ //空接口  可以通过这个类自定义WebSecurity
 public interface WebSecurityConfigurer<T extends SecurityBuilder<Filter>> extends SecurityConfigurer<Filter, T> {
 
 }

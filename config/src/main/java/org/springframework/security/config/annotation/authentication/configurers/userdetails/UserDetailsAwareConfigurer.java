@@ -29,7 +29,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @param <B> the type of the {@link ProviderManagerBuilder}
  * @param <U> the type of {@link UserDetailsService}
  * @author Rob Winch
- */
+ */ //其子类主要负责用户认证的组件
 public abstract class UserDetailsAwareConfigurer<B extends ProviderManagerBuilder<B>, U extends UserDetailsService>
 		extends SecurityConfigurerAdapter<AuthenticationManager, B> {
 

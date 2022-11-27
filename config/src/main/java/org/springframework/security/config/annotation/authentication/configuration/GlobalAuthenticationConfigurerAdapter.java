@@ -29,7 +29,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
  *
  * @author Rob Winch
  * @since 5.0
- */
+ */ //用于配置全局的AuthenticationManagerBuilder
 @Order(100)
 public abstract class GlobalAuthenticationConfigurerAdapter
 		implements SecurityConfigurer<AuthenticationManager, AuthenticationManagerBuilder> {

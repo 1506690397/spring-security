@@ -27,7 +27,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @param <U> The type of {@link UserDetailsService} that is being used
  * @author Rob Winch
  * @since 3.2
- */
+ */ //完成对DaoAuthenticationProvider的配置
 public class DaoAuthenticationConfigurer<B extends ProviderManagerBuilder<B>, U extends UserDetailsService>
 		extends AbstractDaoAuthenticationConfigurer<B, DaoAuthenticationConfigurer<B, U>, U> {
 

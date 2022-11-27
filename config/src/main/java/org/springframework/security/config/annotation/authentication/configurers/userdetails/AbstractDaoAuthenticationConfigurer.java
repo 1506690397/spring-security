@@ -32,7 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @param <U> The type of {@link UserDetailsService} that is being used
  * @author Rob Winch
  * @since 3.2
- */
+ */ //完成对DaoAuthenticationProvider的配置
 public abstract class AbstractDaoAuthenticationConfigurer<B extends ProviderManagerBuilder<B>, C extends AbstractDaoAuthenticationConfigurer<B, C, U>, U extends UserDetailsService>
 		extends UserDetailsAwareConfigurer<B, U> {
 

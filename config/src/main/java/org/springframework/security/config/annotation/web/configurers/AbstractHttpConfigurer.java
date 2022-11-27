@@ -31,7 +31,7 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
  * {@link HttpSecurity}.
  *
  * @author Rob Winch
- */
+ */ //为了给HttpSecurity中使用的配置类添加一个方便的父类  提取出共同的操作
 public abstract class AbstractHttpConfigurer<T extends AbstractHttpConfigurer<T, B>, B extends HttpSecurityBuilder<B>>
 		extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, B> {
 
@@ -41,13 +41,13 @@ public abstract class AbstractHttpConfigurer<T extends AbstractHttpConfigurer<T,
 	 * Disables the {@link AbstractHttpConfigurer} by removing it. After doing so a fresh
 	 * version of the configuration can be applied.
 	 * @return the {@link HttpSecurityBuilder} for additional customizations
-	 */
+	 */ //禁用某一配置 本质上就是从构建器的configurers集合中移除某一个配置类
 	@SuppressWarnings("unchecked")
 	public B disable() {
 		getBuilder().removeConfigurer(getClass());
 		return getBuilder();
 	}
-
+	//给某一个对象添加一个对象后置处理器
 	@SuppressWarnings("unchecked")
 	public T withObjectPostProcessor(ObjectPostProcessor<?> objectPostProcessor) {
 		addObjectPostProcessor(objectPostProcessor);

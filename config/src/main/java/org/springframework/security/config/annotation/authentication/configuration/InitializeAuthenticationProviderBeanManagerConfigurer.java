@@ -27,7 +27,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
  *
  * @author Rob Winch
  * @since 4.1
- */
+ */ //初始化全局的AuthenticationProvider对象
 @Order(InitializeAuthenticationProviderBeanManagerConfigurer.DEFAULT_ORDER)
 class InitializeAuthenticationProviderBeanManagerConfigurer extends GlobalAuthenticationConfigurerAdapter {
 
@@ -46,7 +46,7 @@ class InitializeAuthenticationProviderBeanManagerConfigurer extends GlobalAuthen
 	public void init(AuthenticationManagerBuilder auth) throws Exception {
 		auth.apply(new InitializeAuthenticationProviderManagerConfigurer());
 	}
-
+	//配置全局的AuthenticationProvider对象
 	class InitializeAuthenticationProviderManagerConfigurer extends GlobalAuthenticationConfigurerAdapter {
 
 		@Override
@@ -54,7 +54,7 @@ class InitializeAuthenticationProviderBeanManagerConfigurer extends GlobalAuthen
 			if (auth.isConfigured()) {
 				return;
 			}
-			AuthenticationProvider authenticationProvider = getBeanOrNull(AuthenticationProvider.class);
+			AuthenticationProvider authenticationProvider = getBeanOrNull(AuthenticationProvider.class); //从容器中查找AuthenticationProvider并设置给全局的AuthenticationManagerBuilder对象
 			if (authenticationProvider == null) {
 				return;
 			}
