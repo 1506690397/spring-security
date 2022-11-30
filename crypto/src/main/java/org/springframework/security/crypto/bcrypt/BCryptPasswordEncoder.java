@@ -32,7 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * will have to be done (exponentially) to hash the passwords. The default value is 10.
  *
  * @author Dave Syer
- */
+ */ //使用bcrypt算法进行加密   自带“盐”
 public class BCryptPasswordEncoder implements PasswordEncoder {
 
 	private Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2(a|y|b)?\\$(\\d\\d)\\$[./0-9A-Za-z]{53}");

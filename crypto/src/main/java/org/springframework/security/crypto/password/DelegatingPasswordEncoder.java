@@ -122,23 +122,23 @@ import java.util.Map;
  * @author Jihoon Cha
  * @since 5.0
  * @see org.springframework.security.crypto.factory.PasswordEncoderFactories
- */
+ */ //对加密方案进行代理
 public class DelegatingPasswordEncoder implements PasswordEncoder {
-
+	//定义前缀
 	private static final String DEFAULT_ID_PREFIX = "{";
-
+	//定义后缀
 	private static final String DEFAULT_ID_SUFFIX = "}";
 
 	private final String idPrefix;
 
 	private final String idSuffix;
-
+	//表示默认的加密方案id
 	private final String idForEncode;
-
+	//表示默认的加密方案（BCryptPasswordEncoder）
 	private final PasswordEncoder passwordEncoderForEncode;
-
+	//用来保存id和加密方案之间的映射
 	private final Map<String, PasswordEncoder> idToPasswordEncoder;
-
+	//默认的密码对比器  根据加密方案的id找不到对应的加密方案时就会使用默认的密码对比器   UnmappedIdPasswordEncoder中的matches方法不会做任何比对操作 直接抛出异常
 	private PasswordEncoder defaultPasswordEncoderForMatches = new UnmappedIdPasswordEncoder();
 
 	/**
@@ -220,24 +220,24 @@ public class DelegatingPasswordEncoder implements PasswordEncoder {
 		}
 		this.defaultPasswordEncoderForMatches = defaultPasswordEncoderForMatches;
 	}
-
+	//委派给具体的加密器进行加密  在加密后的密文前加上一个前缀id用来描述具体的加密方案
 	@Override
 	public String encode(CharSequence rawPassword) {
 		return this.idPrefix + this.idForEncode + this.idSuffix + this.passwordEncoderForEncode.encode(rawPassword);
 	}
-
+	//密码比对方法
 	@Override
 	public boolean matches(CharSequence rawPassword, String prefixEncodedPassword) {
 		if (rawPassword == null && prefixEncodedPassword == null) {
 			return true;
 		}
-		String id = extractId(prefixEncodedPassword);
-		PasswordEncoder delegate = this.idToPasswordEncoder.get(id);
-		if (delegate == null) {
+		String id = extractId(prefixEncodedPassword); //从加密字符串重提取出具体的加密方案id  也就是{}中的字符
+		PasswordEncoder delegate = this.idToPasswordEncoder.get(id); //获取对应的加密方案
+		if (delegate == null) { //如果不存在对应的加密实例则获取默认的密码匹配器
 			return this.defaultPasswordEncoderForMatches.matches(rawPassword, prefixEncodedPassword);
 		}
 		String encodedPassword = extractEncodedPassword(prefixEncodedPassword);
-		return delegate.matches(rawPassword, encodedPassword);
+		return delegate.matches(rawPassword, encodedPassword); //进行密码比对
 	}
 
 	private String extractId(String prefixEncodedPassword) {
@@ -254,7 +254,7 @@ public class DelegatingPasswordEncoder implements PasswordEncoder {
 		}
 		return prefixEncodedPassword.substring(start + this.idPrefix.length(), end);
 	}
-
+	//如果不是默认的加密方案（BcryptPasswordEncoder）则会进行密码升级
 	@Override
 	public boolean upgradeEncoding(String prefixEncodedPassword) {
 		String id = extractId(prefixEncodedPassword);
@@ -282,7 +282,7 @@ public class DelegatingPasswordEncoder implements PasswordEncoder {
 		public String encode(CharSequence rawPassword) {
 			throw new UnsupportedOperationException("encode is not supported");
 		}
-
+		//不做任何比对操作直接抛出异常
 		@Override
 		public boolean matches(CharSequence rawPassword, String prefixEncodedPassword) {
 			String id = extractId(prefixEncodedPassword);

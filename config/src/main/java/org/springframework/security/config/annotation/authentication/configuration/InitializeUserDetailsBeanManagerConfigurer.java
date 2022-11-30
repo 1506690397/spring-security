@@ -63,12 +63,12 @@ class InitializeUserDetailsBeanManagerConfigurer extends GlobalAuthenticationCon
 			if (userDetailsService == null) {
 				return;
 			}
-			PasswordEncoder passwordEncoder = getBeanOrNull(PasswordEncoder.class);
+			PasswordEncoder passwordEncoder = getBeanOrNull(PasswordEncoder.class); //从spring容器中获取一个Password实例
 			UserDetailsPasswordService passwordManager = getBeanOrNull(UserDetailsPasswordService.class);
 			DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 			provider.setUserDetailsService(userDetailsService); //将其设置给全局的AuthenticationManagerBuilder对象
 			if (passwordEncoder != null) {
-				provider.setPasswordEncoder(passwordEncoder);
+				provider.setPasswordEncoder(passwordEncoder); //设置给provider实例
 			}
 			if (passwordManager != null) {
 				provider.setUserDetailsPasswordService(passwordManager);

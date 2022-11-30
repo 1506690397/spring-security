@@ -45,7 +45,7 @@ import org.springframework.security.crypto.util.EncodingUtils;
  * @author Rob Winch
  * @author Loïc Guibert
  * @since 4.1
- */
+ */ //使用PBKDF2算法对密码进行加密
 public class Pbkdf2PasswordEncoder implements PasswordEncoder {
 
 	private static final int DEFAULT_SALT_LENGTH = 16;

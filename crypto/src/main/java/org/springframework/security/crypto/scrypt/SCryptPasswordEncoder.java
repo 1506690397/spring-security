@@ -55,7 +55,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author Shazin Sadakath
  * @author Rob Winch
  *
- */
+ */ //使用scrypt算法进行加密
 public class SCryptPasswordEncoder implements PasswordEncoder {
 
 	private static final int DEFAULT_CPU_COST = 65536;

@@ -43,7 +43,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * @author Simeon Macke
  * @since 5.3
- */
+ */ //使用Argon2算法对密码进行加密
 public class Argon2PasswordEncoder implements PasswordEncoder {
 
 	private static final int DEFAULT_SALT_LENGTH = 16;

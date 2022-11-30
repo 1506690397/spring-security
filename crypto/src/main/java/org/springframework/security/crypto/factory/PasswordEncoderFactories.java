@@ -67,12 +67,12 @@ public final class PasswordEncoderFactories {
 	 * {@link Argon2PasswordEncoder#defaultsForSpringSecurity_v5_8()}</li>
 	 * </ul>
 	 * @return the {@link PasswordEncoder} to use
-	 */
+	 */ //提供了默认的DelegatingPasswordEncoder实例
 	@SuppressWarnings("deprecation")
 	public static PasswordEncoder createDelegatingPasswordEncoder() {
 		String encodingId = "bcrypt";
 		Map<String, PasswordEncoder> encoders = new HashMap<>();
-		encoders.put(encodingId, new BCryptPasswordEncoder());
+		encoders.put(encodingId, new BCryptPasswordEncoder()); //存储每一种密码加密方案的id和对应的加密类
 		encoders.put("ldap", new org.springframework.security.crypto.password.LdapShaPasswordEncoder());
 		encoders.put("MD4", new org.springframework.security.crypto.password.Md4PasswordEncoder());
 		encoders.put("MD5", new org.springframework.security.crypto.password.MessageDigestPasswordEncoder("MD5"));
@@ -87,7 +87,7 @@ public final class PasswordEncoderFactories {
 		encoders.put("sha256", new org.springframework.security.crypto.password.StandardPasswordEncoder());
 		encoders.put("argon2", Argon2PasswordEncoder.defaultsForSpringSecurity_v5_2());
 		encoders.put("argon2@SpringSecurity_v5_8", Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8());
-		return new DelegatingPasswordEncoder(encodingId, encoders);
+		return new DelegatingPasswordEncoder(encodingId, encoders); //创建DelegatingPasswordEncoder实例
 	}
 
 }

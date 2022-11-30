@@ -22,13 +22,13 @@ package org.springframework.security.crypto.password;
  * The preferred implementation is {@code BCryptPasswordEncoder}.
  *
  * @author Keith Donald
- */
+ */ //定义了密码加密和对比的操作
 public interface PasswordEncoder {
 
 	/**
 	 * Encode the raw password. Generally, a good encoding algorithm applies a SHA-1 or
 	 * greater hash combined with an 8-byte or greater randomly generated salt.
-	 */
+	 */ //对明文密码进行加密
 	String encode(CharSequence rawPassword);
 
 	/**
@@ -39,7 +39,7 @@ public interface PasswordEncoder {
 	 * @param encodedPassword the encoded password from storage to compare with
 	 * @return true if the raw password, after encoding, matches the encoded password from
 	 * storage
-	 */
+	 */ //进行密码比对
 	boolean matches(CharSequence rawPassword, String encodedPassword);
 
 	/**
@@ -48,7 +48,7 @@ public interface PasswordEncoder {
 	 * @param encodedPassword the encoded password to check
 	 * @return true if the encoded password should be encoded again for better security,
 	 * else false.
-	 */
+	 */ //用来判断当前密码是否需要升级  默认返回false表示不需要升级
 	default boolean upgradeEncoding(String encodedPassword) {
 		return false;
 	}

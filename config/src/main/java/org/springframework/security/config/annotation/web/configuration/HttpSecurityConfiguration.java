@@ -212,14 +212,14 @@ class HttpSecurityConfiguration {
 		public boolean upgradeEncoding(String encodedPassword) {
 			return getPasswordEncoder().upgradeEncoding(encodedPassword);
 		}
-
+		//获取一个PasswordEncoder实例
 		private PasswordEncoder getPasswordEncoder() {
 			if (this.passwordEncoder != null) {
 				return this.passwordEncoder;
 			}
-			PasswordEncoder passwordEncoder = getBeanOrNull(PasswordEncoder.class);
+			PasswordEncoder passwordEncoder = getBeanOrNull(PasswordEncoder.class); //从容器中找
 			if (passwordEncoder == null) {
-				passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+				passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder(); //没找到的话生成一个默认的DelegatingPasswordEncoder
 			}
 			this.passwordEncoder = passwordEncoder;
 			return passwordEncoder;
