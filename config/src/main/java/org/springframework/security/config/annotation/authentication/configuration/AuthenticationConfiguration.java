@@ -59,7 +59,7 @@ import org.springframework.util.Assert;
  * @author Rob Winch
  * @since 3.2
  *
- */
+ */ //主要做全局的配置   同时提供一个全局的AuthenticationManager
 @Configuration(proxyBeanMethods = false)
 @Import(ObjectPostProcessorConfiguration.class)
 public class AuthenticationConfiguration {
@@ -75,16 +75,16 @@ public class AuthenticationConfiguration {
 	private List<GlobalAuthenticationConfigurerAdapter> globalAuthConfigurers = Collections.emptyList();
 
 	private ObjectPostProcessor<Object> objectPostProcessor;
-
+	//构建全局的AuthenticationManager
 	@Bean
 	public AuthenticationManagerBuilder authenticationManagerBuilder(ObjectPostProcessor<Object> objectPostProcessor,
 			ApplicationContext context) {
 		LazyPasswordEncoder defaultPasswordEncoder = new LazyPasswordEncoder(context);
-		AuthenticationEventPublisher authenticationEventPublisher = getAuthenticationEventPublisher(context);
+		AuthenticationEventPublisher authenticationEventPublisher = getAuthenticationEventPublisher(context); //从Spring容器中查找AuthenticationEventPublisher
 		DefaultPasswordEncoderAuthenticationManagerBuilder result = new DefaultPasswordEncoderAuthenticationManagerBuilder(
 				objectPostProcessor, defaultPasswordEncoder);
 		if (authenticationEventPublisher != null) {
-			result.authenticationEventPublisher(authenticationEventPublisher);
+			result.authenticationEventPublisher(authenticationEventPublisher); //将authenticationEventPublisher设置给AuthenticationManagerBuilder对象
 		}
 		return result;
 	}
@@ -106,24 +106,24 @@ public class AuthenticationConfiguration {
 			ApplicationContext context) {
 		return new InitializeAuthenticationProviderBeanManagerConfigurer(context);
 	}
-
+	//用来构建具体的AuthenticationManager对象
 	public AuthenticationManager getAuthenticationManager() throws Exception {
-		if (this.authenticationManagerInitialized) {
-			return this.authenticationManager;
+		if (this.authenticationManagerInitialized) { //查看AuthenticationManager是否初始化
+			return this.authenticationManager; //如果已经初始化则直接返回authenticationManager对象
 		}
-		AuthenticationManagerBuilder authBuilder = this.applicationContext.getBean(AuthenticationManagerBuilder.class);
+		AuthenticationManagerBuilder authBuilder = this.applicationContext.getBean(AuthenticationManagerBuilder.class); //从Spring容器中获取AuthenticationManagerBuilder对象
 		if (this.buildingAuthenticationManager.getAndSet(true)) {
-			return new AuthenticationManagerDelegator(authBuilder);
+			return new AuthenticationManagerDelegator(authBuilder); //防止在初始化AuthenticationManager时无限递归
 		}
-		for (GlobalAuthenticationConfigurerAdapter config : this.globalAuthConfigurers) {
-			authBuilder.apply(config);
+		for (GlobalAuthenticationConfigurerAdapter config : this.globalAuthConfigurers) { //遍历globalAuthConfigurers配置类集合
+			authBuilder.apply(config); //将配置类添加到authBuilder对象中
 		}
-		this.authenticationManager = authBuilder.build();
+		this.authenticationManager = authBuilder.build(); //进行构建
 		if (this.authenticationManager == null) {
 			this.authenticationManager = getAuthenticationManagerBean();
 		}
 		this.authenticationManagerInitialized = true;
-		return this.authenticationManager;
+		return this.authenticationManager; //返回构建结果
 	}
 
 	@Autowired(required = false)

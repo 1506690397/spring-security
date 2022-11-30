@@ -34,7 +34,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
  * @since 3.2
  * @see EnableWebSecurity
  * @see EnableGlobalMethodSecurity
- */
+ */ //提供一个后置处理器
 @Configuration(proxyBeanMethods = false)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class ObjectPostProcessorConfiguration {
