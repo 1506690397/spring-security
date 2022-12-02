@@ -28,7 +28,7 @@ import org.springframework.security.core.Authentication;
  * </p>
  *
  * @author Ben Alex
- */
+ */ //空实现
 public class NullRememberMeServices implements RememberMeServices {
 
 	@Override

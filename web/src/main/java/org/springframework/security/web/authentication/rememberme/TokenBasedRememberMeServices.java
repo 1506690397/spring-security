@@ -120,22 +120,22 @@ public class TokenBasedRememberMeServices extends AbstractRememberMeServices {
 		Assert.notNull(encodingAlgorithm, "encodingAlgorithm cannot be null");
 		this.encodingAlgorithm = encodingAlgorithm;
 	}
-
+	//用来验证Cookie中的令牌信息是否合法
 	@Override
 	protected UserDetails processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request,
 			HttpServletResponse response) {
-		if (!isValidCookieTokensLength(cookieTokens)) {
+		if (!isValidCookieTokensLength(cookieTokens)) { //校验cookie的长度
 			throw new InvalidCookieException(
 					"Cookie token did not contain 3 or 4 tokens, but contained '" + Arrays.asList(cookieTokens) + "'");
 		}
-		long tokenExpiryTime = getTokenExpiryTime(cookieTokens);
-		if (isTokenExpired(tokenExpiryTime)) {
+		long tokenExpiryTime = getTokenExpiryTime(cookieTokens); //获取过期时间
+		if (isTokenExpired(tokenExpiryTime)) { //判断是否过期
 			throw new InvalidCookieException("Cookie token[1] has expired (expired on '" + new Date(tokenExpiryTime)
 					+ "'; current time is '" + new Date() + "')");
 		}
 		// Check the user exists. Defer lookup until after expiry time checked, to
 		// possibly avoid expensive database call.
-		UserDetails userDetails = getUserDetailsService().loadUserByUsername(cookieTokens[0]);
+		UserDetails userDetails = getUserDetailsService().loadUserByUsername(cookieTokens[0]); //根据用户名查询当前用户对象
 		Assert.notNull(userDetails, () -> "UserDetailsService " + getUserDetailsService()
 				+ " returned null for username " + cookieTokens[0] + ". " + "This is an interface contract violation");
 		// Check signature of token matches remaining details. Must do this after user
@@ -153,12 +153,12 @@ public class TokenBasedRememberMeServices extends AbstractRememberMeServices {
 			actualAlgorithm = RememberMeTokenAlgorithm.valueOf(cookieTokens[2]);
 		}
 		String expectedTokenSignature = makeTokenSignature(tokenExpiryTime, userDetails.getUsername(),
-				userDetails.getPassword(), actualAlgorithm);
-		if (!equals(expectedTokenSignature, actualTokenSignature)) {
+				userDetails.getPassword(), actualAlgorithm); //生成一个签名
+		if (!equals(expectedTokenSignature, actualTokenSignature)) { //判断生成的签名和cookie传来的签名是否相等
 			throw new InvalidCookieException("Cookie contained signature '" + actualTokenSignature + "' but expected '"
-					+ expectedTokenSignature + "'");
+					+ expectedTokenSignature + "'"); //不相等抛出异常
 		}
-		return userDetails;
+		return userDetails; //相等返回用户对象
 	}
 
 	private boolean isValidCookieTokensLength(String[] cookieTokens) {
@@ -213,8 +213,8 @@ public class TokenBasedRememberMeServices extends AbstractRememberMeServices {
 	@Override
 	public void onLoginSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication successfulAuthentication) {
-		String username = retrieveUserName(successfulAuthentication);
-		String password = retrievePassword(successfulAuthentication);
+		String username = retrieveUserName(successfulAuthentication); //获取用户名信息
+		String password = retrievePassword(successfulAuthentication); //获取密码信息
 		// If unable to find a username and password, just abort as
 		// TokenBasedRememberMeServices is
 		// unable to construct a valid token in this case.
@@ -222,7 +222,7 @@ public class TokenBasedRememberMeServices extends AbstractRememberMeServices {
 			this.logger.debug("Unable to retrieve username");
 			return;
 		}
-		if (!StringUtils.hasLength(password)) {
+		if (!StringUtils.hasLength(password)) { //如果用户登录成功后已经从successfulAuthentication对象中擦除了则从数据库中重新加载出密码
 			UserDetails user = getUserDetailsService().loadUserByUsername(username);
 			password = user.getPassword();
 			if (!StringUtils.hasLength(password)) {
@@ -230,13 +230,13 @@ public class TokenBasedRememberMeServices extends AbstractRememberMeServices {
 				return;
 			}
 		}
-		int tokenLifetime = calculateLoginLifetime(request, successfulAuthentication);
+		int tokenLifetime = calculateLoginLifetime(request, successfulAuthentication); //计算出令牌的过期时间   默认是两周
 		long expiryTime = System.currentTimeMillis();
 		// SEC-949
 		expiryTime += 1000L * ((tokenLifetime < 0) ? TWO_WEEKS_S : tokenLifetime);
-		String signatureValue = makeTokenSignature(expiryTime, username, password, this.encodingAlgorithm);
+		String signatureValue = makeTokenSignature(expiryTime, username, password, this.encodingAlgorithm); //计算出一个签名
 		setCookie(new String[] { username, Long.toString(expiryTime), this.encodingAlgorithm.name(), signatureValue },
-				tokenLifetime, request, response);
+				tokenLifetime, request, response); //设置cookie
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug(
 					"Added remember-me cookie for user '" + username + "', expiry: '" + new Date(expiryTime) + "'");

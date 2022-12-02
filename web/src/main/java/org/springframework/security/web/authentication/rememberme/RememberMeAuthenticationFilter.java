@@ -102,7 +102,7 @@ public class RememberMeAuthenticationFilter extends GenericFilterBean implements
 	}
 
 	private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+			throws IOException, ServletException { //先判断SecurityContextHolder中是否有值
 		if (this.securityContextHolderStrategy.getContext().getAuthentication() != null) {
 			this.logger.debug(LogMessage
 					.of(() -> "SecurityContextHolder not populated with remember-me token, as it already contained: '"
@@ -110,12 +110,12 @@ public class RememberMeAuthenticationFilter extends GenericFilterBean implements
 			chain.doFilter(request, response);
 			return;
 		}
-		Authentication rememberMeAuth = this.rememberMeServices.autoLogin(request, response);
-		if (rememberMeAuth != null) {
+		Authentication rememberMeAuth = this.rememberMeServices.autoLogin(request, response); //没值得话表示用户尚未登录  调用autoLogin方法进行自动登录
+		if (rememberMeAuth != null) { //返回的rememberMeAuth不为null时表示登录成功
 			// Attempt authenticaton via AuthenticationManager
 			try {
-				rememberMeAuth = this.authenticationManager.authenticate(rememberMeAuth);
-				// Store to SecurityContextHolder
+				rememberMeAuth = this.authenticationManager.authenticate(rememberMeAuth); //对key进行校验
+				// Store to SecurityContextHolder //将用户信息保存到SecurityContextHolder中
 				SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
 				context.setAuthentication(rememberMeAuth);
 				this.securityContextHolderStrategy.setContext(context);
@@ -123,12 +123,12 @@ public class RememberMeAuthenticationFilter extends GenericFilterBean implements
 				this.logger.debug(LogMessage.of(() -> "SecurityContextHolder populated with remember-me token: '"
 						+ this.securityContextHolderStrategy.getContext().getAuthentication() + "'"));
 				this.securityContextRepository.saveContext(context, request, response);
-				if (this.eventPublisher != null) {
+				if (this.eventPublisher != null) { //发布登录成功事件
 					this.eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(
 							this.securityContextHolderStrategy.getContext().getAuthentication(), this.getClass()));
 				}
 				if (this.successHandler != null) {
-					this.successHandler.onAuthenticationSuccess(request, response, rememberMeAuth);
+					this.successHandler.onAuthenticationSuccess(request, response, rememberMeAuth); //调用登录成功回调 //并不包含RememberMeServices中的loginSuccess方法
 					return;
 				}
 			}
@@ -138,7 +138,7 @@ public class RememberMeAuthenticationFilter extends GenericFilterBean implements
 								+ "rejected Authentication returned by RememberMeServices: '%s'; "
 								+ "invalidating remember-me token", rememberMeAuth),
 						ex);
-				this.rememberMeServices.loginFail(request, response);
+				this.rememberMeServices.loginFail(request, response); //调用登录失败回调
 				onUnsuccessfulAuthentication(request, response, ex);
 			}
 		}
@@ -159,7 +159,7 @@ public class RememberMeAuthenticationFilter extends GenericFilterBean implements
 	 * returned from the {@code RememberMeServices} {@code autoLogin} method. This method
 	 * will not be called when no remember-me token is present in the request and
 	 * {@code autoLogin} reurns null.
-	 */
+	 */ //空方法无任何实现
 	protected void onUnsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) {
 	}

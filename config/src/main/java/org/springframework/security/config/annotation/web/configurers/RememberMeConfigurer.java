@@ -268,21 +268,21 @@ public final class RememberMeConfigurer<H extends HttpSecurityBuilder<H>>
 	@Override
 	public void init(H http) throws Exception {
 		validateInput();
-		String key = getKey();
-		RememberMeServices rememberMeServices = getRememberMeServices(http, key);
+		String key = getKey(); //获取一个key  就是开发者一开始配置的  如果没有配置就自动生成一个UUID
+		RememberMeServices rememberMeServices = getRememberMeServices(http, key); //获取RememberMeServices实例  如果开发者配置了tokenRepository则获取到的PersistentTokenBasedRememberMeServices实例   否则获取到TokenBasedRememberMeServices
 		http.setSharedObject(RememberMeServices.class, rememberMeServices);
 		LogoutConfigurer<H> logoutConfigurer = http.getConfigurer(LogoutConfigurer.class);
 		if (logoutConfigurer != null && this.logoutHandler != null) {
 			logoutConfigurer.addLogoutHandler(this.logoutHandler);
 		}
-		RememberMeAuthenticationProvider authenticationProvider = new RememberMeAuthenticationProvider(key);
+		RememberMeAuthenticationProvider authenticationProvider = new RememberMeAuthenticationProvider(key); //这个Provider主要用来校验key
 		authenticationProvider = postProcess(authenticationProvider);
 		http.authenticationProvider(authenticationProvider);
 		initDefaultLoginFilter(http);
 	}
 
 	@Override
-	public void configure(H http) {
+	public void configure(H http) { //构建一个RememberMeAuthenticationFilter   创建时传入RememberMeServices实例
 		RememberMeAuthenticationFilter rememberMeFilter = new RememberMeAuthenticationFilter(
 				http.getSharedObject(AuthenticationManager.class), this.rememberMeServices);
 		if (this.authenticationSuccessHandler != null) {
@@ -290,7 +290,7 @@ public final class RememberMeConfigurer<H extends HttpSecurityBuilder<H>>
 		}
 		rememberMeFilter.setSecurityContextHolderStrategy(getSecurityContextHolderStrategy());
 		rememberMeFilter = postProcess(rememberMeFilter);
-		http.addFilter(rememberMeFilter);
+		http.addFilter(rememberMeFilter); //将创建好的过滤器放到过滤器链中
 	}
 
 	/**

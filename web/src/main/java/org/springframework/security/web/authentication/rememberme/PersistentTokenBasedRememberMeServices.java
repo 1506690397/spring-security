@@ -94,27 +94,27 @@ public class PersistentTokenBasedRememberMeServices extends AbstractRememberMeSe
 	@Override
 	protected UserDetails processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request,
 			HttpServletResponse response) {
-		if (cookieTokens.length != 2) {
+		if (cookieTokens.length != 2) { //判断token长度不等于2抛出异常
 			throw new InvalidCookieException("Cookie token did not contain " + 2 + " tokens, but contained '"
 					+ Arrays.asList(cookieTokens) + "'");
 		}
-		String presentedSeries = cookieTokens[0];
-		String presentedToken = cookieTokens[1];
-		PersistentRememberMeToken token = this.tokenRepository.getTokenForSeries(presentedSeries);
-		if (token == null) {
+		String presentedSeries = cookieTokens[0]; //提取出series
+		String presentedToken = cookieTokens[1]; //提取出token
+		PersistentRememberMeToken token = this.tokenRepository.getTokenForSeries(presentedSeries); //从数据库中查询一个PersistentRememberToken对象
+		if (token == null) { //如果是null则抛出异常
 			// No series match, so we can't authenticate using this cookie
 			throw new RememberMeAuthenticationException("No persistent token found for series id: " + presentedSeries);
 		}
 		// We have a match for this user/series combination
-		if (!presentedToken.equals(token.getTokenValue())) {
+		if (!presentedToken.equals(token.getTokenValue())) { //如果查询出来的token和cookieTokens解析出来的token不想听说明登录令牌已经泄露
 			// Token doesn't match series value. Delete all logins for this user and throw
 			// an exception to warn them.
-			this.tokenRepository.removeUserTokens(token.getUsername());
+			this.tokenRepository.removeUserTokens(token.getUsername()); //溢出当前用户所有自动登录记录并抛出异常
 			throw new CookieTheftException(this.messages.getMessage(
 					"PersistentTokenBasedRememberMeServices.cookieStolen",
 					"Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack."));
 		}
-		if (token.getDate().getTime() + getTokenValiditySeconds() * 1000L < System.currentTimeMillis()) {
+		if (token.getDate().getTime() + getTokenValiditySeconds() * 1000L < System.currentTimeMillis()) { //查看是否过期  如果过期就抛出异常
 			throw new RememberMeAuthenticationException("Remember-me login has expired");
 		}
 		// Token also matches, so login is valid. Update the token value, keeping the
@@ -122,16 +122,16 @@ public class PersistentTokenBasedRememberMeServices extends AbstractRememberMeSe
 		this.logger.debug(LogMessage.format("Refreshing persistent login token for user '%s', series '%s'",
 				token.getUsername(), token.getSeries()));
 		PersistentRememberMeToken newToken = new PersistentRememberMeToken(token.getUsername(), token.getSeries(),
-				generateTokenData(), new Date());
+				generateTokenData(), new Date()); //生成一个新的PersistentRememberMeToken对象  token重新生成
 		try {
-			this.tokenRepository.updateToken(newToken.getSeries(), newToken.getTokenValue(), newToken.getDate());
-			addCookie(newToken, request, response);
+			this.tokenRepository.updateToken(newToken.getSeries(), newToken.getTokenValue(), newToken.getDate()); //更新数据库中的token个date
+			addCookie(newToken, request, response); //添加cookie
 		}
 		catch (Exception ex) {
 			this.logger.error("Failed to update token: ", ex);
 			throw new RememberMeAuthenticationException("Autologin failed due to data access problem");
 		}
-		return getUserDetailsService().loadUserByUsername(token.getUsername());
+		return getUserDetailsService().loadUserByUsername(token.getUsername()); //根据用户名查找用户对象并返回
 	}
 
 	/**
@@ -145,10 +145,10 @@ public class PersistentTokenBasedRememberMeServices extends AbstractRememberMeSe
 		String username = successfulAuthentication.getName();
 		this.logger.debug(LogMessage.format("Creating new persistent login for user %s", username));
 		PersistentRememberMeToken persistentToken = new PersistentRememberMeToken(username, generateSeriesData(),
-				generateTokenData(), new Date());
+				generateTokenData(), new Date()); //构建一个PersistentRememberMeToken
 		try {
-			this.tokenRepository.createNewToken(persistentToken);
-			addCookie(persistentToken, request, response);
+			this.tokenRepository.createNewToken(persistentToken); //存入数据库
+			addCookie(persistentToken, request, response); //添加cookie
 		}
 		catch (Exception ex) {
 			this.logger.error("Failed to save persistent token ", ex);

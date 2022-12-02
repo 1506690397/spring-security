@@ -120,22 +120,22 @@ public abstract class AbstractRememberMeServices
 	 */
 	@Override
 	public final Authentication autoLogin(HttpServletRequest request, HttpServletResponse response) {
-		String rememberMeCookie = extractRememberMeCookie(request);
-		if (rememberMeCookie == null) {
+		String rememberMeCookie = extractRememberMeCookie(request); //从当前请求中提取出需要的Cookie信息   即remember-me对应的值
+		if (rememberMeCookie == null) { //如果为null则表示这次不需要自动登录   返回null
 			return null;
 		}
 		this.logger.debug("Remember-me cookie detected");
-		if (rememberMeCookie.length() == 0) {
+		if (rememberMeCookie.length() == 0) { //如果remember-me的长度为0返回null之前执行cancelCookie函数
 			this.logger.debug("Cookie was empty");
-			cancelCookie(request, response);
+			cancelCookie(request, response); //将remember-me的值置为null
 			return null;
 		}
 		try {
-			String[] cookieTokens = decodeCookie(rememberMeCookie);
-			UserDetails user = processAutoLoginCookie(cookieTokens, request, response);
-			this.userDetailsChecker.check(user);
+			String[] cookieTokens = decodeCookie(rememberMeCookie); //对获取到的令牌进行解析
+			UserDetails user = processAutoLoginCookie(cookieTokens, request, response); //对Cookie进行验证
+			this.userDetailsChecker.check(user); //对用户状态进行检验（账户是否可用、是否锁定）
 			this.logger.debug("Remember-me cookie accepted");
-			return createSuccessfulAuthentication(request, user);
+			return createSuccessfulAuthentication(request, user); //创建登录成功的用户对象
 		}
 		catch (CookieTheftException ex) {
 			cancelCookie(request, response);
@@ -255,10 +255,10 @@ public abstract class AbstractRememberMeServices
 	@Override
 	public final void loginFail(HttpServletRequest request, HttpServletResponse response) {
 		this.logger.debug("Interactive login attempt was unsuccessful.");
-		cancelCookie(request, response);
-		onLoginFail(request, response);
+		cancelCookie(request, response); //先取消cookie设置
+		onLoginFail(request, response); //调用onLoginFail完成失败处理
 	}
-
+	//如果需要 开发者可以重写这个方法
 	protected void onLoginFail(HttpServletRequest request, HttpServletResponse response) {
 	}
 
@@ -274,11 +274,11 @@ public abstract class AbstractRememberMeServices
 	@Override
 	public final void loginSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication successfulAuthentication) {
-		if (!rememberMeRequested(request, this.parameter)) {
+		if (!rememberMeRequested(request, this.parameter)) { //判断是否开启了自动登录
 			this.logger.debug("Remember-me login not requested.");
 			return;
 		}
-		onLoginSuccess(request, response, successfulAuthentication);
+		onLoginSuccess(request, response, successfulAuthentication); //进行登录成功的处理
 	}
 
 	/**
@@ -359,9 +359,9 @@ public abstract class AbstractRememberMeServices
 	 * @param maxAge the value passed to {@link Cookie#setMaxAge(int)}
 	 * @param request the request
 	 * @param response the response to add the cookie to.
-	 */
+	 */ //在自动登录成功后将调用该方法把令牌信息放入响应头中  并最终返回到前端
 	protected void setCookie(String[] tokens, int maxAge, HttpServletRequest request, HttpServletResponse response) {
-		String cookieValue = encodeCookie(tokens);
+		String cookieValue = encodeCookie(tokens); //对要返回到前端的数据进行Base64编码
 		Cookie cookie = new Cookie(this.cookieName, cookieValue);
 		cookie.setMaxAge(maxAge);
 		cookie.setPath(getCookiePath(request));

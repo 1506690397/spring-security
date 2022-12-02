@@ -68,7 +68,7 @@ public interface RememberMeServices {
 	 * @param response to change, cancel or modify the remember-me token
 	 * @return a valid authentication object, or <code>null</code> if the request should
 	 * not be authenticated
-	 */
+	 */ //从请求中提取出需要的参数完成登录功能
 	Authentication autoLogin(HttpServletRequest request, HttpServletResponse response);
 
 	/**
@@ -78,7 +78,7 @@ public interface RememberMeServices {
 	 * <code>HttpServletRequest</code>.
 	 * @param request that contained an invalid authentication request
 	 * @param response to change, cancel or modify the remember-me token
-	 */
+	 */ //自动登录失败的回调
 	void loginFail(HttpServletRequest request, HttpServletResponse response);
 
 	/**
@@ -92,7 +92,7 @@ public interface RememberMeServices {
 	 * @param response to change, cancel or modify the remember-me token
 	 * @param successfulAuthentication representing the successfully authenticated
 	 * principal
-	 */
+	 */ //自动登录成功的回调
 	void loginSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication successfulAuthentication);
 

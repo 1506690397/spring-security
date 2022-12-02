@@ -22,13 +22,13 @@ import java.util.Date;
  * @author Luke Taylor
  */
 public class PersistentRememberMeToken {
-
+	//用户名
 	private final String username;
 
 	private final String series;
 
 	private final String tokenValue;
-
+	//上次使用时间
 	private final Date date;
 
 	public PersistentRememberMeToken(String username, String series, String tokenValue, Date date) {
