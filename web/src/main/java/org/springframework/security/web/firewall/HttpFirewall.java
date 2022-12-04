@@ -28,20 +28,20 @@ import jakarta.servlet.http.HttpServletResponse;
  * wrapper if the response behaviour should also be restricted.
  *
  * @author Luke Taylor
- */
+ */ //防火墙
 public interface HttpFirewall {
 
 	/**
 	 * Provides the request object which will be passed through the filter chain.
 	 * @throws RequestRejectedException if the request should be rejected immediately
-	 */
+	 */ //对请求对象进行检验并封装
 	FirewalledRequest getFirewalledRequest(HttpServletRequest request) throws RequestRejectedException;
 
 	/**
 	 * Provides the response which will be passed through the filter chain.
 	 * @param response the original response
 	 * @return either the original response or a replacement/wrapper.
-	 */
+	 */ //对响应对象进行封装
 	HttpServletResponse getFirewalledResponse(HttpServletResponse response);
 
 }

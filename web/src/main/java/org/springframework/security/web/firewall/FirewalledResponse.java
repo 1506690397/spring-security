@@ -29,7 +29,7 @@ import org.springframework.util.Assert;
  * @author Eddú Meléndez
  * @author Gabriel Lavoie
  * @author Luke Butters
- */
+ */ //封装后的向英烈
 class FirewalledResponse extends HttpServletResponseWrapper {
 
 	private static final String LOCATION_HEADER = "Location";

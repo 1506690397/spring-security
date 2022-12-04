@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
  * chain.
  *
  * @author Luke Taylor
- */
+ */ //封装后的请求类  在HttpServletRequestWrapper基础上增加了reset方法
 public abstract class FirewalledRequest extends HttpServletRequestWrapper {
 
 	/**

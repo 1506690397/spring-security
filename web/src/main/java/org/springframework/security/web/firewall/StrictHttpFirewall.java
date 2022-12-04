@@ -77,7 +77,7 @@ import org.springframework.util.Assert;
  * @author Eddú Meléndez
  * @since 4.2.4
  * @see DefaultHttpFirewall
- */
+ */ //检查严格的防火墙  默认的
 public class StrictHttpFirewall implements HttpFirewall {
 
 	/**
@@ -119,7 +119,7 @@ public class StrictHttpFirewall implements HttpFirewall {
 	private Set<String> encodedUrlBlocklist = new HashSet<>();
 
 	private Set<String> decodedUrlBlocklist = new HashSet<>();
-
+	//包含着请求方法的set集合
 	private Set<String> allowedHttpMethods = createDefaultAllowedHttpMethods();
 
 	private Predicate<String> allowedHostnames = (hostname) -> true;
@@ -501,12 +501,12 @@ public class StrictHttpFirewall implements HttpFirewall {
 
 	@Override
 	public FirewalledRequest getFirewalledRequest(HttpServletRequest request) throws RequestRejectedException {
-		rejectForbiddenHttpMethod(request);
-		rejectedBlocklistedUrls(request);
-		rejectedUntrustedHosts(request);
-		if (!isNormalized(request)) {
+		rejectForbiddenHttpMethod(request); //校验请求方法是否合法
+		rejectedBlocklistedUrls(request); //校验请求中的非法字符
+		rejectedUntrustedHosts(request); //校验主机信息
+		if (!isNormalized(request)) { //判断参数是否合法
 			throw new RequestRejectedException("The request was rejected because the URL was not normalized.");
-		}
+		} //判断请求字符是否合法
 		rejectNonPrintableAsciiCharactersInFieldName(request.getRequestURI(), "requestURI");
 		return new StrictFirewalledRequest(request);
 	}
@@ -522,7 +522,7 @@ public class StrictHttpFirewall implements HttpFirewall {
 		if (this.allowedHttpMethods == ALLOW_ANY_HTTP_METHOD) {
 			return;
 		}
-		if (!this.allowedHttpMethods.contains(request.getMethod())) {
+		if (!this.allowedHttpMethods.contains(request.getMethod())) { //判断当前请求方法是否在请求方法集合中
 			throw new RequestRejectedException(
 					"The request was rejected because the HTTP method \"" + request.getMethod()
 							+ "\" was not included within the list of allowed HTTP methods " + this.allowedHttpMethods);
@@ -530,14 +530,14 @@ public class StrictHttpFirewall implements HttpFirewall {
 	}
 
 	private void rejectedBlocklistedUrls(HttpServletRequest request) {
-		for (String forbidden : this.encodedUrlBlocklist) {
+		for (String forbidden : this.encodedUrlBlocklist) { //校验编码前的请求地址
 			if (encodedUrlContains(request, forbidden)) {
 				throw new RequestRejectedException(
 						"The request was rejected because the URL contained a potentially malicious String \""
 								+ forbidden + "\"");
 			}
 		}
-		for (String forbidden : this.decodedUrlBlocklist) {
+		for (String forbidden : this.decodedUrlBlocklist) { //校验解码后的请求地址
 			if (decodedUrlContains(request, forbidden)) {
 				throw new RequestRejectedException(
 						"The request was rejected because the URL contained a potentially malicious String \""
@@ -588,22 +588,22 @@ public class StrictHttpFirewall implements HttpFirewall {
 	}
 
 	private static boolean encodedUrlContains(HttpServletRequest request, String value) {
-		if (valueContains(request.getContextPath(), value)) {
+		if (valueContains(request.getContextPath(), value)) { //主要检验ContextPath
 			return true;
 		}
-		return valueContains(request.getRequestURI(), value);
+		return valueContains(request.getRequestURI(), value); //校验RequestURI
 	}
 
 	private static boolean decodedUrlContains(HttpServletRequest request, String value) {
-		if (valueContains(request.getServletPath(), value)) {
+		if (valueContains(request.getServletPath(), value)) { //校验ServletPath
 			return true;
 		}
-		if (valueContains(request.getPathInfo(), value)) {
+		if (valueContains(request.getPathInfo(), value)) { //校验PathInfo
 			return true;
 		}
 		return false;
 	}
-
+	//判断是否是可打印字符
 	private static boolean containsOnlyPrintableAsciiCharacters(String uri) {
 		if (uri == null) {
 			return true;

@@ -43,7 +43,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Luke Taylor
  * @see StrictHttpFirewall
- */
+ */ //检查相对宽松的防火墙
 public class DefaultHttpFirewall implements HttpFirewall {
 
 	private boolean allowUrlEncodedSlash;
@@ -51,13 +51,13 @@ public class DefaultHttpFirewall implements HttpFirewall {
 	@Override
 	public FirewalledRequest getFirewalledRequest(HttpServletRequest request) throws RequestRejectedException {
 		FirewalledRequest firewalledRequest = new RequestWrapper(request);
-		if (!isNormalized(firewalledRequest.getServletPath()) || !isNormalized(firewalledRequest.getPathInfo())) {
+		if (!isNormalized(firewalledRequest.getServletPath()) || !isNormalized(firewalledRequest.getPathInfo())) { //判断servletPath和pathInfo是否合法
 			throw new RequestRejectedException(
 					"Un-normalized paths are not supported: " + firewalledRequest.getServletPath()
 							+ ((firewalledRequest.getPathInfo() != null) ? firewalledRequest.getPathInfo() : ""));
 		}
 		String requestURI = firewalledRequest.getRequestURI();
-		if (containsInvalidUrlEncodedSlash(requestURI)) {
+		if (containsInvalidUrlEncodedSlash(requestURI)) { //判断是否包含编码后的斜杠即%2f或%2F
 			throw new RequestRejectedException("The requestURI cannot contain encoded slash. Got " + requestURI);
 		}
 		return firewalledRequest;

@@ -54,7 +54,7 @@ final class RequestWrapper extends FirewalledRequest {
 
 	RequestWrapper(HttpServletRequest request) {
 		super(request);
-		this.strippedServletPath = strip(request.getServletPath());
+		this.strippedServletPath = strip(request.getServletPath()); //将地址中的//格式化为/ 将servletPath和pathInfo用分好隔开的参数提取出来  只保留路径即可
 		String pathInfo = strip(request.getPathInfo());
 		if (pathInfo != null && pathInfo.length() == 0) {
 			pathInfo = null;
