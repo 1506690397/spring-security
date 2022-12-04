@@ -63,8 +63,8 @@ final class RepositoryDeferredCsrfToken implements DeferredCsrfToken {
 		this.csrfToken = this.csrfTokenRepository.loadToken(this.request);
 		this.missingToken = (this.csrfToken == null);
 		if (this.missingToken) {
-			this.csrfToken = this.csrfTokenRepository.generateToken(this.request);
-			this.csrfTokenRepository.saveToken(this.csrfToken, this.request, this.response);
+			this.csrfToken = this.csrfTokenRepository.generateToken(this.request); //生成token
+			this.csrfTokenRepository.saveToken(this.csrfToken, this.request, this.response); //保存token
 		}
 	}
 

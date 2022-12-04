@@ -35,7 +35,7 @@ import org.springframework.web.util.WebUtils;
  * @author Rob Winch
  * @author Steve Riesenberg
  * @since 4.1
- */
+ */ //将CsrfToken保存在Cookie当中
 public final class CookieCsrfTokenRepository implements CsrfTokenRepository {
 
 	static final String DEFAULT_CSRF_COOKIE_NAME = "XSRF-TOKEN";
@@ -65,12 +65,12 @@ public final class CookieCsrfTokenRepository implements CsrfTokenRepository {
 
 	public CookieCsrfTokenRepository() {
 	}
-
+	//生成一个默认的DefaultCsrfToken令牌   headerName和parameterName都是默认的   具体令牌是一个UUID字符串
 	@Override
 	public CsrfToken generateToken(HttpServletRequest request) {
 		return new DefaultCsrfToken(this.headerName, this.parameterName, createNewToken());
 	}
-
+	//保存令牌  具体方式就是生成Cookie添加到响应头中
 	@Override
 	public void saveToken(CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
 		String tokenValue = (token != null) ? token.getToken() : "";
@@ -93,7 +93,7 @@ public final class CookieCsrfTokenRepository implements CsrfTokenRepository {
 			request.removeAttribute(CSRF_TOKEN_REMOVED_ATTRIBUTE_NAME);
 		}
 	}
-
+	//从响应头中提取出Cookie进而解析出CSRF令牌信息
 	@Override
 	public CsrfToken loadToken(HttpServletRequest request) {
 		// Return null when token has been removed during the current request
@@ -162,7 +162,7 @@ public final class CookieCsrfTokenRepository implements CsrfTokenRepository {
 	 * {@link #setCookieHttpOnly(boolean)} set to false.
 	 * @return an instance of CookieCsrfTokenRepository with
 	 * {@link #setCookieHttpOnly(boolean)} set to false
-	 */
+	 */ //将CookieHttpOnly设置为false允许前端操作Cookie
 	public static CookieCsrfTokenRepository withHttpOnlyFalse() {
 		CookieCsrfTokenRepository result = new CookieCsrfTokenRepository();
 		result.setCookieHttpOnly(false);

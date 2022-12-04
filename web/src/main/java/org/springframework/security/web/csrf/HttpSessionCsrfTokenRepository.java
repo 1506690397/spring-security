@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  *
  * @author Rob Winch
  * @since 3.2
- */
+ */ //主要是将CSRF令牌保存在HttpSession中
 public final class HttpSessionCsrfTokenRepository implements CsrfTokenRepository {
 
 	private static final String DEFAULT_CSRF_PARAMETER_NAME = "_csrf";
@@ -45,21 +45,21 @@ public final class HttpSessionCsrfTokenRepository implements CsrfTokenRepository
 	private String headerName = DEFAULT_CSRF_HEADER_NAME;
 
 	private String sessionAttributeName = DEFAULT_CSRF_TOKEN_ATTR_NAME;
-
+	//保存令牌
 	@Override
 	public void saveToken(CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
-		if (token == null) {
+		if (token == null) { //如果传入的CsrfToken为null就从HttpSession中移除令牌
 			HttpSession session = request.getSession(false);
 			if (session != null) {
 				session.removeAttribute(this.sessionAttributeName);
 			}
 		}
-		else {
+		else { //否则就将CsrfToken令牌保存到HttpSession中
 			HttpSession session = request.getSession();
 			session.setAttribute(this.sessionAttributeName, token);
 		}
 	}
-
+	//返回HttpSession中保存的令牌信息
 	@Override
 	public CsrfToken loadToken(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
@@ -68,7 +68,7 @@ public final class HttpSessionCsrfTokenRepository implements CsrfTokenRepository
 		}
 		return (CsrfToken) session.getAttribute(this.sessionAttributeName);
 	}
-
+	//生成一个默认的DefaultCsrfToken令牌   headerName和parameterName都是默认的   具体令牌是一个UUID字符串
 	@Override
 	public CsrfToken generateToken(HttpServletRequest request) {
 		return new DefaultCsrfToken(this.headerName, this.parameterName, createNewToken());

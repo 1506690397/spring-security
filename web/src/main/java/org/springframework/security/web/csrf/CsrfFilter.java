@@ -59,7 +59,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * @author Rob Winch
  * @author Steve Riesenberg
  * @since 3.2
- */
+ */ //校验客户端传过来的CSRF令牌是否有效
 public final class CsrfFilter extends OncePerRequestFilter {
 
 	/**
@@ -106,9 +106,9 @@ public final class CsrfFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		DeferredCsrfToken deferredCsrfToken = this.tokenRepository.loadDeferredToken(request, response);
+		DeferredCsrfToken deferredCsrfToken = this.tokenRepository.loadDeferredToken(request, response); //加载出CsrfToken对象  默认的tokenRepository对象类型是LazyCsrfTokenRepository
 		this.requestHandler.handle(request, response, deferredCsrfToken::get);
-		if (!this.requireCsrfProtectionMatcher.matches(request)) {
+		if (!this.requireCsrfProtectionMatcher.matches(request)) { //判断是否是GET、HEAD、TRACE、以及OPTIONS  如果是这几种则不用进行校验
 			if (this.logger.isTraceEnabled()) {
 				this.logger.trace("Did not protect against CSRF since request did not match "
 						+ this.requireCsrfProtectionMatcher);
@@ -117,8 +117,8 @@ public final class CsrfFilter extends OncePerRequestFilter {
 			return;
 		}
 		CsrfToken csrfToken = deferredCsrfToken.get();
-		String actualToken = this.requestHandler.resolveCsrfTokenValue(request, csrfToken);
-		if (!equalsConstantTime(csrfToken.getToken(), actualToken)) {
+		String actualToken = this.requestHandler.resolveCsrfTokenValue(request, csrfToken); //获取请求头中的token对象   如果请求头中没有  那么从请求参数中提取出csrf令牌
+		if (!equalsConstantTime(csrfToken.getToken(), actualToken)) { //将获取的token和通过loadToken加载出来的令牌进行比对
 			boolean missingToken = deferredCsrfToken.isGenerated();
 			this.logger.debug(
 					LogMessage.of(() -> "Invalid CSRF token found for " + UrlUtils.buildFullRequestUrl(request)));

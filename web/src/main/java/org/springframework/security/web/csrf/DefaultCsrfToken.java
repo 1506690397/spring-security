@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
  *
  * @author Rob Winch
  * @since 3.2
- */
+ */ //默认的实现类
 @SuppressWarnings("serial")
 public final class DefaultCsrfToken implements CsrfToken {
 

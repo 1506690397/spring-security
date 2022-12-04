@@ -32,19 +32,19 @@ public interface CsrfToken extends Serializable {
 	 * on requests instead of the parameter. Cannot be null.
 	 * @return the HTTP header that the CSRF is populated on the response and can be
 	 * placed on requests instead of the parameter
-	 */
+	 */ //当csrf令牌被放置到请求头时获取参数名
 	String getHeaderName();
 
 	/**
 	 * Gets the HTTP parameter name that should contain the token. Cannot be null.
 	 * @return the HTTP parameter name that should contain the token.
-	 */
+	 */ //当csrf被当作请求参数进行传递时，获取参数名
 	String getParameterName();
 
 	/**
 	 * Gets the token value. Cannot be null.
 	 * @return the token value
-	 */
+	 */ //获取具体的令牌
 	String getToken();
 
 }

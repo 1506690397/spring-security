@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  * @deprecated Use
  * {@link CsrfTokenRepository#loadDeferredToken(HttpServletRequest, HttpServletResponse)}
  * which returns a {@link DeferredCsrfToken}
- */
+ */ //是一个代理类  可以代理HttpSessionCsrfTokenRepository或者CookieCsrfTokenRepository  代理的目的就是延迟保存生成的CsrfToken
 @Deprecated
 public final class LazyCsrfTokenRepository implements CsrfTokenRepository {
 
@@ -68,7 +68,7 @@ public final class LazyCsrfTokenRepository implements CsrfTokenRepository {
 	 * @param request the {@link HttpServletRequest} to use. The
 	 * {@link HttpServletRequest} must have the {@link HttpServletResponse} as an
 	 * attribute with the name of <code>HttpServletResponse.class.getName()</code>
-	 */
+	 */ //生成CsrfToken时  代理类生成的CsrfToken类型是DefaultCsrfToken  这里将DefaultCsrfToken装饰为SaveOnAccessCsrfToken  当调用SaveOnAccessCsrfToken中的getToken方法时才会保存CsrfToken
 	@Override
 	public CsrfToken generateToken(HttpServletRequest request) {
 		return wrap(request, this.delegate.generateToken(request));
@@ -79,7 +79,7 @@ public final class LazyCsrfTokenRepository implements CsrfTokenRepository {
 	 * {@link CsrfToken#getToken()} is accessed from
 	 * {@link #generateToken(HttpServletRequest)}. If it is null, then the save is
 	 * performed immediately.
-	 */
+	 */ //只有当token为null时才会执行代理类的saveToken方法（相当于只执行移除CsrfToken操作）
 	@Override
 	public void saveToken(CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
 		if (token == null) {
@@ -158,7 +158,7 @@ public final class LazyCsrfTokenRepository implements CsrfTokenRepository {
 		}
 
 	}
-
+	//代理类  主要是对getToken方法做了改变
 	private static final class SaveOnAccessCsrfToken implements CsrfToken {
 
 		private transient CsrfTokenRepository tokenRepository;
@@ -189,7 +189,7 @@ public final class LazyCsrfTokenRepository implements CsrfTokenRepository {
 
 		@Override
 		public String getToken() {
-			saveTokenIfNecessary();
+			saveTokenIfNecessary();//csrf令牌保存操作
 			return this.delegate.getToken();
 		}
 

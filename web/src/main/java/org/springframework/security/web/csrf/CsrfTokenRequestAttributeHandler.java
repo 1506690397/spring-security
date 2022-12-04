@@ -59,7 +59,7 @@ public class CsrfTokenRequestAttributeHandler implements CsrfTokenRequestHandler
 		request.setAttribute(CsrfToken.class.getName(), csrfToken);
 		String csrfAttrName = (this.csrfRequestAttributeName != null) ? this.csrfRequestAttributeName
 				: csrfToken.getParameterName();
-		request.setAttribute(csrfAttrName, csrfToken);
+		request.setAttribute(csrfAttrName, csrfToken); //将token设置到请求属性中
 	}
 
 	private static final class SupplierCsrfToken implements CsrfToken {
