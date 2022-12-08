@@ -143,10 +143,10 @@ public final class HstsHeaderWriter implements HeaderWriter {
 	public HstsHeaderWriter() {
 		this(DEFAULT_MAX_AGE_SECONDS);
 	}
-
+	//添加请求头
 	@Override
 	public void writeHeaders(HttpServletRequest request, HttpServletResponse response) {
-		if (!this.requestMatcher.matches(request)) {
+		if (!this.requestMatcher.matches(request)) { //是否是https请求
 			if (this.logger.isTraceEnabled()) {
 				this.logger.trace(LogMessage.format("Not injecting HSTS header since it did not match request to [%s]",
 						this.requestMatcher));
@@ -154,7 +154,7 @@ public final class HstsHeaderWriter implements HeaderWriter {
 			return;
 		}
 		if (!response.containsHeader(HSTS_HEADER_NAME)) {
-			response.setHeader(HSTS_HEADER_NAME, this.hstsHeaderValue);
+			response.setHeader(HSTS_HEADER_NAME, this.hstsHeaderValue); //添加响应头
 		}
 	}
 

@@ -75,7 +75,7 @@ import org.springframework.util.Assert;
  * @author Ankur Pathak
  * @author Daniel Garnier-Moiroux
  * @since 3.2
- */
+ */ //响应头配置
 public class HeadersConfigurer<H extends HttpSecurityBuilder<H>>
 		extends AbstractHttpConfigurer<HeadersConfigurer<H>, H> {
 
@@ -397,7 +397,7 @@ public class HeadersConfigurer<H extends HttpSecurityBuilder<H>>
 	/**
 	 * Gets the {@link HeaderWriter} instances and possibly initializes with the defaults.
 	 * @return
-	 */
+	 */ //获取到所有需要添加的响应头传入过滤器  智慧添加不为null的实例
 	private List<HeaderWriter> getHeaderWriters() {
 		List<HeaderWriter> writers = new ArrayList<>();
 		addIfNotNull(writers, this.contentTypeOptions.writer);
