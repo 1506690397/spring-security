@@ -165,10 +165,10 @@ public final class HttpBasicConfigurer<B extends HttpSecurityBuilder<B>>
 				Arrays.<RequestMatcher>asList(notHtmlMatcher, restMatcher));
 		RequestMatcher preferredMatcher = new OrRequestMatcher(
 				Arrays.asList(X_REQUESTED_WITH, restNotHtmlMatcher, allMatcher));
-		registerDefaultEntryPoint(http, preferredMatcher);
+		registerDefaultEntryPoint(http, preferredMatcher); //默认失败处理类配置
 		registerDefaultLogoutSuccessHandler(http, preferredMatcher);
 	}
-
+	//该方法完成了失败处理类AuthenticationEntryPoint的配置
 	private void registerDefaultEntryPoint(B http, RequestMatcher preferredMatcher) {
 		ExceptionHandlingConfigurer<B> exceptionHandling = http.getConfigurer(ExceptionHandlingConfigurer.class);
 		if (exceptionHandling == null) {
@@ -186,7 +186,7 @@ public final class HttpBasicConfigurer<B extends HttpSecurityBuilder<B>>
 		LogoutConfigurer<B> handler = logout.defaultLogoutSuccessHandlerFor(
 				postProcess(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT)), preferredMatcher);
 	}
-
+	//向过滤器链中添加一个过滤器BasicAuthenticationFilter   该过滤器是专门用来处理HTTP 基本认证相关的事情
 	@Override
 	public void configure(B http) {
 		AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);

@@ -87,7 +87,7 @@ public class DigestAuthenticationEntryPoint implements AuthenticationEntryPoint,
 		// in same session.
 		String authenticateHeader = "Digest realm=\"" + this.realmName + "\", " + "qop=\"auth\", nonce=\""
 				+ nonceValueBase64 + "\"";
-		if (authException instanceof NonceExpiredException) {
+		if (authException instanceof NonceExpiredException) { //Digest：使用HTTP摘要认证  Realm：服务端返回的标识访问资源的安全域 qop：服务端返回的保护级别，客户端会根据此选择合适的摘要算法  nonce：服务端生产的一个随机字符串 stale：一个标记，当随机字符串nonce过期时会包含该标记
 			authenticateHeader = authenticateHeader + ", stale=\"true\"";
 		}
 		logger.debug(LogMessage.format("WWW-Authenticate header sent to user agent: %s", authenticateHeader));

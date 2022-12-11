@@ -64,29 +64,29 @@ public class CorsConfigurer<H extends HttpSecurityBuilder<H>> extends AbstractHt
 	@Override
 	public void configure(H http) {
 		ApplicationContext context = http.getSharedObject(ApplicationContext.class);
-		CorsFilter corsFilter = getCorsFilter(context);
+		CorsFilter corsFilter = getCorsFilter(context); //获取一个CorsFilter加到SpringSecurity过滤器链中
 		Assert.state(corsFilter != null, () -> "Please configure either a " + CORS_FILTER_BEAN_NAME + " bean or a "
 				+ CORS_CONFIGURATION_SOURCE_BEAN_NAME + "bean.");
 		http.addFilter(corsFilter);
 	}
 
 	private CorsFilter getCorsFilter(ApplicationContext context) {
-		if (this.configurationSource != null) {
+		if (this.configurationSource != null) { //如果configurationSource不为null则创建一个CorsFilter实例
 			return new CorsFilter(this.configurationSource);
 		}
 		boolean containsCorsFilter = context.containsBeanDefinition(CORS_FILTER_BEAN_NAME);
-		if (containsCorsFilter) {
+		if (containsCorsFilter) { //从Spring容器中获取该过滤器
 			return context.getBean(CORS_FILTER_BEAN_NAME, CorsFilter.class);
 		}
 		boolean containsCorsSource = context.containsBean(CORS_CONFIGURATION_SOURCE_BEAN_NAME);
-		if (containsCorsSource) {
+		if (containsCorsSource) { //通过查看容器中是否存在CorsConfigurationSource对象  根据此对象创建CorsFilter过滤器
 			CorsConfigurationSource configurationSource = context.getBean(CORS_CONFIGURATION_SOURCE_BEAN_NAME,
 					CorsConfigurationSource.class);
 			return new CorsFilter(configurationSource);
 		}
 		boolean mvcPresent = ClassUtils.isPresent(HANDLER_MAPPING_INTROSPECTOR, context.getClassLoader());
 		if (mvcPresent) {
-			return MvcCorsFilter.getMvcCorsFilter(context);
+			return MvcCorsFilter.getMvcCorsFilter(context); //HandlerMappingIntrospector类实现了CorsConfigurationSource接口   从而根据此对象创建一个CorsFilter过滤器进行返回
 		}
 		return null;
 	}
@@ -107,7 +107,7 @@ public class CorsConfigurer<H extends HttpSecurityBuilder<H>> extends AbstractHt
 						+ HANDLER_MAPPING_INTROSPECTOR_BEAN_NAME + " of type "
 						+ HandlerMappingIntrospector.class.getName()
 						+ " is required to use MvcRequestMatcher. Please ensure Spring Security & Spring MVC are configured in a shared ApplicationContext.");
-			}
+			} //HandlerMappingIntrospector类实现了CorsConfigurationSource接口   从而根据此对象创建一个CorsFilter过滤器进行返回
 			HandlerMappingIntrospector mappingIntrospector = context.getBean(HANDLER_MAPPING_INTROSPECTOR_BEAN_NAME,
 					HandlerMappingIntrospector.class);
 			return new CorsFilter(mappingIntrospector);

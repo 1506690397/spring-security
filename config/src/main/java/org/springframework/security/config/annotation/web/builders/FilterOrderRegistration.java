@@ -58,7 +58,7 @@ import org.springframework.web.filter.CorsFilter;
  * @author Rob Winch
  * @since 3.2
  */
-
+//对过滤器进行排序
 @SuppressWarnings("serial")
 final class FilterOrderRegistration {
 
@@ -68,7 +68,7 @@ final class FilterOrderRegistration {
 
 	private final Map<String, Integer> filterToOrder = new HashMap<>();
 
-	FilterOrderRegistration() {
+	FilterOrderRegistration() { //过滤器链构造之前对所有的过滤器进行排序
 		Step order = new Step(INITIAL_ORDER, ORDER_STEP);
 		put(DisableEncodeUrlFilter.class, order.next());
 		put(ForceEagerSessionCreationFilter.class, order.next());

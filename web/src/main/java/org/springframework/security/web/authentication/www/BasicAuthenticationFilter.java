@@ -91,7 +91,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * remember-me mechanism.
  *
  * @author Ben Alex
- */
+ */ //该过滤器是专门用来处理HTTP 基本认证相关的事情
 public class BasicAuthenticationFilter extends OncePerRequestFilter {
 
 	private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
@@ -163,33 +163,33 @@ public class BasicAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		try {
-			UsernamePasswordAuthenticationToken authRequest = this.authenticationConverter.convert(request);
-			if (authRequest == null) {
+			UsernamePasswordAuthenticationToken authRequest = this.authenticationConverter.convert(request); //对请求头进行解析
+			if (authRequest == null) { //如果authRequest为null 则说明请求头中没有包含认证信息   那么直接执行接下来的过滤器即可
 				this.logger.trace("Did not process authentication request since failed to find "
 						+ "username and password in Basic Authorization header");
-				chain.doFilter(request, response);
+				chain.doFilter(request, response); //最终会通过ExceptionTranslationFilter过滤器进入到BasicAuthenticationEntryPoint#commence方法中
 				return;
-			}
-			String username = authRequest.getName();
+			} //如果authRequest不为null则说明请求是携带了认证信息的  那么就对认证信息进行校验
+			String username = authRequest.getName(); //取出用户名
 			this.logger.trace(LogMessage.format("Found username '%s' in Basic Authorization header", username));
-			if (authenticationIsRequired(username)) {
-				Authentication authResult = this.authenticationManager.authenticate(authRequest);
-				SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
+			if (authenticationIsRequired(username)) { //判断是否有必要进行认证
+				Authentication authResult = this.authenticationManager.authenticate(authRequest); //进行用户认证
+				SecurityContext context = this.securityContextHolderStrategy.createEmptyContext(); //创建SecurityContext并将用户信息存入SecurityContext中
 				context.setAuthentication(authResult);
-				this.securityContextHolderStrategy.setContext(context);
+				this.securityContextHolderStrategy.setContext(context); //将SecurityContext存入SecurityContextHolder中
 				if (this.logger.isDebugEnabled()) {
 					this.logger.debug(LogMessage.format("Set SecurityContextHolder to %s", authResult));
 				}
-				this.rememberMeServices.loginSuccess(request, response, authResult);
+				this.rememberMeServices.loginSuccess(request, response, authResult); //如果配置了rememberMeServices也会进行响应的处理
 				this.securityContextRepository.saveContext(context, request, response);
-				onSuccessfulAuthentication(request, response, authResult);
+				onSuccessfulAuthentication(request, response, authResult); //默认没有任何实现
 			}
 		}
 		catch (AuthenticationException ex) {
-			this.securityContextHolderStrategy.clearContext();
+			this.securityContextHolderStrategy.clearContext(); //清除SecurityContext
 			this.logger.debug("Failed to process authentication request", ex);
-			this.rememberMeServices.loginFail(request, response);
-			onUnsuccessfulAuthentication(request, response, ex);
+			this.rememberMeServices.loginFail(request, response); //remember登录失败处理
+			onUnsuccessfulAuthentication(request, response, ex); //登录失败回调
 			if (this.ignoreFailure) {
 				chain.doFilter(request, response);
 			}
@@ -198,10 +198,10 @@ public class BasicAuthenticationFilter extends OncePerRequestFilter {
 			}
 			return;
 		}
-
+		//如果没必要进行认证则直接调用剩下的过滤器
 		chain.doFilter(request, response);
 	}
-
+	//取出当前登录对象  判断使用是否已经登录过了  同时判断是否是当前用户
 	protected boolean authenticationIsRequired(String username) {
 		// Only reauthenticate if username doesn't match SecurityContextHolder and user
 		// isn't authenticated (see SEC-53)

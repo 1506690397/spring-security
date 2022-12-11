@@ -52,8 +52,8 @@ public class BasicAuthenticationEntryPoint implements AuthenticationEntryPoint, 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException {
-		response.addHeader("WWW-Authenticate", "Basic realm=\"" + this.realmName + "\"");
-		response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+		response.addHeader("WWW-Authenticate", "Basic realm=\"" + this.realmName + "\""); //响应头中添加WWW-Authenticate字段
+		response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase()); //发送错误响应  响应码401
 	}
 
 	public String getRealmName() {
