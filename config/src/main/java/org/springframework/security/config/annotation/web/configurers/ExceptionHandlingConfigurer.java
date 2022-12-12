@@ -62,14 +62,14 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
  *
  * @author Rob Winch
  * @since 3.2
- */
+ */ //配置异常处理
 public final class ExceptionHandlingConfigurer<H extends HttpSecurityBuilder<H>>
 		extends AbstractHttpConfigurer<ExceptionHandlingConfigurer<H>, H> {
 
 	private AuthenticationEntryPoint authenticationEntryPoint;
 
 	private AccessDeniedHandler accessDeniedHandler;
-
+	//key是请求匹配器   value是认证失败处理器
 	private LinkedHashMap<RequestMatcher, AuthenticationEntryPoint> defaultEntryPointMappings = new LinkedHashMap<>();
 
 	private LinkedHashMap<RequestMatcher, AccessDeniedHandler> defaultDeniedHandlerMappings = new LinkedHashMap<>();
@@ -182,14 +182,14 @@ public final class ExceptionHandlingConfigurer<H extends HttpSecurityBuilder<H>>
 
 	@Override
 	public void configure(H http) {
-		AuthenticationEntryPoint entryPoint = getAuthenticationEntryPoint(http);
+		AuthenticationEntryPoint entryPoint = getAuthenticationEntryPoint(http); //获取认证失败时的处理器
 		ExceptionTranslationFilter exceptionTranslationFilter = new ExceptionTranslationFilter(entryPoint,
-				getRequestCache(http));
-		AccessDeniedHandler deniedHandler = getAccessDeniedHandler(http);
-		exceptionTranslationFilter.setAccessDeniedHandler(deniedHandler);
+				getRequestCache(http)); //创建ExceptionTranslationFilter过滤器传入entryPoint
+		AccessDeniedHandler deniedHandler = getAccessDeniedHandler(http); //获取一个deniedHandler
+		exceptionTranslationFilter.setAccessDeniedHandler(deniedHandler); //设置给ExceptionTranslationFilter过滤器
 		exceptionTranslationFilter.setSecurityContextHolderStrategy(getSecurityContextHolderStrategy());
 		exceptionTranslationFilter = postProcess(exceptionTranslationFilter);
-		http.addFilter(exceptionTranslationFilter);
+		http.addFilter(exceptionTranslationFilter); //添加到SpringSecurity过滤器链中
 	}
 
 	/**
@@ -215,9 +215,9 @@ public final class ExceptionHandlingConfigurer<H extends HttpSecurityBuilder<H>>
 	 * @return the {@link AuthenticationEntryPoint} to use
 	 */
 	AuthenticationEntryPoint getAuthenticationEntryPoint(H http) {
-		AuthenticationEntryPoint entryPoint = this.authenticationEntryPoint;
+		AuthenticationEntryPoint entryPoint = this.authenticationEntryPoint; //默认情况下this.authenticationEntryPoint为null
 		if (entryPoint == null) {
-			entryPoint = createDefaultEntryPoint(http);
+			entryPoint = createDefaultEntryPoint(http); //获取AuthenticationEntryPoint实例
 		}
 		return entryPoint;
 	}
@@ -234,12 +234,12 @@ public final class ExceptionHandlingConfigurer<H extends HttpSecurityBuilder<H>>
 	}
 
 	private AuthenticationEntryPoint createDefaultEntryPoint(H http) {
-		if (this.defaultEntryPointMappings.isEmpty()) {
+		if (this.defaultEntryPointMappings.isEmpty()) { //如果为空则返回一个Http403ForbiddenEntryPoint类型的处理器
 			return new Http403ForbiddenEntryPoint();
 		}
-		if (this.defaultEntryPointMappings.size() == 1) {
+		if (this.defaultEntryPointMappings.size() == 1) { //如果只有一项则直接取出来进行返回
 			return this.defaultEntryPointMappings.values().iterator().next();
-		}
+		} //如果有多项则使用DelegatingAuthenticationEntryPoint代理类  在代理类中会遍历defaultEntryPointMappings中的每一项  查看当前是否满足其RequestMatcher  如果满足  则使用对应的认证失败处理器来处理
 		DelegatingAuthenticationEntryPoint entryPoint = new DelegatingAuthenticationEntryPoint(
 				this.defaultEntryPointMappings);
 		entryPoint.setDefaultEntryPoint(this.defaultEntryPointMappings.values().iterator().next());

@@ -130,21 +130,21 @@ public class ExceptionTranslationFilter extends GenericFilterBean implements Mes
 		}
 		catch (Exception ex) {
 			// Try to extract a SpringSecurityException from the stacktrace
-			Throwable[] causeChain = this.throwableAnalyzer.determineCauseChain(ex);
+			Throwable[] causeChain = this.throwableAnalyzer.determineCauseChain(ex);//获取整个异常链
 			RuntimeException securityException = (AuthenticationException) this.throwableAnalyzer
-					.getFirstThrowableOfType(AuthenticationException.class, causeChain);
+					.getFirstThrowableOfType(AuthenticationException.class, causeChain); //查看异常链中是否有认证失败类型的异常
 			if (securityException == null) {
 				securityException = (AccessDeniedException) this.throwableAnalyzer
-						.getFirstThrowableOfType(AccessDeniedException.class, causeChain);
+						.getFirstThrowableOfType(AccessDeniedException.class, causeChain); //查找是否有鉴权失败类型的异常
 			}
 			if (securityException == null) {
-				rethrow(ex);
+				rethrow(ex); //如果不存在认证异常或鉴权异常则抛出交给上层容器处理
 			}
 			if (response.isCommitted()) {
 				throw new ServletException("Unable to handle the Spring Security Exception "
 						+ "because the response is already committed.", ex);
 			}
-			handleSpringSecurityException(request, response, chain, securityException);
+			handleSpringSecurityException(request, response, chain, securityException); //如果存在认证异常或鉴权异常则进行异常处理
 		}
 	}
 
@@ -171,11 +171,11 @@ public class ExceptionTranslationFilter extends GenericFilterBean implements Mes
 
 	private void handleSpringSecurityException(HttpServletRequest request, HttpServletResponse response,
 			FilterChain chain, RuntimeException exception) throws IOException, ServletException {
-		if (exception instanceof AuthenticationException) {
-			handleAuthenticationException(request, response, chain, (AuthenticationException) exception);
+		if (exception instanceof AuthenticationException) { //首先判断是否是认证异常
+			handleAuthenticationException(request, response, chain, (AuthenticationException) exception); //进行认证异常处理
 		}
-		else if (exception instanceof AccessDeniedException) {
-			handleAccessDeniedException(request, response, chain, (AccessDeniedException) exception);
+		else if (exception instanceof AccessDeniedException) { //判断是否是鉴权异常
+			handleAccessDeniedException(request, response, chain, (AccessDeniedException) exception); //进行鉴权异常处理
 		}
 	}
 
@@ -187,19 +187,19 @@ public class ExceptionTranslationFilter extends GenericFilterBean implements Mes
 
 	private void handleAccessDeniedException(HttpServletRequest request, HttpServletResponse response,
 			FilterChain chain, AccessDeniedException exception) throws ServletException, IOException {
-		Authentication authentication = this.securityContextHolderStrategy.getContext().getAuthentication();
+		Authentication authentication = this.securityContextHolderStrategy.getContext().getAuthentication(); //从SpringSecurityHolder中取出当前认证主体
 		boolean isAnonymous = this.authenticationTrustResolver.isAnonymous(authentication);
-		if (isAnonymous || this.authenticationTrustResolver.isRememberMe(authentication)) {
+		if (isAnonymous || this.authenticationTrustResolver.isRememberMe(authentication)) { //如果当前认证主体是一个匿名用户，或者当前认证是通过RememberME完成的那也认为是认证异常
 			if (logger.isTraceEnabled()) {
 				logger.trace(LogMessage.format("Sending %s to authentication entry point since access is denied",
 						authentication), exception);
-			}
+			} //重新创建一个InsufficientAuthenticationException异常进入sendStartAuthentication方法进行处理
 			sendStartAuthentication(request, response, chain,
 					new InsufficientAuthenticationException(
 							this.messages.getMessage("ExceptionTranslationFilter.insufficientAuthentication",
 									"Full authentication is required to access this resource")));
 		}
-		else {
+		else { //否则为鉴权异常
 			if (logger.isTraceEnabled()) {
 				logger.trace(
 						LogMessage.format("Sending %s to access denied handler since access is denied", authentication),
@@ -214,9 +214,9 @@ public class ExceptionTranslationFilter extends GenericFilterBean implements Mes
 		// SEC-112: Clear the SecurityContextHolder's Authentication, as the
 		// existing Authentication is no longer considered valid
 		SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
-		this.securityContextHolderStrategy.setContext(context);
-		this.requestCache.saveRequest(request, response);
-		this.authenticationEntryPoint.commence(request, response, reason);
+		this.securityContextHolderStrategy.setContext(context); //清除SecurityContextHolder中保存的认证主体
+		this.requestCache.saveRequest(request, response); //保存当前请求
+		this.authenticationEntryPoint.commence(request, response, reason); //调用authenticationEntryPoint.commence方法完成认证失败处理
 	}
 
 	public void setAccessDeniedHandler(AccessDeniedHandler accessDeniedHandler) {

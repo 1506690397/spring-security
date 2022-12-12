@@ -241,7 +241,7 @@ public abstract class AbstractAuthenticationFilterConfigurer<B extends HttpSecur
 	protected final void registerDefaultAuthenticationEntryPoint(B http) {
 		registerAuthenticationEntryPoint(http, this.authenticationEntryPoint);
 	}
-
+	//添加处理器
 	@SuppressWarnings("unchecked")
 	protected final void registerAuthenticationEntryPoint(B http, AuthenticationEntryPoint authenticationEntryPoint) {
 		ExceptionHandlingConfigurer<B> exceptionHandling = http.getConfigurer(ExceptionHandlingConfigurer.class);
