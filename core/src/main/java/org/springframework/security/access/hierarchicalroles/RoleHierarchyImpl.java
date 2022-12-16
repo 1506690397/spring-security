@@ -116,7 +116,7 @@ public class RoleHierarchyImpl implements RoleHierarchy {
 	}
 
 	@Override
-	public Collection<GrantedAuthority> getReachableGrantedAuthorities(
+	public Collection<GrantedAuthority> getReachableGrantedAuthorities( //获取用户真正“可触达”的权限
 			Collection<? extends GrantedAuthority> authorities) {
 		if (authorities == null || authorities.isEmpty()) {
 			return AuthorityUtils.NO_AUTHORITIES;
@@ -155,7 +155,7 @@ public class RoleHierarchyImpl implements RoleHierarchy {
 	/**
 	 * Parse input and build the map for the roles reachable in one step: the higher role
 	 * will become a key that references a set of the reachable lower roles.
-	 */
+	 */ //对角色继承关系
 	private void buildRolesReachableInOneStepMap() {
 		this.rolesReachableInOneStepMap = new HashMap<>();
 		for (String line : this.roleHierarchyStringRepresentation.split("\n")) {
@@ -185,7 +185,7 @@ public class RoleHierarchyImpl implements RoleHierarchy {
 	 * reachable from it in the map of roles reachable in one or more steps. (Or throw a
 	 * CycleInRoleHierarchyException if a cycle in the role hierarchy definition is
 	 * detected)
-	 */
+	 */ //再次解析角色继承集合
 	private void buildRolesReachableInOneOrMoreStepsMap() {
 		this.rolesReachableInOneOrMoreStepsMap = new HashMap<>();
 		// iterate over all higher roles from rolesReachableInOneStepMap

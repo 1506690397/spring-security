@@ -46,7 +46,7 @@ import org.springframework.util.ClassUtils;
  * @deprecated Use the {@code use-authorization-manager} attribute for
  * {@code <method-security>} and {@code <intercept-methods>} instead or use
  * annotation-based or {@link AuthorizationManager}-based authorization
- */
+ */ //基于XML文件配置的方法权限拦截规则
 @Deprecated
 public class MapBasedMethodSecurityMetadataSource extends AbstractFallbackMethodSecurityMetadataSource
 		implements BeanClassLoaderAware {

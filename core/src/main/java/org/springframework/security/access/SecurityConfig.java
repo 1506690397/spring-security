@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
  * Stores a {@link ConfigAttribute} as a <code>String</code>.
  *
  * @author Ben Alex
- */
+ */ //如果用户使用了@Secured注解来控制权限，那么配置的权限就会被封装为SecurityConfig对象
 public class SecurityConfig implements ConfigAttribute {
 
 	private final String attrib;

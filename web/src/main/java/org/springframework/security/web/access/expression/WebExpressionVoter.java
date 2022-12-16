@@ -36,7 +36,7 @@ import org.springframework.util.Assert;
  * @author Luke Taylor
  * @since 3.0
  * @deprecated Use {@link WebExpressionAuthorizationManager} instead
- */
+ */ //基于URL地址进行权限控制时的投票器
 @Deprecated
 public class WebExpressionVoter implements AccessDecisionVoter<FilterInvocation> {
 

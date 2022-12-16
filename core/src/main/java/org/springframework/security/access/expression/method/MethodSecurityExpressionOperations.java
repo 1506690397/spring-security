@@ -24,7 +24,7 @@ import org.springframework.security.access.expression.SecurityExpressionOperatio
  *
  * @author Luke Taylor
  * @since 3.1.1
- */
+ */ //定义了基于方法的权限管理时一些必须实现的接口
 public interface MethodSecurityExpressionOperations extends SecurityExpressionOperations {
 
 	void setFilterObject(Object filterObject);

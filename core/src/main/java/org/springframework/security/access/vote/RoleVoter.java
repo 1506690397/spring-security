@@ -51,7 +51,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @deprecated Use
  * {@link org.springframework.security.authorization.AuthorityAuthorizationManager}
  * instead
- */
+ */ //根据登录主体的角色进行投票
 @Deprecated
 public class RoleVoter implements AccessDecisionVoter<Object> {
 

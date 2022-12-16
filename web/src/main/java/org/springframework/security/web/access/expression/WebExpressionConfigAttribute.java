@@ -26,7 +26,7 @@ import org.springframework.security.web.FilterInvocation;
  *
  * @author Luke Taylor
  * @since 3.0
- */
+ */ //如果用户是基于URL地址来控制权限并且支持SpEL那么默认配置的权限控制表达式最终会被封装为WebExpressionConfigAttribute对象
 class WebExpressionConfigAttribute implements ConfigAttribute, EvaluationContextPostProcessor<FilterInvocation> {
 
 	private final Expression authorizeExpression;

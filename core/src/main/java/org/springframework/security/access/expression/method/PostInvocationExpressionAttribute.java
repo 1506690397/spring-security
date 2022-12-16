@@ -26,7 +26,7 @@ import org.springframework.security.access.prepost.PostInvocationAttribute;
  * @deprecated Use
  * {@link org.springframework.security.authorization.method.AuthorizationManagerAfterMethodInterceptor}
  * instead
- */
+ */ //如果用户使用了@PostAuthorize、@PostFilter注解来控制权限  那么相关的配置就会封装为@PostInvocationExpressionAttribute对象
 @Deprecated
 class PostInvocationExpressionAttribute extends AbstractExpressionBasedMethodConfigAttribute
 		implements PostInvocationAttribute {

@@ -96,7 +96,7 @@ import org.springframework.util.StringUtils;
  * All comparisons and prefixes are case sensitive.
  *
  * @author Ben Alex
- */
+ */ //基于SpringSecurity提供的ACL权限系统的投票器
 public class AclEntryVoter extends AbstractAclVoter {
 
 	private static final Log logger = LogFactory.getLog(AclEntryVoter.class);

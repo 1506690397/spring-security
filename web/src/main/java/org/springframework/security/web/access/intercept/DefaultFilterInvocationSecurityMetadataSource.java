@@ -54,7 +54,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class DefaultFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
 	protected final Log logger = LogFactory.getLog(getClass());
-
+	//key是请求匹配器   value是权限集合
 	private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
 
 	/**

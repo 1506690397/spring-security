@@ -33,7 +33,7 @@ import org.springframework.security.authorization.AuthorizationManager;
  * @deprecated Use the {@code use-authorization-manager} attribute for
  * {@code <method-security>} and {@code <intercept-methods>} instead or use
  * annotation-based or {@link AuthorizationManager}-based authorization
- */
+ */ //如果受保护的对象是一个方法  那么将通过MethodSecurityMetadataSource的实现类来获取受保护对象所需要的权限
 public interface MethodSecurityMetadataSource extends SecurityMetadataSource {
 
 	Collection<ConfigAttribute> getAttributes(Method method, Class<?> targetClass);

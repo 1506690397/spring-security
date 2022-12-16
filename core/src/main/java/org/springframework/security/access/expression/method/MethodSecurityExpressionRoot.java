@@ -27,7 +27,7 @@ import org.springframework.security.core.Authentication;
  * @author Luke Taylor
  * @author Evgeniy Cheban
  * @since 3.0
- */
+ */ //对MethodSecurityExpressionOperations接口定义的方法进行了实现
 class MethodSecurityExpressionRoot extends SecurityExpressionRoot implements MethodSecurityExpressionOperations {
 
 	private Object filterObject;

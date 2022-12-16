@@ -41,7 +41,7 @@ import org.springframework.security.core.Authentication;
  * @deprecated Use
  * {@link org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor}
  * instead
- */
+ */ //处理@PreFilter和@PreAuthorize
 @Deprecated
 public class PreInvocationAuthorizationAdviceVoter implements AccessDecisionVoter<MethodInvocation> {
 

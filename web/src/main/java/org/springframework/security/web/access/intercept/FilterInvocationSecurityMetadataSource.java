@@ -24,7 +24,7 @@ import org.springframework.security.web.FilterInvocation;
  * designed to perform lookups keyed on {@link FilterInvocation}s.
  *
  * @author Ben Alex
- */
+ */ //空接口  如果被保护的对象是一个URL地址  那么将由FilterInvocationSecurityMetadataSource的实现类提供访问该URL地址所需要的权限
 public interface FilterInvocationSecurityMetadataSource extends SecurityMetadataSource {
 
 }

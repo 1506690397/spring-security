@@ -64,7 +64,7 @@ public interface AfterInvocationManager {
 	 * the implementation should simply return the same object it was passed by the
 	 * <code>returnedObject</code> method argument)
 	 * @throws AccessDeniedException if access is denied
-	 */
+	 */ //对执行的结果进行过滤
 	Object decide(Authentication authentication, Object object, Collection<ConfigAttribute> attributes,
 			Object returnedObject) throws AccessDeniedException;
 

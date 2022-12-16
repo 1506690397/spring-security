@@ -24,7 +24,7 @@ import org.springframework.security.core.Authentication;
  * @author Andrei Stefan
  * @author Luke Taylor
  * @since 3.1.1
- */
+ */ //定义了基本的权限表达式
 public interface SecurityExpressionOperations {
 
 	/**

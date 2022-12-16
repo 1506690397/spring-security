@@ -26,7 +26,7 @@ import org.springframework.security.access.prepost.PreInvocationAttribute;
  * @deprecated Use
  * {@link org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor}
  * instead
- */
+ */ //如果用户使用了@PreAuthorize、@PreFilter注解来控制权限  那么相关的配置就会封装为PreInvocationExpressionAttribute对象
 @Deprecated
 class PreInvocationExpressionAttribute extends AbstractExpressionBasedMethodConfigAttribute
 		implements PreInvocationAttribute {

@@ -33,11 +33,11 @@ import org.springframework.security.core.Authentication;
  */ //投票器   检查用户是否具有应有的角色从而进行投票或弃权票
 @Deprecated
 public interface AccessDecisionVoter<S> {
-
+	//表示投票通过
 	int ACCESS_GRANTED = 1;
-
+	//表示弃权
 	int ACCESS_ABSTAIN = 0;
-
+	//表示拒绝
 	int ACCESS_DENIED = -1;
 
 	/**
@@ -51,7 +51,7 @@ public interface AccessDecisionVoter<S> {
 	 * {@code AbstractSecurityInterceptor}
 	 * @return true if this {@code AccessDecisionVoter} can support the passed
 	 * configuration attribute
-	 */
+	 */ //判断是否支持处理ConfigAttribute对象
 	boolean supports(ConfigAttribute attribute);
 
 	/**
@@ -59,7 +59,7 @@ public interface AccessDecisionVoter<S> {
 	 * access control votes for the indicated secured object type.
 	 * @param clazz the class that is being queried
 	 * @return true if the implementation can process the indicated class
-	 */
+	 */ //判断是否支持处理受保护的对象
 	boolean supports(Class<?> clazz);
 
 	/**
@@ -88,7 +88,7 @@ public interface AccessDecisionVoter<S> {
 	 * @param attributes the configuration attributes associated with the secured object
 	 * @return either {@link #ACCESS_GRANTED}, {@link #ACCESS_ABSTAIN} or
 	 * {@link #ACCESS_DENIED}
-	 */
+	 */ //具体的投票方法  第一个参数可以提取出来当前用户所具备的权限   第二个参数表示受保护的安全对象  第三个参数表示访问受保护对象所需要的权限
 	int vote(Authentication authentication, S object, Collection<ConfigAttribute> attributes);
 
 }

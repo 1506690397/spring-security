@@ -24,7 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
  * The simple interface of a role hierarchy.
  *
  * @author Michael Mayr
- */
+ */ //对角色类继承提供支持
 public interface RoleHierarchy {
 
 	/**
@@ -39,7 +39,7 @@ public interface RoleHierarchy {
 	 * Reachable authorities: ROLE_A, ROLE_B, ROLE_C.
 	 * @param authorities - List of the directly assigned authorities.
 	 * @return List of all reachable authorities given the assigned authorities.
-	 */
+	 */ //返回用户真正“可触达”的权限
 	Collection<? extends GrantedAuthority> getReachableGrantedAuthorities(
 			Collection<? extends GrantedAuthority> authorities);
 

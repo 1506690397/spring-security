@@ -40,7 +40,7 @@ import org.springframework.util.Assert;
  * @author Luke Taylor
  * @deprecated Use
  * {@link org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor#secured}
- */
+ */ //@Secured权限所标记的权限规则将由SecuredAnnotationSecurityMetadataSource负责提供
 @Deprecated
 @SuppressWarnings({ "unchecked" })
 public class SecuredAnnotationSecurityMetadataSource extends AbstractFallbackMethodSecurityMetadataSource {

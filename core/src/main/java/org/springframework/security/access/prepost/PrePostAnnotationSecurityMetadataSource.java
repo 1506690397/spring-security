@@ -53,7 +53,7 @@ import org.springframework.util.ClassUtils;
  * and
  * {@link org.springframework.security.authorization.method.PostAuthorizeAuthorizationManager}
  * instead
- */
+ */ //@PreAuthorize  @PreFilter  @PostAuthorize  @PostFilter四个注解所标记的权限规则将由PrePostAnnotationSecurityMetadataSource负责提供
 @Deprecated
 public class PrePostAnnotationSecurityMetadataSource extends AbstractMethodSecurityMetadataSource {
 

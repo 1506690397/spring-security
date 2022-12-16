@@ -27,7 +27,7 @@ import org.springframework.security.core.Authentication;
  *
  * @author Ben Alex
  * @deprecated Use {@link AuthorizationManager} instead
- */ //决策期  决定此次访问是否被允许  会对voter进行挨个遍历  从而进行判断
+ */ //决策器  决定此次访问是否被允许  会对voter进行挨个遍历  从而进行判断
 @Deprecated
 public interface AccessDecisionManager {
 
@@ -41,7 +41,7 @@ public interface AccessDecisionManager {
 	 * hold a required authority or ACL privilege
 	 * @throws InsufficientAuthenticationException if access is denied as the
 	 * authentication does not provide a sufficient level of trust
-	 */
+	 */ //是核心的决策方法  在这个方法中判断是否允许当前URL或当前方法的调用
 	void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
 			throws AccessDeniedException, InsufficientAuthenticationException;
 
@@ -58,7 +58,7 @@ public interface AccessDecisionManager {
 	 * <code>AbstractSecurityInterceptor</code>
 	 * @return true if this <code>AccessDecisionManager</code> can support the passed
 	 * configuration attribute
-	 */
+	 */ //用来判断是否支持处理ConfigAttribute对象
 	boolean supports(ConfigAttribute attribute);
 
 	/**
@@ -66,7 +66,7 @@ public interface AccessDecisionManager {
 	 * provide access control decisions for the indicated secured object type.
 	 * @param clazz the class that is being queried
 	 * @return <code>true</code> if the implementation can process the indicated class
-	 */
+	 */ //用来判断是否支持当前安全对象
 	boolean supports(Class<?> clazz);
 
 }

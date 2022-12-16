@@ -26,7 +26,7 @@ import org.springframework.security.access.intercept.AbstractSecurityInterceptor
  * applies to a given secure object invocation.
  *
  * @author Ben Alex
- */
+ */ //提供受保护对象所需要的权限
 public interface SecurityMetadataSource extends AopInfrastructureBean {
 
 	/**
@@ -36,7 +36,7 @@ public interface SecurityMetadataSource extends AopInfrastructureBean {
 	 * empty collection if there are no applicable attributes.
 	 * @throws IllegalArgumentException if the passed object is not of a type supported by
 	 * the <code>SecurityMetadataSource</code> implementation
-	 */
+	 */ //根据传入的安全对象参数返回其所需要的权限
 	Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException;
 
 	/**
@@ -46,7 +46,7 @@ public interface SecurityMetadataSource extends AopInfrastructureBean {
 	 * This is used by the {@link AbstractSecurityInterceptor} to perform startup time
 	 * validation of each {@code ConfigAttribute} configured against it.
 	 * @return the {@code ConfigAttribute}s or {@code null} if unsupported
-	 */
+	 */ //返回所有的角色/权限  以便验证是否支持
 	Collection<ConfigAttribute> getAllConfigAttributes();
 
 	/**
@@ -54,7 +54,7 @@ public interface SecurityMetadataSource extends AopInfrastructureBean {
 	 * provide {@code ConfigAttribute}s for the indicated secure object type.
 	 * @param clazz the class that is being queried
 	 * @return true if the implementation can process the indicated class
-	 */
+	 */ //返回当前的SecurityMetadataSource是否支持受保护的对象  如FilterInvocation或者MethodInvocation
 	boolean supports(Class<?> clazz);
 
 }

@@ -48,14 +48,14 @@ import org.springframework.util.Assert;
  * @deprecated Use
  * {@link org.springframework.security.authorization.AuthorityAuthorizationManager}
  * instead
- */
+ */ //判断当前用户的认证形式
 @Deprecated
 public class AuthenticatedVoter implements AccessDecisionVoter<Object> {
-
+	//要求当前用户既不是匿名用户也不是RememberMe进行认证
 	public static final String IS_AUTHENTICATED_FULLY = "IS_AUTHENTICATED_FULLY";
-
+	//在IS_AUTHENTICATED_FULLY基础上允许RememberMe登录
 	public static final String IS_AUTHENTICATED_REMEMBERED = "IS_AUTHENTICATED_REMEMBERED";
-
+	//允许当前用户通过RememberMe进行认证也允许当前用户是匿名用户
 	public static final String IS_AUTHENTICATED_ANONYMOUSLY = "IS_AUTHENTICATED_ANONYMOUSLY";
 
 	private AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();

@@ -59,11 +59,11 @@ final class GlobalMethodSecuritySelector implements ImportSelector {
 		boolean jsr250Enabled = attributes.getBoolean("jsr250Enabled");
 		List<String> classNames = new ArrayList<>(4);
 		if (isProxy) {
-			classNames.add(MethodSecurityMetadataSourceAdvisorRegistrar.class.getName());
+			classNames.add(MethodSecurityMetadataSourceAdvisorRegistrar.class.getName()); //MethodSecurityMetadataSourceAdvisorRegistrar如果使用的是Spring自带的aop则配置类会被导入该类主要用来向spring容器中注册一个MethodSecurityMetadataSourceAdvisor对象，这个对象定义了AOP中的pointcut和advice
 		}
-		classNames.add(autoProxyClassName);
+		classNames.add(autoProxyClassName); //autoProxyClassName注册自动代理创建者 根据不同的代理模式而定
 		if (!skipMethodSecurityConfiguration) {
-			classNames.add(GlobalMethodSecurityConfiguration.class.getName());
+			classNames.add(GlobalMethodSecurityConfiguration.class.getName()); //用来提供MethodSecurityMetadataSource和MethodInterceptor两个关键对象  如果开发者自定义配置类继承自GlobalMethodSecurityConfiguration则这里不会导入这个外部配置类
 		}
 		if (jsr250Enabled) {
 			classNames.add(Jsr250MetadataSourceConfiguration.class.getName());

@@ -148,10 +148,10 @@ public class GlobalMethodSecurityConfiguration implements ImportAware, SmartInit
 	@Bean
 	public MethodInterceptor methodSecurityInterceptor(MethodSecurityMetadataSource methodSecurityMetadataSource) {
 		this.methodSecurityInterceptor = isAspectJ() ? new AspectJMethodSecurityInterceptor()
-				: new MethodSecurityInterceptor();
-		this.methodSecurityInterceptor.setAccessDecisionManager(accessDecisionManager());
-		this.methodSecurityInterceptor.setAfterInvocationManager(afterInvocationManager());
-		this.methodSecurityInterceptor.setSecurityMetadataSource(methodSecurityMetadataSource);
+				: new MethodSecurityInterceptor(); //先看代理模式 默认是spring自带的aop  所以使用MethodSecurityInterceptor创建对应的MethodInterceptor实例
+		this.methodSecurityInterceptor.setAccessDecisionManager(accessDecisionManager()); //设置决策管理器
+		this.methodSecurityInterceptor.setAfterInvocationManager(afterInvocationManager()); //配置后置处理器
+		this.methodSecurityInterceptor.setSecurityMetadataSource(methodSecurityMetadataSource); //配置SecurityMetadataSource对象
 		this.methodSecurityInterceptor.setSecurityContextHolderStrategy(this.securityContextHolderStrategy);
 		RunAsManager runAsManager = runAsManager();
 		if (runAsManager != null) {
@@ -217,7 +217,7 @@ public class GlobalMethodSecurityConfiguration implements ImportAware, SmartInit
 	 * @return the {@link AfterInvocationManager} to use
 	 */
 	protected AfterInvocationManager afterInvocationManager() {
-		if (prePostEnabled()) {
+		if (prePostEnabled()) { //根据@EnableGlobal注解MethodSecurity注解的属性信息添加后置处理器
 			AfterInvocationProviderManager invocationProviderManager = new AfterInvocationProviderManager();
 			ExpressionBasedPostInvocationAdvice postAdvice = new ExpressionBasedPostInvocationAdvice(
 					getExpressionHandler());
@@ -352,11 +352,11 @@ public class GlobalMethodSecurityConfiguration implements ImportAware, SmartInit
 	@Bean
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 	public MethodSecurityMetadataSource methodSecurityMetadataSource() {
-		List<MethodSecurityMetadataSource> sources = new ArrayList<>();
+		List<MethodSecurityMetadataSource> sources = new ArrayList<>(); //创建一个List集合用来保存MethodSecurityMetadataSource对象
 		ExpressionBasedAnnotationAttributeFactory attributeFactory = new ExpressionBasedAnnotationAttributeFactory(
 				getExpressionHandler());
-		MethodSecurityMetadataSource customMethodSecurityMetadataSource = customMethodSecurityMetadataSource();
-		if (customMethodSecurityMetadataSource != null) {
+		MethodSecurityMetadataSource customMethodSecurityMetadataSource = customMethodSecurityMetadataSource(); //调用customMethodSecurityMetadataSource方法获取自定义的MethodMetadataSource对象  默认返回null
+		if (customMethodSecurityMetadataSource != null) { //接下来就是向sources集合中添加相应的MethodSecurityMetadataSource对象
 			sources.add(customMethodSecurityMetadataSource);
 		}
 		boolean hasCustom = customMethodSecurityMetadataSource != null;
@@ -366,13 +366,13 @@ public class GlobalMethodSecurityConfiguration implements ImportAware, SmartInit
 		Assert.state(isPrePostEnabled || isSecuredEnabled || isJsr250Enabled || hasCustom,
 				"In the composition of all global method configuration, "
 						+ "no annotation support was actually activated");
-		if (isPrePostEnabled) {
+		if (isPrePostEnabled) { //如果@EnableGlobalMethodSecurity注解配置了prePostEnabled=true则加入PrePostAnnotationSecurityMetadataSource对象来解析相应的注解
 			sources.add(new PrePostAnnotationSecurityMetadataSource(attributeFactory));
 		}
-		if (isSecuredEnabled) {
+		if (isSecuredEnabled) { //如果@EnableGlobalMethodSecurity注解配置了securedEnabled=true则加入SecuredAnnotationSecurityMetadataSource对象来解析相应的注解
 			sources.add(new SecuredAnnotationSecurityMetadataSource());
 		}
-		if (isJsr250Enabled) {
+		if (isJsr250Enabled) { //如果@EnableGlobalMethodSecurity注解配置了jsr250Enabled=true则加入Jsr250MethodSecurityMetadataSource对象来解析相应的注解
 			GrantedAuthorityDefaults grantedAuthorityDefaults = getSingleBeanOrNull(GrantedAuthorityDefaults.class);
 			Jsr250MethodSecurityMetadataSource jsr250MethodSecurityMetadataSource = this.context
 					.getBean(Jsr250MethodSecurityMetadataSource.class);
@@ -381,7 +381,7 @@ public class GlobalMethodSecurityConfiguration implements ImportAware, SmartInit
 			}
 			sources.add(jsr250MethodSecurityMetadataSource);
 		}
-		return new DelegatingMethodSecurityMetadataSource(sources);
+		return new DelegatingMethodSecurityMetadataSource(sources); //构建一个代理对象进行返回
 	}
 
 	/**

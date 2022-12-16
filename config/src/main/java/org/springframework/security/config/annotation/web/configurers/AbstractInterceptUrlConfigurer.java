@@ -61,7 +61,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
  * @see ExpressionUrlAuthorizationConfigurer
  * @see UrlAuthorizationConfigurer
  * @deprecated Use {@link AuthorizeHttpRequestsConfigurer} instead
- */
+ */ //主要负责创建FilterSecurityInterceptor对象
 @Deprecated
 public abstract class AbstractInterceptUrlConfigurer<C extends AbstractInterceptUrlConfigurer<C, H>, H extends HttpSecurityBuilder<H>>
 		extends AbstractHttpConfigurer<C, H> {
@@ -72,7 +72,7 @@ public abstract class AbstractInterceptUrlConfigurer<C extends AbstractIntercept
 
 	AbstractInterceptUrlConfigurer() {
 	}
-
+	//创建一个FilterSecurityInterceptor添加到SpringSecurity过滤器链中
 	@Override
 	public void configure(H http) throws Exception {
 		FilterInvocationSecurityMetadataSource metadataSource = createMetadataSource(http);

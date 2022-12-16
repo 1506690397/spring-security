@@ -29,7 +29,7 @@ import org.springframework.security.web.util.matcher.IpAddressMatcher;
  * @author Luke Taylor
  * @author Evgeniy Cheban
  * @since 3.0
- */
+ */ //在父类基础上增加了hasIpAddress方法  用来判断请求的IP地址是否满足要求
 public class WebSecurityExpressionRoot extends SecurityExpressionRoot {
 
 	/**

@@ -59,7 +59,7 @@ public class MethodSecurityMetadataSourceAdvisor extends AbstractPointcutAdvisor
 	private transient MethodSecurityMetadataSource attributeSource;
 
 	private transient MethodInterceptor interceptor;
-
+	//切点
 	private final Pointcut pointcut = new MethodSecurityMetadataSourcePointcut();
 
 	private BeanFactory beanFactory;
@@ -103,7 +103,7 @@ public class MethodSecurityMetadataSourceAdvisor extends AbstractPointcutAdvisor
 			if (this.interceptor == null) {
 				Assert.notNull(this.adviceBeanName, "'adviceBeanName' must be set for use with bean factory lookup.");
 				Assert.state(this.beanFactory != null, "BeanFactory must be set to resolve 'adviceBeanName'");
-				this.interceptor = this.beanFactory.getBean(this.adviceBeanName, MethodInterceptor.class);
+				this.interceptor = this.beanFactory.getBean(this.adviceBeanName, MethodInterceptor.class); //从spring容器中查找一个名为methodSecurityInterceptor的MethodInterceptor对象
 			}
 			return this.interceptor;
 		}
@@ -126,7 +126,7 @@ public class MethodSecurityMetadataSourceAdvisor extends AbstractPointcutAdvisor
 		@Override
 		public boolean matches(Method m, Class<?> targetClass) {
 			MethodSecurityMetadataSource source = MethodSecurityMetadataSourceAdvisor.this.attributeSource;
-			return !CollectionUtils.isEmpty(source.getAttributes(m, targetClass));
+			return !CollectionUtils.isEmpty(source.getAttributes(m, targetClass)); //getAttributes查看目标方法上是否有相应的权限注解  如果有返回true  目标方法就会被拦截下来
 		}
 
 	}

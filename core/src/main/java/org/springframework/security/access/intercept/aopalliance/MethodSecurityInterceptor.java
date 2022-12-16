@@ -61,15 +61,15 @@ public class MethodSecurityInterceptor extends AbstractSecurityInterceptor imple
 	 */
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
-		InterceptorStatusToken token = super.beforeInvocation(mi);
+		InterceptorStatusToken token = super.beforeInvocation(mi); //进行权限校验
 		Object result;
 		try {
-			result = mi.proceed();
+			result = mi.proceed(); //继续执行目标方法
 		}
 		finally {
-			super.finallyInvocation(token);
+			super.finallyInvocation(token); //完成一些清理工作
 		}
-		return super.afterInvocation(token, result);
+		return super.afterInvocation(token, result); //对请求结果进行过滤
 	}
 
 	public MethodSecurityMetadataSource getSecurityMetadataSource() {

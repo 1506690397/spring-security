@@ -38,7 +38,7 @@ import org.springframework.security.access.method.AbstractFallbackMethodSecurity
  * @deprecated Use
  * {@link org.springframework.security.authorization.method.Jsr250AuthorizationManager}
  * instead
- */
+ */ //JSR-250相关的注解做标记的权限规则
 @Deprecated
 public class Jsr250MethodSecurityMetadataSource extends AbstractFallbackMethodSecurityMetadataSource {
 

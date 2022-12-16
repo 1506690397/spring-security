@@ -28,7 +28,7 @@ import org.springframework.security.authorization.method.AuthorizationManagerBef
  * @author Ryan Heaton
  * @since 2.0
  * @deprecated Use {@link AuthorizationManagerBeforeMethodInterceptor#jsr250()} instead
- */
+ */ //如果用户使用JSR-250相关的注解来控制权限  那么配置的权限就会被封装为Jsr250SecurityConfig对象
 @Deprecated
 public class Jsr250SecurityConfig extends SecurityConfig {
 

@@ -45,18 +45,18 @@ class MethodSecurityMetadataSourceAdvisorRegistrar implements ImportBeanDefiniti
 	@Override
 	public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 		BeanDefinitionBuilder advisor = BeanDefinitionBuilder
-				.rootBeanDefinition(MethodSecurityMetadataSourceAdvisor.class);
+				.rootBeanDefinition(MethodSecurityMetadataSourceAdvisor.class); //定义一个BeanDefinitionBuilder
 		advisor.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-		advisor.addConstructorArgValue("methodSecurityInterceptor");
-		advisor.addConstructorArgReference("methodSecurityMetadataSource");
-		advisor.addConstructorArgValue("methodSecurityMetadataSource");
+		advisor.addConstructorArgValue("methodSecurityInterceptor"); //给MethodSecurityMetadataSourceAdvisor的构造方法设置参数 第一个是要引用的MethodInterceptor对象名
+		advisor.addConstructorArgReference("methodSecurityMetadataSource"); //第二个要引用的是MethodSecurityMetadataSource对象名
+		advisor.addConstructorArgValue("methodSecurityMetadataSource"); //第三个和第二个一样 只不过是一个引用  一个是字符串
 		MultiValueMap<String, Object> attributes = importingClassMetadata
 				.getAllAnnotationAttributes(EnableGlobalMethodSecurity.class.getName());
 		Integer order = (Integer) attributes.getFirst("order");
 		if (order != null) {
 			advisor.addPropertyValue("order", order);
 		}
-		registry.registerBeanDefinition("metaDataSourceAdvisor", advisor.getBeanDefinition());
+		registry.registerBeanDefinition("metaDataSourceAdvisor", advisor.getBeanDefinition()); //注册到spring容器中
 	}
 
 }

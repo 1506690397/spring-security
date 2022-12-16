@@ -102,7 +102,7 @@ public class FilterSecurityInterceptor extends AbstractSecurityInterceptor imple
 	}
 
 	public void invoke(FilterInvocation filterInvocation) throws IOException, ServletException {
-		if (isApplied(filterInvocation) && this.observeOncePerRequest) {
+		if (isApplied(filterInvocation) && this.observeOncePerRequest) { //如果当前过滤器已经执行过了则继续执行剩下的过滤器
 			// filter already applied to this request and user wants us to observe
 			// once-per-request handling, so don't re-do security checking
 			filterInvocation.getChain().doFilter(filterInvocation.getRequest(), filterInvocation.getResponse());
@@ -112,14 +112,14 @@ public class FilterSecurityInterceptor extends AbstractSecurityInterceptor imple
 		if (filterInvocation.getRequest() != null && this.observeOncePerRequest) {
 			filterInvocation.getRequest().setAttribute(FILTER_APPLIED, Boolean.TRUE);
 		}
-		InterceptorStatusToken token = super.beforeInvocation(filterInvocation);
+		InterceptorStatusToken token = super.beforeInvocation(filterInvocation); //如果第一次执行则调用父类的beforeInvocation方法进行权限校验
 		try {
-			filterInvocation.getChain().doFilter(filterInvocation.getRequest(), filterInvocation.getResponse());
+			filterInvocation.getChain().doFilter(filterInvocation.getRequest(), filterInvocation.getResponse()); //校验通过后继续执行剩余的过滤器
 		}
 		finally {
-			super.finallyInvocation(token);
+			super.finallyInvocation(token); //调用父类的finallyInvocation方法
 		}
-		super.afterInvocation(token, null);
+		super.afterInvocation(token, null); //最后调用父类的afterInvocation方法
 	}
 
 	private boolean isApplied(FilterInvocation filterInvocation) {

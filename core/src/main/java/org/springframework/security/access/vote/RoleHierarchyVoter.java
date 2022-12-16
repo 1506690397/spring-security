@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
  * @deprecated Use
  * {@link org.springframework.security.authorization.AuthorityAuthorizationManager#setRoleHierarchy}
  * instead
- */
+ */ //根绝角色进行投票   还可通过RoleHierarchyVoterImpl对象对用户具有的角色进行解析获取用户真正“可触达”的角色
 @Deprecated
 public class RoleHierarchyVoter extends RoleVoter {
 

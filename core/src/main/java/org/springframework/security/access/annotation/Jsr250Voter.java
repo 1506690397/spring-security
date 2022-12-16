@@ -31,7 +31,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @deprecated Use
  * {@link org.springframework.security.authorization.method.Jsr250AuthorizationManager}
  * instead
- */
+ */ //基于JSR-250权限注解的投票器
 @Deprecated
 public class Jsr250Voter implements AccessDecisionVoter<Object> {
 

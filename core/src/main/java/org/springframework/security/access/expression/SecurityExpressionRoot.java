@@ -35,7 +35,7 @@ import org.springframework.util.Assert;
  * @author Luke Taylor
  * @author Evgeniy Cheban
  * @since 3.0
- */
+ */ //对SecurityExpressionOperations做了基本的实现  并在其基础上增加了principal
 public abstract class SecurityExpressionRoot implements SecurityExpressionOperations {
 
 	private final Supplier<Authentication> authentication;
