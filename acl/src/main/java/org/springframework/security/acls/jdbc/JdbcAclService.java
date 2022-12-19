@@ -48,7 +48,7 @@ import org.springframework.util.Assert;
  * so that the implementation can detect changed parameters easily.
  *
  * @author Ben Alex
- */
+ */ //主要针对Acl查询操作
 public class JdbcAclService implements AclService {
 
 	protected static final Log log = LogFactory.getLog(JdbcAclService.class);

@@ -23,7 +23,7 @@ import java.util.Map;
  * Provides retrieval of {@link Acl} instances.
  *
  * @author Ben Alex
- */
+ */ //主要定义了一些解析Acl对象的方法
 public interface AclService {
 
 	/**

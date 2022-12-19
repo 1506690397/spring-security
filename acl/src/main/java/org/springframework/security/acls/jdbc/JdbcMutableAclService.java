@@ -58,7 +58,7 @@ import org.springframework.util.Assert;
  *
  * @author Ben Alex
  * @author Johannes Zlattinger
- */
+ */ //支持Acl的添加、更新以及删除等操作
 public class JdbcMutableAclService extends JdbcAclService implements MutableAclService {
 
 	private static final String DEFAULT_INSERT_INTO_ACL_CLASS = "insert into acl_class (class) values (?)";

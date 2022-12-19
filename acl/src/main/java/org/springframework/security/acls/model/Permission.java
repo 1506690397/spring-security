@@ -22,7 +22,7 @@ import java.io.Serializable;
  * Represents a permission granted to a <tt>Sid</tt> for a given domain object.
  *
  * @author Ben Alex
- */
+ */ //具体的权限对象
 public interface Permission extends Serializable {
 
 	char RESERVED_ON = '~';

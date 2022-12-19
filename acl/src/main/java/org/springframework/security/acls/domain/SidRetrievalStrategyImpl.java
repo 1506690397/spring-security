@@ -54,13 +54,13 @@ public class SidRetrievalStrategyImpl implements SidRetrievalStrategy {
 	@Override
 	public List<Sid> getSids(Authentication authentication) {
 		Collection<? extends GrantedAuthority> authorities = this.roleHierarchy
-				.getReachableGrantedAuthorities(authentication.getAuthorities());
+				.getReachableGrantedAuthorities(authentication.getAuthorities()); //获取权限集合
 		List<Sid> sids = new ArrayList<>(authorities.size() + 1);
-		sids.add(new PrincipalSid(authentication));
+		sids.add(new PrincipalSid(authentication)); //构造代表用户角色的GrantedAuthoritySid存入sids集合中
 		for (GrantedAuthority authority : authorities) {
 			sids.add(new GrantedAuthoritySid(authority));
 		}
-		return sids;
+		return sids; //将sids集合返回
 	}
 
 }

@@ -31,7 +31,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author Ben Alex
- */
+ */ //所有需要控制的对象
 public interface ObjectIdentity extends Serializable {
 
 	/**
@@ -53,7 +53,7 @@ public interface ObjectIdentity extends Serializable {
 	 * such change will cascade to the ACL subsystem data.
 	 * </p>
 	 * @return the identifier (unique within this <tt>type</tt>; never <tt>null</tt>)
-	 */
+	 */ //返回资源的id
 	Serializable getIdentifier();
 
 	/**
@@ -61,7 +61,7 @@ public interface ObjectIdentity extends Serializable {
 	 * name (an interface or a class) &ndash; traditionally it is the name of the domain
 	 * object implementation class.
 	 * @return the "type" of the domain object (never <tt>null</tt>).
-	 */
+	 */ //返回资源类全路径
 	String getType();
 
 	/**

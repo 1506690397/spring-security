@@ -37,7 +37,7 @@ import java.util.List;
  * </p>
  *
  * @author Ben Alex
- */
+ */ //关联一个ObjectIdentity和多个ACE
 public interface Acl extends Serializable {
 
 	/**

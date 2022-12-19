@@ -27,7 +27,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author Ben Alex
- */
+ */ //一个AccessControlEntry对象代表一条权限记录  一个AccessControlEntry对象包含一个Sid和一个Permission对象
 public interface AccessControlEntry extends Serializable {
 
 	Acl getAcl();
