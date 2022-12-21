@@ -162,16 +162,16 @@ public class OAuth2LoginAuthenticationFilter extends AbstractAuthenticationProce
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		MultiValueMap<String, String> params = OAuth2AuthorizationResponseUtils.toMultiMap(request.getParameterMap());
-		if (!OAuth2AuthorizationResponseUtils.isAuthorizationResponse(params)) {
+		if (!OAuth2AuthorizationResponseUtils.isAuthorizationResponse(params)) { //对当前请求参数进行校验  请求必须包含code和state两个参数  否则会抛出异常
 			OAuth2Error oauth2Error = new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST);
 			throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
 		}
 		OAuth2AuthorizationRequest authorizationRequest = this.authorizationRequestRepository
-				.removeAuthorizationRequest(request, response);
+				.removeAuthorizationRequest(request, response); //获取在OAuth2AuthorizationRequestRedirectFilter过滤器中保存的授权请求  若为空则抛出异常
 		if (authorizationRequest == null) {
 			OAuth2Error oauth2Error = new OAuth2Error(AUTHORIZATION_REQUEST_NOT_FOUND_ERROR_CODE);
 			throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
-		}
+		}//检查当前注册应用中是否有授权请求时的应用  如果没有则抛出异常
 		String registrationId = authorizationRequest.getAttribute(OAuth2ParameterNames.REGISTRATION_ID);
 		ClientRegistration clientRegistration = this.clientRegistrationRepository.findByRegistrationId(registrationId);
 		if (clientRegistration == null) {
@@ -179,7 +179,7 @@ public class OAuth2LoginAuthenticationFilter extends AbstractAuthenticationProce
 					"Client Registration not found with Id: " + registrationId, null);
 			throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
 		}
-		// @formatter:off
+		// @formatter:off 构造一个未经认证的OAuth2LoginAuthenticationToken对象
 		String redirectUri = UriComponentsBuilder.fromHttpUrl(UrlUtils.buildFullRequestUrl(request))
 				.replaceQuery(null)
 				.build()
@@ -192,7 +192,7 @@ public class OAuth2LoginAuthenticationFilter extends AbstractAuthenticationProce
 				new OAuth2AuthorizationExchange(authorizationRequest, authorizationResponse));
 		authenticationRequest.setDetails(authenticationDetails);
 		OAuth2LoginAuthenticationToken authenticationResult = (OAuth2LoginAuthenticationToken) this
-				.getAuthenticationManager().authenticate(authenticationRequest);
+				.getAuthenticationManager().authenticate(authenticationRequest); //进行认证处理
 		OAuth2AuthenticationToken oauth2Authentication = this.authenticationResultConverter
 				.convert(authenticationResult);
 		Assert.notNull(oauth2Authentication, "authentication result cannot be null");

@@ -79,7 +79,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * @see <a target="_blank" href=
  * "https://tools.ietf.org/html/rfc6749#section-4.1.1">Section 4.1.1 Authorization Request
  * (Authorization Code)</a>
- */
+ */ //主要用来判断是否是授权请求
 public class OAuth2AuthorizationRequestRedirectFilter extends OncePerRequestFilter {
 
 	/**
@@ -168,7 +168,7 @@ public class OAuth2AuthorizationRequestRedirectFilter extends OncePerRequestFilt
 			throws ServletException, IOException {
 		try {
 			OAuth2AuthorizationRequest authorizationRequest = this.authorizationRequestResolver.resolve(request);
-			if (authorizationRequest != null) {
+			if (authorizationRequest != null) { //若为授权请求进行重定向
 				this.sendRedirectForAuthorization(request, response, authorizationRequest);
 				return;
 			}
@@ -216,7 +216,7 @@ public class OAuth2AuthorizationRequestRedirectFilter extends OncePerRequestFilt
 	private void sendRedirectForAuthorization(HttpServletRequest request, HttpServletResponse response,
 			OAuth2AuthorizationRequest authorizationRequest) throws IOException {
 		if (AuthorizationGrantType.AUTHORIZATION_CODE.equals(authorizationRequest.getGrantType())) {
-			this.authorizationRequestRepository.saveAuthorizationRequest(authorizationRequest, request, response);
+			this.authorizationRequestRepository.saveAuthorizationRequest(authorizationRequest, request, response); //重定向前将授权请求保存到session中
 		}
 		this.authorizationRedirectStrategy.sendRedirect(request, response,
 				authorizationRequest.getAuthorizationRequestUri());

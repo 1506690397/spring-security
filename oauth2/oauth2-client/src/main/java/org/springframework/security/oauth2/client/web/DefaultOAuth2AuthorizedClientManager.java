@@ -144,7 +144,7 @@ public final class DefaultOAuth2AuthorizedClientManager implements OAuth2Authori
 		Assert.notNull(servletRequest, "servletRequest cannot be null");
 		HttpServletResponse servletResponse = getHttpServletResponseOrDefault(authorizeRequest.getAttributes());
 		Assert.notNull(servletResponse, "servletResponse cannot be null");
-		OAuth2AuthorizationContext.Builder contextBuilder;
+		OAuth2AuthorizationContext.Builder contextBuilder; //构造OAuth2AuthorizationContext对象 用来保存授权请求时所需要的一些必要信息  构造该对象需要用到客户端对象
 		if (authorizedClient != null) {
 			contextBuilder = OAuth2AuthorizationContext.withAuthorizedClient(authorizedClient);
 		}
@@ -172,7 +172,7 @@ public final class DefaultOAuth2AuthorizedClientManager implements OAuth2Authori
 				})
 				.build();
 		// @formatter:on
-		try {
+		try { //通过authorize方法进行授权
 			authorizedClient = this.authorizedClientProvider.authorize(authorizationContext);
 		}
 		catch (OAuth2AuthorizationException ex) {

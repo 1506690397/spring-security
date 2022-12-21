@@ -115,30 +115,30 @@ public class BearerTokenAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String token;
-		try {
+		try { //从请求中解析出AccessToken
 			token = this.bearerTokenResolver.resolve(request);
 		}
 		catch (OAuth2AuthenticationException invalid) {
 			this.logger.trace("Sending to authentication entry point since failed to resolve bearer token", invalid);
 			this.authenticationEntryPoint.commence(request, response, invalid);
 			return;
-		}
+		} //如果获取到的令牌为空，就说明用户没有传递AccessToken，此时继续执行后面的过滤器  在最后的FilerSecurityInterceptor中检查出权限不足而抛出异常
 		if (token == null) {
 			this.logger.trace("Did not process request since did not find bearer token");
 			filterChain.doFilter(request, response);
 			return;
 		}
-
+		//构造一个BearerTokenAuthenticationToken对象传入AccessToken令牌
 		BearerTokenAuthenticationToken authenticationRequest = new BearerTokenAuthenticationToken(token);
 		authenticationRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
 
 		try {
 			AuthenticationManager authenticationManager = this.authenticationManagerResolver.resolve(request);
-			Authentication authenticationResult = authenticationManager.authenticate(authenticationRequest);
+			Authentication authenticationResult = authenticationManager.authenticate(authenticationRequest); //调用authenticate方法进行令牌校验  在该方法中会调用授权服务器的接口
 			SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
 			context.setAuthentication(authenticationResult);
 			this.securityContextHolderStrategy.setContext(context);
-			this.securityContextRepository.saveContext(context, request, response);
+			this.securityContextRepository.saveContext(context, request, response); //将获取到的authenticationResult对象存入SecurityContext中完成登录
 			if (this.logger.isDebugEnabled()) {
 				this.logger.debug(LogMessage.format("Set SecurityContextHolder to %s", authenticationResult));
 			}

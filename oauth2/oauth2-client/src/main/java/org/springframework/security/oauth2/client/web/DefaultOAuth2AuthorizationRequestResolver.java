@@ -104,7 +104,7 @@ public final class DefaultOAuth2AuthorizationRequestResolver implements OAuth2Au
 	@Override
 	public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
 		String registrationId = resolveRegistrationId(request);
-		if (registrationId == null) {
+		if (registrationId == null) {//用来判断是否为授权请求  如果不是则返回null 是的话进行解析
 			return null;
 		}
 		String redirectUriAction = getAction(request, "login");
@@ -150,7 +150,7 @@ public final class DefaultOAuth2AuthorizationRequestResolver implements OAuth2Au
 		ClientRegistration clientRegistration = this.clientRegistrationRepository.findByRegistrationId(registrationId);
 		if (clientRegistration == null) {
 			throw new InvalidClientRegistrationIdException("Invalid Client Registration with Id: " + registrationId);
-		}
+		} //构造一个OAuth2AuthorizationRequest对象进行返回
 		OAuth2AuthorizationRequest.Builder builder = getBuilder(clientRegistration);
 
 		String redirectUriStr = expandRedirectUri(request, clientRegistration, redirectUriAction);

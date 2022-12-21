@@ -94,13 +94,13 @@ public class OAuth2LoginAuthenticationProvider implements AuthenticationProvider
 		OAuth2LoginAuthenticationToken loginAuthenticationToken = (OAuth2LoginAuthenticationToken) authentication;
 		// Section 3.1.2.1 Authentication Request -
 		// https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest scope
-		// REQUIRED. OpenID Connect requests MUST contain the "openid" scope value.
+		// REQUIRED. OpenID Connect requests MUST contain the "openid" scope value. //判断是否为OpenID Connect认证  如果是则返回null 交给OAuth2AuthorizationCodeAuthenticationProvider去处理
 		if (loginAuthenticationToken.getAuthorizationExchange().getAuthorizationRequest().getScopes()
 				.contains("openid")) {
 			// This is an OpenID Connect Authentication Request so return null
 			// and let OidcAuthorizationCodeAuthenticationProvider handle it instead
 			return null;
-		}
+		} //根据授权码code去请求接口获取AccessToken
 		OAuth2AuthorizationCodeAuthenticationToken authorizationCodeAuthenticationToken;
 		try {
 			authorizationCodeAuthenticationToken = (OAuth2AuthorizationCodeAuthenticationToken) this.authorizationCodeAuthenticationProvider
@@ -111,16 +111,16 @@ public class OAuth2LoginAuthenticationProvider implements AuthenticationProvider
 		catch (OAuth2AuthorizationException ex) {
 			OAuth2Error oauth2Error = ex.getError();
 			throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString(), ex);
-		}
+		} //提取出accessToken
 		OAuth2AccessToken accessToken = authorizationCodeAuthenticationToken.getAccessToken();
 		Map<String, Object> additionalParameters = authorizationCodeAuthenticationToken.getAdditionalParameters();
 		OAuth2User oauth2User = this.userService.loadUser(new OAuth2UserRequest(
-				loginAuthenticationToken.getClientRegistration(), accessToken, additionalParameters));
+				loginAuthenticationToken.getClientRegistration(), accessToken, additionalParameters)); //将用户信息封装成一个OAuth2User对象
 		Collection<? extends GrantedAuthority> mappedAuthorities = this.authoritiesMapper
 				.mapAuthorities(oauth2User.getAuthorities());
 		OAuth2LoginAuthenticationToken authenticationResult = new OAuth2LoginAuthenticationToken(
 				loginAuthenticationToken.getClientRegistration(), loginAuthenticationToken.getAuthorizationExchange(),
-				oauth2User, mappedAuthorities, accessToken, authorizationCodeAuthenticationToken.getRefreshToken());
+				oauth2User, mappedAuthorities, accessToken, authorizationCodeAuthenticationToken.getRefreshToken()); //构造一个OAuth2LoginAuthenticationToken对象进行返回
 		authenticationResult.setDetails(loginAuthenticationToken.getDetails());
 		return authenticationResult;
 	}
